@@ -4,5 +4,6 @@
 @tailwind utilities;
 
 html {
+    font-family: 'Roboto', sans-serif;
     background-color: rgb(55, 65, 81);
 }
