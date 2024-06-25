@@ -9,5 +9,5 @@ import { CoalitionCarouselComponent } from '../carousel/carousel.component';
   styleUrl: './home.component.css',
 })
 export class HomeComponent {
-
+  
 }
