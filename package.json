@@ -19,6 +19,8 @@
     "@angular/platform-browser-dynamic": "^18.0.0",
     "@angular/router": "^18.0.0",
     "@coreui/angular": "^5.2.2",
+    "@fullcalendar/angular": "^6.1.14",
+    "fullcalendar": "^6.1.14",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"
