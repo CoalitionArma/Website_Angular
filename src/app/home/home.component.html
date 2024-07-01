@@ -23,6 +23,7 @@
           <div class="px-10 justify-center">
             <h2 class="text-white text-5xl font-bold font-sans">Who we are</h2>
             <br>
+            <hr>
             <p class="mb-12 text-xl">COALITION was founded in 2016 as an 18+ gaming community for ArmA and other milsim games. Since then the community has since grown to house thousands of international players across multiple multiplayer games including : DayZ, War Thunder, Squad, Reforger, and DCS.</p>
           </div>
         </div>
@@ -44,17 +45,18 @@
       <c-carousel-inner>
         <c-carousel-item *ngFor="let event of events">
           <div class="px-10 relative py-5 overflow-hidden">
-            <div class="flex flex-row">
-              <div class="flex-none w-1/2">
-                <img class="object-cover h-full w-auto" src="{{event.src}}" alt="">
+            <div class="flex flex-col md:flex-row">
+              <div class="flex-none w-full md:w-1/2">
+                <img class="object-cover h-full w-auto rounded-3xl" src="{{event.src}}" alt="">
               </div>
-                <div class="flex-1 w-1/2 content-center">
+                <div class="flex-1 w-full md:w-1/2 content-center">
                     <h2 class="text-white text-5xl font-bold font-sans">{{event.title}}</h2>
                     <h3 class="text-white text-5xl font-bold font-sans"> {{ event.nextEventDate.cstDay }} &#64; {{ event.nextEventDate.cstHour }}  {{ coalTimezoneStr }}</h3>
                     @if (event.nextEventDate.cstDay != event.nextEventDate.localDay && event.nextEventDate.cstHour != event.nextEventDate.localHour) {
                       <p class="text-white font-bold font-sans">&#40; {{ event.nextEventDate.localDay }} &#64; {{ event.nextEventDate.localHour }} {{ localTimezoneStr }} &#41;<p>
                     }
                     <br>
+                    <hr>
                     <div class="container">
                       <div class="text-xl text-justify" *ngFor="let point of event.infoPoints">
                           <span>{{point}}</span>
