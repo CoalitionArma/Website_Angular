@@ -1,9 +1,0 @@
-/* Tailwind CSS stuff */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-html {
-    font-family: 'Roboto', sans-serif;
-    background-color: rgb(45, 45, 45);
-}

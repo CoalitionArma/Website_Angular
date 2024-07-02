@@ -41,37 +41,30 @@
       <div class="bg-neutral-700 absolute inset-x-0 bottom-0 h-1/2 w-full"></div>
     </div>
     
-    <c-carousel [interval]="2000" (itemChange)="onItemChange($event)" class="bg-neutral-700 relative h-full">
+    <c-carousel [interval]="15000" (itemChange)="onItemChange($event)" class="bg-neutral-700 relative" transition="slide">
+      <c-carousel-indicators></c-carousel-indicators>
       <c-carousel-inner>
-        <c-carousel-item *ngFor="let event of events" class="inset-y-0">
-          <div class="px-10 relative py-5 overflow-hidden">
-            <div class="flex flex-col md:flex-row">
-              <div class="flex-none w-full md:w-1/2">
-                <img class="object-cover h-full w-auto rounded-3xl" src="{{event.src}}" alt="">
-              </div>
-              <div class="flex-1 w-full md:w-1/2 content-center">
-                <div class="px-10 justify-center">
+        <c-carousel-item *ngFor="let event of events" class="">
+          <div class="px-10 relative py-5 overflow-hidden flex flex-col md:flex-row">
+            <img class="w-full md:w-1/2 object-cover h-full w-auto rounded-3xl" src="{{event.src}}" alt="">
+            <div class="flex-1 w-full md:w-1/2 px-10">
+              <div class="h-1/3 flex flex-col justify-center">
                   <h2 class="text-white text-5xl font-bold font-sans">{{event.title}}</h2>
-                    <h3 class="text-white text-5xl font-bold font-sans"> {{ event.nextEventDate.cstDay }} &#64; {{ event.nextEventDate.cstHour }}  {{ coalTimezoneStr }}</h3>
-                    @if (event.nextEventDate.cstDay != event.nextEventDate.localDay && event.nextEventDate.cstHour != event.nextEventDate.localHour) {
-                      <p class="text-white font-bold font-sans">&#40; {{ event.nextEventDate.localDay }} &#64; {{ event.nextEventDate.localHour }} {{ localTimezoneStr }} &#41;<p>
-                    }
-                    <br>
-                    <div class="container">
-                      <div class="text-xl text-justify" *ngFor="let point of event.infoPoints">
-                          <span>{{point}}</span>
-                      </div>
-                  </div>
-                </div>
+                  <h3 class="text-white text-4xl font-sans"> {{ event.nextEventDate.cstDay }} &#64; {{ event.nextEventDate.cstHour }}  {{ coalTimezoneStr }}</h3>
+                  @if (event.nextEventDate.cstDay != event.nextEventDate.localDay && event.nextEventDate.cstHour != event.nextEventDate.localHour) {
+                    <p class="text-white font-bold font-sans">&#40; {{ event.nextEventDate.localDay }} &#64; {{ event.nextEventDate.localHour }} {{ localTimezoneStr }} &#41;<p>
+                  }
+              </div>
+              <br>
+              <div class="text-xl text-center container flex flex-col justify-center">
+                  <p *ngFor="let point of event.infoPoints">{{point}}</p>
               </div>
             </div>
           </div>
         </c-carousel-item>
       </c-carousel-inner>
-      <div class="absolute inset-y-0">
-        <c-carousel-control [routerLink] caption="Previous" direction="prev" class="carousel-control-next"></c-carousel-control>
-        <c-carousel-control [routerLink] caption="Next" direction="next" class="carousel-control-prev"></c-carousel-control>
-      </div>
+      <c-carousel-control [routerLink] caption="&ZeroWidthSpace;" direction="prev"></c-carousel-control>
+      <c-carousel-control [routerLink] caption="&ZeroWidthSpace;" direction="next"></c-carousel-control>
     </c-carousel>
   </div>
 
