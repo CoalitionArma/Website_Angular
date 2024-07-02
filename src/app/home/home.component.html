@@ -8,7 +8,6 @@
       <img class="h-1/2" src="./assets/Coalition.png"/>
       <div>
         <p class="text-white text-6xl font-bold font-serif z-0">ACCESIBLE<br>MILSIM</p>
-        <hr>
         <p class="text-white text-2xl font-serif mt-2">and gaming</p>
       </div>
     </div>
@@ -25,7 +24,6 @@
           <div class="px-10 justify-center">
             <h2 class="text-white text-5xl font-bold font-sans">Who we are</h2>
             <br>
-            <hr>
             <p class="mb-12 text-xl">COALITION was founded in 2016 as an 18+ gaming community for ArmA and other milsim games. Since then the community has since grown to house thousands of international players across multiple multiplayer games including : DayZ, War Thunder, Squad, Reforger, and DCS.</p>
           </div>
         </div>
@@ -51,26 +49,29 @@
               <div class="flex-none w-full md:w-1/2">
                 <img class="object-cover h-full w-auto rounded-3xl" src="{{event.src}}" alt="">
               </div>
-                <div class="flex-1 w-full md:w-1/2 content-center">
-                    <h2 class="text-white text-5xl font-bold font-sans">{{event.title}}</h2>
+              <div class="flex-1 w-full md:w-1/2 content-center">
+                <div class="px-10 justify-center">
+                  <h2 class="text-white text-5xl font-bold font-sans">{{event.title}}</h2>
                     <h3 class="text-white text-5xl font-bold font-sans"> {{ event.nextEventDate.cstDay }} &#64; {{ event.nextEventDate.cstHour }}  {{ coalTimezoneStr }}</h3>
                     @if (event.nextEventDate.cstDay != event.nextEventDate.localDay && event.nextEventDate.cstHour != event.nextEventDate.localHour) {
                       <p class="text-white font-bold font-sans">&#40; {{ event.nextEventDate.localDay }} &#64; {{ event.nextEventDate.localHour }} {{ localTimezoneStr }} &#41;<p>
                     }
                     <br>
-                    <hr>
                     <div class="container">
                       <div class="text-xl text-justify" *ngFor="let point of event.infoPoints">
                           <span>{{point}}</span>
                       </div>
                   </div>
+                </div>
               </div>
             </div>
           </div>
         </c-carousel-item>
       </c-carousel-inner>
-      <c-carousel-control [routerLink] caption="Previous" direction="prev" class="carousel-control-next"></c-carousel-control>
-      <c-carousel-control [routerLink] caption="Next" direction="next" class="carousel-control-prev"></c-carousel-control>
+      <div class="space-x-4">
+        <c-carousel-control [routerLink] caption="Previous" direction="prev" class="carousel-control-next"></c-carousel-control>
+        <c-carousel-control [routerLink] caption="Next" direction="next" class="carousel-control-prev"></c-carousel-control>
+      </div>
     </c-carousel>
   </div>
 
