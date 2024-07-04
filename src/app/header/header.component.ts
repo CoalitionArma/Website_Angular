@@ -11,4 +11,8 @@ import { DropdownModule, GridModule, NavModule, HeaderModule} from '@coreui/angu
 })
 export class HeaderComponent {
 
+    subDivClicked($event:any) {
+      console.log($event)
+      $event.stopPropagation()
+    }
 }

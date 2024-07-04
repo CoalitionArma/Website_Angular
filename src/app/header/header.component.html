@@ -15,19 +15,14 @@
         <a cDropdownToggle cNavLink>Dropdown</a>
         <ul cDropdownMenu>
           <li><a [routerLink]="[]" cDropdownItem>Action</a></li>
-          <li><c-nav-item><c-dropdown alignment="end">
-            <a cDropdownToggle cNavLink>Dropdown</a>
+          <c-dropdown direction="dropend" variant="btn-group">
+            <button cButton cDropdownToggle color="secondary" (click)="subDivClicked($event)">Dropend</button>
             <ul cDropdownMenu>
-              <li><a [routerLink]="[]" cDropdownItem>Action</a></li>
-              <li><a [routerLink]="[]" cDropdownItem>Another action</a></li>
-              <li>
-                <hr cDropdownDivider>
-              </li>
-              <li><a [routerLink]="[]" cDropdownItem>Something else</a></li>
+              <li><button cDropdownItem>Action</button></li>
+              <li><button cDropdownItem>Another action</button></li>
+              <li><button cDropdownItem>Something else here</button></li>
             </ul>
           </c-dropdown>
-        </c-nav-item>
-          </li>
           <li>
             <hr cDropdownDivider>
           </li>
