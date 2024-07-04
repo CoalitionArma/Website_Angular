@@ -51,7 +51,7 @@
         <c-carousel-inner>
           <c-carousel-item *ngFor="let event of events" class="">
             <div class="px-10 relative pt-5 pb-10 overflow-hidden flex flex-col lg:flex-row">
-              <img class="w-full lg:w-1/2 object-cover h-full w-auto rounded-3xl" src="{{event.src}}" alt="">
+              <img class="lg:w-1/2 object-cover h-full w-auto rounded-3xl" src="{{event.src}}" alt="">
               <div class="flex-1 w-full lg:w-1/2 px-10 flex flex-col justify-center">
                 <h2 class="text-white text-5xl font-bold font-sans">{{event.title}}</h2>
                 <h3 class="text-white text-4xl font-sans"> {{ event.nextEventDate.cstDay }} &#64; {{ event.nextEventDate.cstHour }}  {{ coalTimezoneStr }}</h3>
@@ -79,7 +79,7 @@
 
   <section class="relative h-screen">
     <div class="flex h-full absolute inset-0 bg-cover bg-center bg-fixed justify-center content-center" style="background-image: url('./assets/images/lmg.png'); background-repeat: no-repeat;">
-      <div class="flex-col absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center flex-col place-content-center">
+      <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center flex-col place-content-center">
         <div class="w-1/2">
           <h2 class="text-white text-5xl font-bold font-sans">Wanna get in on the action?</h2>
           <br>
