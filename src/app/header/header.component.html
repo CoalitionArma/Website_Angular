@@ -1,22 +1,62 @@
-<div class="header drop-shadow-lg border-solid border-b-2 border-red-900 bg-gradient-to-r from-neutral-800 to-neutral-900 overflow-visible">
+<c-header>
+  <c-container fluid>
+    <c-header-brand [routerLink]>Brand</c-header-brand>
+    <c-header-nav class="ms-auto">
+      <c-nav-item>
+        <a [active]="true" [routerLink] cNavLink>Home</a>
+      </c-nav-item>
+      <c-nav-item>
+        <a cNavLink routerLink="/components/alert">Link</a>
+      </c-nav-item>
+      <c-nav-item>
+        <a cNavLink disabled routerLink="/components/alert">Disabled</a>
+      </c-nav-item>
+      <c-dropdown alignment="end">
+        <a cDropdownToggle cNavLink>Dropdown</a>
+        <ul cDropdownMenu>
+          <li><a [routerLink]="[]" cDropdownItem>Action</a></li>
+          <li><a [routerLink]="[]" cDropdownItem>Another action</a></li>
+          <li>
+            <hr cDropdownDivider>
+          </li>
+          <li><a [routerLink]="[]" cDropdownItem>Something else</a></li>
+        </ul>
+      </c-dropdown>
+    </c-header-nav>
+  </c-container>
+</c-header>
+
+
+<div class="header drop-shadow-lg border-solid border-b-2 border-red-900 bg-gradient-to-r from-neutral-800 to-neutral-900 overflow-visible z-50">
     <div id="logo">
         <img src="/assets/banner.png" alt="COALITION Logo" aria-hidden="true" width="400px">
     </div>
-    <div id="links">
+    <div id="links" class="overflow-visible">
         <a class="link" routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">Home</a>
         <a class="link" routerLink="/stats" routerLinkActive="active" ariaCurrentWhenActive="page">Stats</a>
         <a class="link" routerLink="/events" routerLinkActive="active" ariaCurrentWhenActive="page">Events</a>
         <a class="link" href="https://discord.gg/the-coalition" target="_blank">Discord</a>
         <c-dropdown alignment="end">
-            <button cButton cDropdownToggle>
-              Games
-            </button>
-            <ul cDropdownMenu class="absolute overflow-visible">
-              <li><a [routerLink]="[]" cDropdownItem>Arma</a></li>
-              <li><a [routerLink]="[]" cDropdownItem>Warthunder</a></li>
-              <li><a [routerLink]="[]" cDropdownItem>DCS</a></li>
-            </ul>
-          </c-dropdown>
+          <button cButton cDropdownToggle>
+            Games
+          </button>
+          <ul cDropdownMenu>
+            <li><a [routerLink]="[]" cDropdownItem>Arma</a></li>
+            <li><a [routerLink]="[]" cDropdownItem>Warthunder</a></li>
+            <li><a [routerLink]="[]" cDropdownItem>DCS</a></li>
+          </ul>
+        </c-dropdown>
+
+        <!-- <c-dropdown alignment="end">
+          <button cButton cDropdownToggle>
+            Games
+          </button>
+          <ul cDropdownMenu class="absolute overflow-visible">
+            <li><a [routerLink]="[]" cDropdownItem>Arma</a></li>
+            <li><a [routerLink]="[]" cDropdownItem>Warthunder</a></li>
+            <li><a [routerLink]="[]" cDropdownItem>DCS</a></li>
+          </ul>
+        </c-dropdown> -->
         <div>|</div>
     </div>
     <div class="login p-5">
