@@ -1,40 +1,4 @@
-<c-header>
-  <c-container fluid>
-    <c-header-brand [routerLink]>Brand</c-header-brand>
-    <c-header-nav class="ms-auto">
-      <c-nav-item>
-        <a [active]="true" [routerLink] cNavLink>Home</a>
-      </c-nav-item>
-      <c-nav-item>
-        <a cNavLink routerLink="/components/alert">Link</a>
-      </c-nav-item>
-      <c-nav-item>
-        <a cNavLink disabled routerLink="/components/alert">Disabled</a>
-      </c-nav-item>
-      <c-dropdown alignment="end">
-        <a cDropdownToggle cNavLink>Dropdown</a>
-        <ul cDropdownMenu>
-          <li><a [routerLink]="[]" cDropdownItem>Action</a></li>
-          <c-dropdown direction="dropend" variant="btn-group">
-            <button cButton cDropdownToggle color="secondary" (click)="subDivClicked($event)">Dropend</button>
-            <ul cDropdownMenu>
-              <li><button cDropdownItem>Action</button></li>
-              <li><button cDropdownItem>Another action</button></li>
-              <li><button cDropdownItem>Something else here</button></li>
-            </ul>
-          </c-dropdown>
-          <li>
-            <hr cDropdownDivider>
-          </li>
-          <li><a [routerLink]="[]" cDropdownItem>Something else</a></li>
-        </ul>
-      </c-dropdown>
-    </c-header-nav>
-  </c-container>
-</c-header>
-
-
-<div class="header drop-shadow-lg border-solid border-b-2 border-red-900 bg-gradient-to-r from-neutral-800 to-neutral-900 overflow-visible z-50">
+<!-- <div class="header drop-shadow-lg border-solid border-b-2 border-red-900 bg-gradient-to-r from-neutral-800 to-neutral-900 overflow-visible z-50">
     <div id="logo">
         <img src="/assets/banner.png" alt="COALITION Logo" aria-hidden="true" width="400px">
     </div>
@@ -57,7 +21,39 @@
     </div>
     <div class="login p-5">
         <button class="bg-red-900 text-white font-semibold py-2 px-5 rounded"> <!-- needs login svg added to button imo -->
-            Login
-        </button>
+            <!-- Login -->
+        <!-- </button>
     </div>
+</div> --> 
+
+
+<div class="header drop-shadow-lg border-solid border-b-2 border-red-900 bg-gradient-to-r from-neutral-800 to-neutral-900 overflow-visible z-50">
+  <div id="logo">
+      <img src="/assets/banner.png" alt="COALITION Logo" aria-hidden="true" width="400px">
+  </div>
+  <div id="links">
+    <button mat-button><a class="link" routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">Home</a></button>
+
+    <button mat-button [matMenuTriggerFor]="games">Games</button>
+    <mat-menu #games="matMenu">
+      <button mat-menu-item [matMenuTriggerFor]="arma">Arma</button>
+      <button mat-menu-item>War Thunder</button>
+      <button mat-menu-item>DCS World</button>
+    </mat-menu>
+    
+    <mat-menu #arma="matMenu">
+      <button mat-menu-item>Wiki</button>
+      <button mat-menu-item><a class="link" routerLink="/cfc" routerLinkActive="active" ariaCurrentWhenActive="page">COA Fight Club</a></button>
+    </mat-menu>
+
+    <button mat-button><a class="link" routerLink="/stats" routerLinkActive="active" ariaCurrentWhenActive="page">Stats</a></button>
+    <button mat-button><a class="link" routerLink="/events" routerLinkActive="active" ariaCurrentWhenActive="page">Events</a></button>
+    <button mat-button><a class="link" href="https://discord.gg/the-coalition" target="_blank">Discord</a></button>
+    <div>|</div>
+  </div>
+  <div class="login p-5">
+      <button class="bg-red-900 text-white font-semibold py-2 px-5 rounded"> <!-- needs login svg added to button imo -->
+          Login
+      </button>
+  </div>
 </div>
