@@ -53,7 +53,10 @@ export class HomeComponent implements OnInit {
     "'To the left of south.'",
     "'Tank is on me.'",
     "'This is me in plain clothes.'",
-    "'Peace in Varistan, at last.'"
+    "'Peace in Varistan, at last.'",
+    "'I'm up, they see me, I'm in spectator'",
+    "'The sniper's dea-'",
+    "'Check the wiki.'"
   ];
 
   quoteToDisplay = this.quotes[Math.floor(Math.random() * this.quotes.length)];
