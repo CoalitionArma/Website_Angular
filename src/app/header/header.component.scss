@@ -6,17 +6,17 @@
 
     #links {
         flex-grow: 1;
-        padding-top: 28px;
+        padding-top: 0px;
         display: flex;
-        gap: 20px;
+        gap: 10px;
         justify-content: right;
         font-size: 15px;
 
-        .link {
-            cursor: pointer;
-            &:hover {
-                color: rgb(182, 65, 65);
-            }
-        }
+        // .link {
+        //     cursor: pointer;
+        //     &:hover {
+        //         color: rgb(182, 65, 65);
+        //     }
+        // }
     }
 }
