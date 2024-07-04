@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit {
     "'Guys. I swear. Armakart really works now.'",
     "'That's nice bud.'",
     "'I'm not a doctor, but I play one in Arma.'",
-    "'We're going to finally take Polishkino this time!'",
+    "'We're going to finally take Polshishkino this time!'",
     "'There's two types of men: those who know of banana business and those who haven't been affected by it yet.'",
     "'Ohhhhhhhhhhh, see ya goober!'",
     "'From the rapturous applause'",
