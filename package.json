@@ -22,6 +22,7 @@
     "@coreui/coreui": "^5.0.2",
     "luxon": "^3.4.4",
     "rxjs": "~7.8.0",
+    "tailwind-gradient-mask-image": "^1.2.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"
   },
