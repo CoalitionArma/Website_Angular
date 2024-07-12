@@ -4,7 +4,11 @@ module.exports = {
       "./src/**/*.{html,ts}",
     ],
     theme: {
-      extend: {},
+      extend: {
+        screens: {
+          wide: "2000px"
+        }
+      }
     },
-    plugins: [],
+    plugins: [require("tailwind-gradient-mask-image")],
   }
