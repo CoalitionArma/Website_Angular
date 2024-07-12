@@ -74,9 +74,9 @@
                         <p class="text-white font-bold font-sans">&#40; {{ event.nextEventDate.localDay }} &#64; {{ event.nextEventDate.localHour }} {{ localTimezoneStr }} &#41;<p>
                       }
                       <br>
-                      <div class="text-xl text-center container flex flex-col justify-center">
-                          <p *ngFor="let point of event.infoPoints">{{point}}</p>
-                      </div>
+                      <p class="text-xl text-center container flex flex-col justify-center">
+                        {{event.about}}
+                      </p>
                     </div>
                   </div>
                 </div>

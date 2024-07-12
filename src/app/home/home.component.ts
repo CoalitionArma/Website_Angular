@@ -22,7 +22,7 @@ export class HomeComponent implements OnInit {
   coalTimezone = 'America/Chicago'
   coalTimezoneStr = DateTime.now().setZone(this.coalTimezone).toFormat('ZZZZ')
 
-  events: any[] = new Array(2).fill({ id: -1, src: '', title: '', nextEventDate: {cstDay: '', cstHour: '', localDay: '', localHour: ''}, infoPoints: []})
+  events: any[] = new Array(4).fill({ id: -1, src: '', title: '', nextEventDate: {cstDay: '', cstHour: '', localDay: '', localHour: ''}, infoPoints: []})
 
   quotes: string[] = [
     "'The only way to do great work is to love what you do.'",
@@ -93,20 +93,38 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.events[0] = {
       id: 0,
-      src: "./assets/images/btr90.png",
+      src: "./assets/images/bmp.png",
       title: "COALITION Fight Club",
       nextEventDate: this.getNextEventDate(5, 18, 0),
-      infoPoints: [
-        "One-Life Intense TvT Action", "3 Unqiue Missions per night", "Large Variety of Maps and Factions"
+      about: [
+        "Three back-to-back, one-life, high-intensity TVT missions, featuring a variety of maps, factions and roles."
       ]
     }
     this.events[1] = {
       id: 1,
-      src: "./assets/images/bmp.png",
+      src: "./assets/images/btr90.png",
       title: "COALITION Reforger Church",
       nextEventDate: this.getNextEventDate(7, 18, 0),
-      infoPoints: [
-        "Relaxed COOP Experience", "3 Unqiue Missions per night", "Large Variety of Maps and Factions"
+      about: [
+        "Relaxed extended COOP experience, featuring respawns, a dedicated gamemaster, and good ol' shooting along side your friends."
+      ]
+    }
+    this.events[2] = {
+      id: 2,
+      src: "./assets/images/timber_ridge.png",
+      title: "COALITION Campaign",
+      nextEventDate: this.getNextEventDate(6, 12, 0),
+      about: [
+        "Our members only, month long, CoTVT campaign. Join a specialized section... [and]"
+      ]
+    }
+    this.events[3] = {
+      id: 3,
+      src: "./assets/images/1874880_20240517212309_1.png",
+      title: "COALITION CCO",
+      nextEventDate: this.getNextEventDate(6, 12, 0),
+      about: [
+        "A 128+ Arma Reforger TVT event, with a preceeding two week planning phase."
       ]
     }
 
