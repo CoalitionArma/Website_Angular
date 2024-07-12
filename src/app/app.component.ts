@@ -3,6 +3,8 @@ import { RouterOutlet } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { HeaderComponent } from './header/header.component';
 import { DOCUMENT, NgClass, ViewportScroller } from '@angular/common';
+import { IconSetService } from '@coreui/icons-angular';
+import { cilListNumbered, cilPaperPlane, brandSet } from '@coreui/icons';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +16,12 @@ import { DOCUMENT, NgClass, ViewportScroller } from '@angular/common';
 export class AppComponent {
   title = 'CoalitionWebsite';
 
-  constructor(private viewportScroller: ViewportScroller){}
+  constructor(
+    private viewportScroller: ViewportScroller,
+    public iconSet: IconSetService
+  ){
+    iconSet.icons = {cilListNumbered, cilPaperPlane, ...brandSet}
+  }
 
   debounce = (fn: any) => {
     // This holds the requestAnimationFrame reference, so we can cancel it if we wish
@@ -49,7 +56,5 @@ export class AppComponent {
   @HostListener('document:scroll', ["$event"])
   onScroll(event: any) {
     this.debounce(this.updateScrollDir)()
-  }
-  
-  
+  } //TODO: do this thing to header
 }

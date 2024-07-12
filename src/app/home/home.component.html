@@ -2,7 +2,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <div class="home text-white justify-center content-center text-center">
-  <div class="relative h-screen">
+  <div class="relative h-dvh">
     <div class="absolute inset-0 bg-cover bg-center justify-center content-center bg-fixed" style="background-image: url('./assets/multi-piece/Coalition_Reforger_Spiral_Blur_USSR_Tunnel.png'); background-repeat: no-repeat;"></div>
     <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center flex-col">
       <img class="h-1/2" src="./assets/Coalition.png"/>
@@ -16,67 +16,81 @@
 
   <!-- <div class="xl:flex-row xl:flex relative justify-center"> -->
     <!-- <img src="./assets/images/saint_pierre.png" class="lg:hidden xl:block absolute right-0"> -->
-    <section id="about" class="flex justify-center border-neutral-200 h-dvh">
-
-      <div class="absolute lg:block hidden gradient-mask-r-[rgba(0,0,0,1.0),transparent_20%] left-0">
+    <div id="main-content" class="relative">
+      <div class="fixed top-0 -z-10">
         <img src="./assets/images/saint_pierre.png" class="lg:hidden object-cover object-left xl:block h-full">
-      </div>
-  
-      <div class="absolute xl:block hidden gradient-mask-l-[rgba(0,0,0,1.0),transparent_20%] right-0">
+      </div> 
+      
+      <!-- <div class="fixed lg:block hidden gradient-mask-r-[rgba(0,0,0,1.0),transparent_10%] top-0 -z-10">
         <img src="./assets/images/saint_pierre.png" class="lg:hidden object-cover object-left xl:block h-full">
-      </div>
+      </div> -->
+ 
+      <!-- <div class="fixed lg:block hidden gradient-mask-l-[rgba(0,0,0,1.0),transparent_10%] top-0 -z-10">
+        <img src="./assets/images/saint_pierre.png" class="lg:hidden object-cover object-left xl:block h-full">
+      </div> -->
 
-      <div class="flex flex-col lg:flex-row xl:w-3/5">
-        <div class="flex-none w-full lg:w-1/2">
-          <img class="object-cover h-full w-auto rounded-3xl" src="./assets/images/1874880_20240517211236_1.png" alt="">
-        </div>
-        <div class="flex-1 w-full lg:w-1/2 content-center">
-          <div class="px-10 justify-center">
-            <h2 class="text-white text-5xl font-bold font-sans">Who we are</h2>
-            <br>
-            <p class="mb-12 text-xl">COALITION was founded in 2016 as an 18+ gaming community for ArmA and other milsim games. Since then the community has since grown to house thousands of international players across multiple multiplayer games including : DayZ, War Thunder, Squad, Reforger, and DCS.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-
-    <!-- bg-gradient-to-r from-neutral-200/0 via-neutral-800/100 to-neutral-800 -->
-    <section id="events" class="px-10 py-5 relative overflow-hidden h-dvh">
-      <div class="absolute lg:block hidden gradient-mask-r-[rgba(0,0,0,1.0),transparent_20%] left-0">
-        <img src="./assets/images/timber_ridge.png" class="lg:hidden object-cover object-left xl:block h-full">
-      </div>
-  
-      <div class="absolute xl:block hidden gradient-mask-l-[rgba(0,0,0,1.0),transparent_20%] right-0">
-        <img src="./assets/images/tiber_ridge.png" class="lg:hidden object-cover object-left xl:block h-full">
-      </div>
-
-      <c-carousel [interval]="15000" (itemChange)="onItemChange($event)" class="relative" transition="slide">
-        <c-carousel-inner>
-          <c-carousel-item *ngFor="let event of events" class="">
-            <div class="px-10 relative pt-5 pb-10 overflow-hidden flex flex-col lg:flex-row">
-              <img class="lg:w-1/2 object-cover h-full w-auto rounded-3xl" src="{{event.src}}" alt="">
-              <div class="flex-1 w-full lg:w-1/2 px-10 flex flex-col justify-center">
-                <h2 class="text-white text-5xl font-bold font-sans">{{event.title}}</h2>
-                <h3 class="text-white text-4xl font-sans"> {{ event.nextEventDate.cstDay }} &#64; {{ event.nextEventDate.cstHour }}  {{ coalTimezoneStr }}</h3>
-                @if (event.nextEventDate.cstDay != event.nextEventDate.localDay && event.nextEventDate.cstHour != event.nextEventDate.localHour) {
-                  <p class="text-white font-bold font-sans">&#40; {{ event.nextEventDate.localDay }} &#64; {{ event.nextEventDate.localHour }} {{ localTimezoneStr }} &#41;<p>
-                }
+      <section id="about" class="w-full h-dvh content-center flex flex-col">
+        <div class="flex flex-row justify-center h-full">
+          <div id="about-text" class="w-2/5 my-auto z-10">
+            <div class="content-center bg-neutral-800 py-4 px-8">
+              <div class="px-10 justify-center -mx-10">
+                <p class="text-white text-sm font-sans text-left">WHO WE ARE</p>
+                <p class="ext-white text-3xl font-bold font-sans text-justify">Accessable milsim gaming community</p>
                 <br>
-                <div class="text-xl text-center container flex flex-col justify-center">
-                    <p *ngFor="let point of event.infoPoints">{{point}}</p>
-                </div>
+                <p class="mb-12 text-xl text-justify leading-8">COALITION was founded in 2016 as an 18+ gaming community for ArmA and other milsim games. Since then the community has since grown to house thousands of international players across multiple multiplayer games including : DayZ, War Thunder, Squad, Reforger, and DCS.</p>
+                <br>
+                <p class="mb-12 text-xl text-justify leading-8">Arma Reforger Development</p>
               </div>
             </div>
-          </c-carousel-item>
-        </c-carousel-inner>
-        <c-carousel-control [routerLink] caption="&ZeroWidthSpace;" direction="prev"></c-carousel-control>
-        <c-carousel-control [routerLink] caption="&ZeroWidthSpace;" direction="next"></c-carousel-control>
-        <c-carousel-indicators></c-carousel-indicators>
-      </c-carousel>
-    </section>
+          </div>
+    
+          <div class="w-2/5 my-auto -mx-10">
+            <img class="object-cover h-full w-auto" src="./assets/images/1874880_20240517211236_1.png" alt="">
+          </div>
+        </div>
 
-  <section class="relative h-screen">
+        <div class="center-content flex flex-col justify-center">
+          <p class="text-md">GET INVOLVED</p>
+          <svg [cIcon]="icons.cilChevronBottom" customClass="self-center" class="self-center" width="50"></svg>
+        </div>
+      </section>
+  
+  
+      <!-- bg-gradient-to-r from-neutral-200/0 via-neutral-800/100 to-neutral-800 -->
+      <section id="events" class="w-full justify-center h-dvh">
+        <c-carousel [interval]="15000" (itemChange)="onItemChange($event)" class="relative" transition="slide">
+          <c-carousel-inner>
+            <c-carousel-item *ngFor="let event of events" class="">
+              <div class="w-full flex flex-row justify-center h-dvh content-center">
+                <div class="w-2/5 my-auto -mx-10">
+                  <img class="object-cover h-full w-auto" src="{{event.src}}" alt="">
+                </div>
+                <div class="w-2/5 my-auto z-10">
+                  <div class="content-center bg-neutral-800 py-4 px-8">
+                    <div class="px-10 justify-center -mx-10">
+                      <h2 class="text-white text-3xl font-bold font-sans">{{event.title}}</h2>
+                      <h3 class="text-white text-lg font-sans"> {{ event.nextEventDate.cstDay }} &#64; {{ event.nextEventDate.cstHour }}  {{ coalTimezoneStr }}</h3>
+                      @if (event.nextEventDate.cstDay != event.nextEventDate.localDay && event.nextEventDate.cstHour != event.nextEventDate.localHour) {
+                        <p class="text-white font-bold font-sans">&#40; {{ event.nextEventDate.localDay }} &#64; {{ event.nextEventDate.localHour }} {{ localTimezoneStr }} &#41;<p>
+                      }
+                      <br>
+                      <div class="text-xl text-center container flex flex-col justify-center">
+                          <p *ngFor="let point of event.infoPoints">{{point}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </c-carousel-item>
+          </c-carousel-inner>
+          <c-carousel-control [routerLink] caption="&ZeroWidthSpace;" direction="prev"></c-carousel-control>
+          <c-carousel-control [routerLink] caption="&ZeroWidthSpace;" direction="next"></c-carousel-control>
+          <c-carousel-indicators></c-carousel-indicators>
+        </c-carousel>
+      </section>
+    </div>
+
+  <section class="relative h-dvh">
     <div class="flex h-full absolute inset-0 bg-cover bg-center bg-fixed justify-center content-center" style="background-image: url('./assets/images/lmg.png'); background-repeat: no-repeat;">
       <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center flex-col place-content-center">
         <div class="w-1/2">

@@ -5,14 +5,19 @@ import { NgFor } from '@angular/common';
 import { CarouselComponent, CarouselInnerComponent, CarouselItemComponent, CarouselControlComponent, CarouselIndicatorsComponent } from '@coreui/angular';
 import { RouterLink } from '@angular/router';
 
+import { cilChevronBottom } from '@coreui/icons';
+import { IconDirective } from '@coreui/icons-angular';
+
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CoalitionCarouselComponent, CarouselComponent, CarouselInnerComponent, NgFor, CarouselItemComponent, CarouselControlComponent, RouterLink, CarouselIndicatorsComponent],
+  imports: [CoalitionCarouselComponent, CarouselComponent, CarouselInnerComponent, NgFor, CarouselItemComponent, CarouselControlComponent, RouterLink, CarouselIndicatorsComponent, IconDirective],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
+  icons = { cilChevronBottom }
+
   localTimezoneStr = DateTime.now().toFormat('ZZZZ')
   coalTimezone = 'America/Chicago'
   coalTimezoneStr = DateTime.now().setZone(this.coalTimezone).toFormat('ZZZZ')
