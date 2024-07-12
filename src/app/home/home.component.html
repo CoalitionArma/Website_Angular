@@ -32,8 +32,8 @@
       <section id="about" class="w-full h-dvh content-center flex flex-col">
         <div class="flex flex-row justify-center h-full">
           <div id="about-text" class="w-2/5 my-auto z-10">
-            <div class="content-center bg-neutral-800 py-4 px-8">
-              <div class="px-10 justify-center -mx-10">
+            <div class="content-center bg-neutral-800/0 py-4 px-8">
+              <div class="px-10 justify-center">
                 <p class="text-white text-sm font-sans text-left">WHO WE ARE</p>
                 <p class="ext-white text-3xl font-bold font-sans text-justify">Accessable milsim gaming community</p>
                 <br>
@@ -44,7 +44,7 @@
             </div>
           </div>
     
-          <div class="w-2/5 my-auto -mx-10">
+          <div class="w-2/5 my-auto">
             <img class="object-cover h-full w-auto" src="./assets/images/1874880_20240517211236_1.png" alt="">
           </div>
         </div>
@@ -62,12 +62,12 @@
           <c-carousel-inner>
             <c-carousel-item *ngFor="let event of events" class="">
               <div class="w-full flex flex-row justify-center h-dvh content-center">
-                <div class="w-2/5 my-auto -mx-10">
+                <div class="w-2/5 my-auto">
                   <img class="object-cover h-full w-auto" src="{{event.src}}" alt="">
                 </div>
                 <div class="w-2/5 my-auto z-10">
-                  <div class="content-center bg-neutral-800 py-4 px-8">
-                    <div class="px-10 justify-center -mx-10">
+                  <div class="content-center py-4 px-8">
+                    <div class="px-10 justify-center">
                       <h2 class="text-white text-3xl font-bold font-sans">{{event.title}}</h2>
                       <h3 class="text-white text-lg font-sans"> {{ event.nextEventDate.cstDay }} &#64; {{ event.nextEventDate.cstHour }}  {{ coalTimezoneStr }}</h3>
                       @if (event.nextEventDate.cstDay != event.nextEventDate.localDay && event.nextEventDate.cstHour != event.nextEventDate.localHour) {
