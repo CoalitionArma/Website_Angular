@@ -1,12 +1,15 @@
 .home-title {
+    text-shadow: 1px 1px 2px black;
     @apply text-white text-3xl font-bold font-sans
 }
 
 .home-medium-title {
+    text-shadow: 1px 1px 2px black;
     @apply text-white text-xl font-sans
 }
 
 .home-small-title {
+    text-shadow: 1px 1px 2px black;
     @apply text-white text-sm font-sans
 }
 
@@ -15,6 +18,7 @@
         @apply text-lg
     }
 
+    text-shadow: 1px 1px 2px black;
     @apply text-sm;
     @apply text-white text-justify;
     
