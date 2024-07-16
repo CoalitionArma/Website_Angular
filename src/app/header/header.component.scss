@@ -1,5 +1,4 @@
 .header {
-    display: flex;
     padding: 10px 30px; 
     background-color: rgb(35, 35, 35);
     color: white;
@@ -19,4 +18,8 @@
             }
         }
     }
+}
+
+.header-mobile {
+    padding: 10px 10px;
 }

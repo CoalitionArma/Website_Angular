@@ -1,4 +1,4 @@
-<div class="header drop-shadow-lg border-solid border-b-2 border-red-900 bg-gradient-to-r from-neutral-800 to-neutral-900">
+<div class="header drop-shadow-lg border-solid border-b-2 border-red-900 bg-gradient-to-r from-neutral-800 to-neutral-900 md:flex hidden ">
     <div id="logo">
         <img src="./assets/banner.png" alt="COALITION Logo" aria-hidden="true" width="400px">
     </div>
@@ -14,4 +14,26 @@
             Login
         </button>
     </div>
+</div>
+
+<div class="header header-mobile drop-shadow-lg border-solid border-b-2 border-red-900 bg-gradient-to-r from-neutral-800 to-neutral-900 md:hidden flex">
+    <div id="logo">
+        <img src="./assets/banner.png" alt="COALITION Logo" aria-hidden="true" width="300px">
+    </div>
+    
+    <div id="menu" class="place-self-center my-auto ml-auto mr-10 justify-self-end">
+        <svg [cIcon]="icons.cilHamburgerMenu" width="50"></svg>
+    </div>
+    <!-- <div id="links">
+        <a class="link" routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">Home</a>
+        <a class="link" routerLink="/stats" routerLinkActive="active" ariaCurrentWhenActive="page">Stats</a>
+        <a class="link" routerLink="/events" routerLinkActive="active" ariaCurrentWhenActive="page">Events</a>
+        <a class="link" href="https://discord.gg/the-coalition" target="_blank">Discord</a>
+        <div>|</div>
+    </div>
+    <div class="login p-5">
+        <button class="bg-red-900 text-white font-semibold py-2 px-5 rounded">
+            Login
+        </button>
+    </div> -->
 </div>

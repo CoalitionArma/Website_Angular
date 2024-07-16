@@ -1,6 +1,6 @@
 <app-header></app-header>
-<main onscroll="onScroll($event)">
-    <section class="content">
+<main>
+    <section overlay-scrollbars [defer]="true" [events]="{scroll: onScroll}" class="h-dvh content">
         <router-outlet></router-outlet>
     </section>
 </main>

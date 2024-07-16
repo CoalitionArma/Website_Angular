@@ -8,14 +8,25 @@ import { RouterLink } from '@angular/router';
 import { cilChevronBottom } from '@coreui/icons';
 import { IconDirective } from '@coreui/icons-angular';
 
+import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
+import { OverlayScrollbars } from 'overlayscrollbars';
+
+import Aos from 'aos';
+import 'aos/dist/aos.css';
+
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CoalitionCarouselComponent, CarouselComponent, CarouselInnerComponent, NgFor, CarouselItemComponent, CarouselControlComponent, RouterLink, CarouselIndicatorsComponent, IconDirective],
+  imports: [CoalitionCarouselComponent, CarouselComponent, CarouselInnerComponent, NgFor, CarouselItemComponent, CarouselControlComponent, RouterLink, CarouselIndicatorsComponent, IconDirective, OverlayscrollbarsModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
+  options = {
+    scrollbars: {
+      theme: 'os-theme-light',
+    },
+  };
   icons = { cilChevronBottom }
 
   localTimezoneStr = DateTime.now().toFormat('ZZZZ')
@@ -106,7 +117,7 @@ export class HomeComponent implements OnInit {
       title: "COALITION Reforger Church",
       nextEventDate: this.getNextEventDate(7, 18, 0),
       about: [
-        "Relaxed extended COOP experience, featuring respawns, a dedicated gamemaster, and fun and unique missions."
+        "A laid back extended COOP mission, featuring respawns, a dedicated gamemaster, and a fun and unique experience."
       ]
     }
     this.events[2] = {
@@ -128,7 +139,7 @@ export class HomeComponent implements OnInit {
       ]
     }
 
-    console.log(this.events)
+    Aos.init()
   }
 
   onItemChange($event: any): void {
