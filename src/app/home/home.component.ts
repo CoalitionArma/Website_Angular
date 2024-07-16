@@ -97,7 +97,7 @@ export class HomeComponent implements OnInit {
       title: "COALITION Fight Club",
       nextEventDate: this.getNextEventDate(5, 18, 0),
       about: [
-        "Three back-to-back, one-life, high-intensity TVT missions, featuring orgainzed and structured gamplay, aswell as a variety of maps, factions and roles."
+        "Three back-to-back, one-life, high-intensity TVT missions, featuring organized and structured gameplay, as well as a variety of maps, factions and roles."
       ]
     }
     this.events[1] = {
@@ -115,7 +115,7 @@ export class HomeComponent implements OnInit {
       title: "COALITION Campaign",
       nextEventDate: this.getNextEventDate(6, 12, 0),
       about: [
-        "Our members only campaign. Join a section specializing in a mode of combat, and fight in a persistant, story driven, campaign."
+        "Our members only campaign. Join a section specializing in a mode of combat, and fight in a persistent, story driven, campaign."
       ]
     }
     this.events[3] = {
@@ -124,7 +124,7 @@ export class HomeComponent implements OnInit {
       title: "COALITION Community Operations",
       nextEventDate: this.getNextEventDate(6, 12, 0),
       about: [
-        "Our primier 128+ player, multi-community event. Featuring multiple weeks of planning and organization culminating into a singular day of combat."
+        "Our premier 128+ player, multi-community event. Featuring multiple weeks of planning and organization culminating into a singular day of combat."
       ]
     }
 
