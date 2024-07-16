@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { IconModule, IconSetService } from '@coreui/icons-angular';
+import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 
 @NgModule({
   imports: [
@@ -12,7 +13,8 @@ import { IconModule, IconSetService } from '@coreui/icons-angular';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     AppComponent,
-    IconModule
+    IconModule,
+    OverlayscrollbarsModule
   ],
   providers: [
     IconSetService

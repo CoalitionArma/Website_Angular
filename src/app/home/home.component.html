@@ -1,14 +1,15 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <div class="home text-white justify-center content-center text-center">
   <div class="relative h-dvh">
     <div class="absolute inset-0 bg-cover bg-center justify-center content-center bg-fixed" style="background-image: url('./assets/multi-piece/Coalition_Reforger_Spiral_Blur_USSR_Tunnel.png'); background-repeat: no-repeat;"></div>
     <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center flex-col">
       <img class="h-1/2 z-20 lg:z-0" src="./assets/Coalition.png"/>
       <div class="z-20 lg:z-0">
-        <p class="text-white text-5xl font-bold font-sans lg:z-0">ACCESIBLE MILSIM</p>
-        <p class="text-white text-2xl font-sans lg:z-0">and gaming</p>
+        <p class="text-white lg:text-5xl text-4xl font-bold font-sans lg:z-0">ACCESIBLE MILSIM</p>
+        <p class="text-white lg:text-xl text-large font-sans lg:z-0">AND GAMING</p>
       </div>
       <div class="absolute inset-0 bg-cover bg-center justify-center content-center bg-fixed lg:z-10" style="background-image: url('./assets/multi-piece/Coalition_Reforger_Cutout_USSR_Tunnel.png'); background-repeat: no-repeat;"></div>
     </div>
@@ -17,16 +18,16 @@
   <div id="main-content" class="relative">
     <div class="absolute inset-0 bg-cover bg-center bg-fixed -z-10" style="background-image: url('./assets/images/charlet_bay_dusk.jpg'); background-repeat: no-repeat;"></div>
     <!-- <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center flex-col -z-10"></div> -->
-    <section id="about" class="w-full h-dvh content-center flex flex-col">
+    <section id="about" class="w-full h-dvh content-center flex flex-col" data-aos="fade-up" data-aos-duration="500">
       <div class="flex flex-col lg:flex-row justify-center h-full">
-        <div id="about-text" class="lg:w-2/5 lg:mx-0 mx-auto w-3/4 my-auto">
+        <div id="about-text" class="lg:w-2/5 lg:mx-0 mx-auto md:w-3/4 w-full my-auto">
           <div class="content-center py-4 px-8">
             <div class="px-10 justify-center">
               <p class="home-small-title text-left drop-shadow">WHO WE ARE</p>
               <p class="home-title text-left">An accessable milsim gaming community</p>
               <br>
               <p class="home-text mb-8">COALITION was founded in 2016 as an 18+ gaming community for ArmA and other milsim games. Since then the community has since grown to house thousands of international players across multiple multiplayer games including: DayZ, War Thunder, Squad, Reforger, and DCS.</p>
-              <p class="home-text">From making mods for the Reforger community to hosting events for both communities and invdividuals to enjoy, COALITION is the place to be for Reforger.</p>
+              <p class="home-text">From making mods for the game, to hosting events for both communities and invdividuals to enjoy, COALITION is the place to be for Reforger.</p>
             </div>
           </div>
         </div>
@@ -36,22 +37,32 @@
         </div>
       </div>
 
-      <div class="center-content flex flex-col justify-center">
-        <span class="text-md">GET INVOLVED</span>
+      <div class="center-content flex flex-col justify-center pb-10">
+        <span class="text-md" style="text-shadow: 1px 1px 2px black;">GET INVOLVED</span>
         <svg [cIcon]="icons.cilChevronBottom" customClass="self-center" class="self-center" width="50"></svg>
       </div>
     </section>
 
-    <section id="events" class="w-full justify-center h-dvh">
+    <!-- TODO
+    scroll bar
+    
+    make column events always start in center of the div
+
+    header 
+    -->
+
+    
+    <section id="events" class="w-full justify-center h-dvh" data-aos="fade-up" data-aos-duration="500">
       <c-carousel [interval]="15000" (itemChange)="onItemChange($event)" class="relative" transition="slide">
         <c-carousel-inner>
           <c-carousel-item *ngFor="let event of events" class="">
-            <div class="w-full flex flex-col lg:flex-row justify-center h-dvh content-center">
-              <div class="w-2/5 my-auto lg:block hidden">
+            <div class="w-full flex flex-col lg:flex-row h-dvh justify-center">
+              <div class="w-3/4 lg:w-2/5 mx-auto lg:mr-0 lg:my-auto">
                 <img class="object-cover h-full w-auto" src="{{event.src}}" alt="">
               </div>
-              <div class="w-3/4 mx-auto lg:mx-0 lg:w-2/5 my-auto">
-                <div class="content-center py-4 px-8 ">
+              <span class="h-5"></span>
+              <div class="w-full mx-auto lg:ml-0 lg:w-2/5 lg:my-auto">
+                <div class="content-center lg:py-4 px-8">
                   <div class="px-10 justify-center">
                     <h2 class="home-title">{{event.title}}</h2>
                     <h3 class="home-medium-title"> {{ event.nextEventDate.cstDay }} &#64; {{ event.nextEventDate.cstHour }}  {{ coalTimezoneStr }}</h3>
@@ -59,7 +70,7 @@
                       <p class="home-medium-title">&#40; {{ event.nextEventDate.localDay }} &#64; {{ event.nextEventDate.localHour }} {{ localTimezoneStr }} &#41;<p>
                     }
                     <br>
-                    <p class="text">
+                    <p class="home-text">
                       {{event.about}}
                     </p>
                   </div>
@@ -79,7 +90,7 @@
     <div class="flex h-full absolute inset-0 bg-cover bg-center bg-fixed justify-center content-center" style="background-image: url('./assets/images/lmg.png'); background-repeat: no-repeat;">
       <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center flex-col place-content-center">
         <div class="w-1/2">
-          <h2 class="text-white text-5xl font-bold font-sans">Wanna get in on the action?</h2>
+          <h2 class="text-white lg:text-5xl md:text-4xl text-3xl font-bold font-sans">Wanna get in on the action?</h2>
           <br>
           <div class="flex flex-wrap justify-center"><a class="mt-5 w-full md:w-auto px-8 py-4 mb-4 md:mb-0 md:mr-4 bg-red-900 hover:bg-red-300 text-sm text-white font-medium leading-normal rounded" href="https://discord.gg/the-coalition" target="_blank">Register on Discord</a></div>
         </div>
