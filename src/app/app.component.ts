@@ -7,6 +7,7 @@ import { IconSetService } from '@coreui/icons-angular';
 import { cilListNumbered, cilPaperPlane, brandSet } from '@coreui/icons';
 
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -16,8 +17,6 @@ import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-
-  
   title = 'CoalitionWebsite';
 
   constructor(
@@ -25,11 +24,4 @@ export class AppComponent {
   ){
     iconSet.icons = {cilListNumbered, cilPaperPlane, ...brandSet}
   }
-
-  lastScroll: number = 0
-  scrollUp: boolean = false
-
-  @HostListener('document:scroll', ["$event"])
-  onScroll(instance: any, event: any) {
-  } //TODO: do this thing to header
 }

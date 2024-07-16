@@ -31,3 +31,14 @@
     @apply text-white text-justify;
     
 }
+
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(300px);
+    transition: all 0.7s ease-out;
+}
+
+.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+}

@@ -2,7 +2,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<div class="home text-white justify-center content-center text-center">
+<div overlay-scrollbars [defer]="true" [events]="{scroll: onScroll}" class="h-dvh home text-white justify-center content-center text-center">
   <div class="relative h-dvh">
     <div class="absolute inset-0 bg-cover bg-center justify-center content-center bg-fixed" style="background-image: url('./assets/multi-piece/Coalition_Reforger_Spiral_Blur_USSR_Tunnel.png'); background-repeat: no-repeat;"></div>
     <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center flex-col">
@@ -18,7 +18,7 @@
   <div id="main-content" class="relative">
     <div class="absolute inset-0 bg-cover bg-center bg-fixed -z-10" style="background-image: url('./assets/images/charlet_bay_dusk.jpg'); background-repeat: no-repeat;"></div>
     <!-- <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center flex-col -z-10"></div> -->
-    <section id="about" class="w-full h-dvh content-center flex flex-col" data-aos="fade-up" data-aos-duration="500">
+    <section id="about" class="animate-on-scroll w-full h-dvh content-center flex flex-col" data-aos="fade-up" data-aos-duration="500">
       <div class="flex flex-col lg:flex-row justify-center h-full">
         <div id="about-text" class="lg:w-2/5 lg:mx-0 mx-auto md:w-3/4 w-full my-auto">
           <div class="content-center py-4 px-8">
@@ -44,7 +44,7 @@
     </section>
 
     <!-- TODO
-    scroll bar
+    fade in animations
     
     make column events always start in center of the div
 
@@ -52,7 +52,7 @@
     -->
 
     
-    <section id="events" class="w-full justify-center h-dvh" data-aos="fade-up" data-aos-duration="500">
+    <section id="events" class="animate-on-scroll w-full justify-center h-dvh" data-aos="fade-up" data-aos-duration="500">
       <c-carousel [interval]="15000" (itemChange)="onItemChange($event)" class="relative" transition="slide">
         <c-carousel-inner>
           <c-carousel-item *ngFor="let event of events" class="">
