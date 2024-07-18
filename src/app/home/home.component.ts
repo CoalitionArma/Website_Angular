@@ -126,7 +126,7 @@ export class HomeComponent implements OnInit {
       title: "COALITION Campaign",
       nextEventDate: this.getNextEventDate(6, 12, 0),
       about: [
-        "Our members only campaign. Join a section specializing in a mode of combat, and fight in a persistent, story driven, campaign."
+        "Our members-only campaign where you can join specialized combat sections and engage in a persistent, story-driven campaign experience."
       ]
     }
     this.events[3] = {
@@ -135,7 +135,7 @@ export class HomeComponent implements OnInit {
       title: "COALITION Community Operations",
       nextEventDate: this.getNextEventDate(6, 12, 0),
       about: [
-        "Our premier 128+ player, multi-community event. Featuring multiple weeks of planning and organization culminating into a singular day of combat."
+        "The premier 128+ player, multi-community event. Featuring multiple weeks of planning and organization culminating in a singular or even multiple days of combat."
       ]
     }
 
@@ -164,9 +164,4 @@ export class HomeComponent implements OnInit {
       }
     })
   }, {threshold: 0, root: document.querySelector("#content")})
-  
-  onScroll(instance: any, event: any) {
-    document.querySelectorAll('.header')
-    console.log(instance)
-  } //TODO: do this thing to header
 }

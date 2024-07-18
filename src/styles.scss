@@ -36,14 +36,15 @@ html {
     background-color: rgb(45, 45, 45);
 }
 
-@layer utilities {
-    /* Hide scrollbar for Chrome, Safari and Opera */
-    ::-webkit-scrollbar {
-        display: none;
-    }
-   /* Hide scrollbar for IE, Edge and Firefox */
-    * {
-        -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: none;  /* Firefox */
-  }
-}
+
+// @layer utilities {
+//     /* Hide scrollbar for Chrome, Safari and Opera */
+//     ::-webkit-scrollbar {
+//         display: none;
+//     }
+//    /* Hide scrollbar for IE, Edge and Firefox */
+//     * {
+//         -ms-overflow-style: none;  /* IE and Edge */
+//         scrollbar-width: none;  /* Firefox */
+//   }
+// }
