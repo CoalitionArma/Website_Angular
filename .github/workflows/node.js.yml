@@ -25,4 +25,4 @@ jobs:
         port: ${{secrets.FTP_PORT}}
         username: ${{secrets.FTP_USER}}
         password: ${{ secrets.FTP_PASS }}
-        local-dir: dist/coalition-website
+        local-dir: dist/coalition-website/
