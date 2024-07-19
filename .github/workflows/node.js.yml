@@ -1,0 +1,34 @@
+name: Build and Deploy Angular Application
+
+on:
+  push:
+    branches:
+      - main  # or your default branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'  # or your required Node.js version
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Angular application
+        run: npm run build -- --prod
+
+      - name: Upload to FTP server
+      - uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_TARGET }}
+          port: ${{secrets.FTP_PORT}}
+          username: ${{secrets.FTP_USER}}
+          password: ${{ secrets.FTP_PASS }}
+          local-dir: dist/coalition-website
