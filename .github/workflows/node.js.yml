@@ -17,7 +17,7 @@ jobs:
 
     -  run: npm install
 
-    -  run: npm run build -- --configuration CoalitionWebsite
+    -  run: npm run build
 
     - uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
