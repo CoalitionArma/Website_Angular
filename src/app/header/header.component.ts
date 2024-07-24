@@ -16,21 +16,33 @@ export class HeaderComponent implements OnInit {
   icons = { cilHamburgerMenu }
   @Input() osInstance!: OverlayScrollbars; 
 
-  hidden = false;
+  visible = true;
+  transparentHeader = true;
   lastScroll = 0;
 
   ngOnInit(): void {
     console.log(this.osInstance)
     this.osInstance.on("scroll", (instance, event) => {
       const currentScroll = instance.elements().scrollOffsetElement.scrollTop
-      if (this.lastScroll <= currentScroll) {
-        this.hidden = false
-        console.log(this.hidden)
+      if (currentScroll <= this.lastScroll) {
+        this.visible = true
+        console.log(this.visible)
       } else {
-        this.hidden = true
-        console.log(this.hidden)
+        this.visible = false
       }
+
+      if (currentScroll == 0) {
+        this.transparentHeader = true
+      } else {
+        this.transparentHeader = false
+      }
+
       this.lastScroll = currentScroll
     })
+  }
+
+  mobileMenuVisible = false;
+  mobileMenuClicked() {
+    this.mobileMenuVisible = !this.mobileMenuVisible
   }
 }

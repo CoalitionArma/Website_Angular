@@ -139,29 +139,12 @@ export class HomeComponent implements OnInit {
       ]
     }
 
-    Aos.init()
-
-    const animatedElements = document.querySelectorAll('.animate-on-scroll')
-    animatedElements.forEach(el => {
-      this.observer.observe(el)
+    Aos.init({
+      once: true
     })
   }
 
   onItemChange($event: any): void {
     // console.log('Carousel onItemChange', $event);
   }
-
-  lastScroll: number = 0
-  scrollUp: boolean = false
-  
-  // viewedElements: string[] = []
-
-  private observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('fade-in')
-        // this.viewedElements.push(entry.target.id)
-      }
-    })
-  }, {threshold: 0, root: document.querySelector("#content")})
 }

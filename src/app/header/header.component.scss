@@ -1,6 +1,5 @@
 .header {
     padding: 10px 30px; 
-    background-color: rgb(35, 35, 35);
     color: white;
 
     #links {
@@ -26,13 +25,29 @@
 
 .drop-header {
     transform: translateY(0);
-    transition: all 0.7s ease-out;
-    transition-delay: 0.2s;
-    position: fixed;
+    transition: all 0.2s ease-in-out;
 }
 
 .hide-header {
     transform: translateY(-100%);
-    transition: all 0.7s ease-out;
-    transition-delay: 0.2s;
+    transition: all 0.2s ease-in;
+}
+
+.transparent-header {
+    @apply bg-gradient-to-r from-neutral-800/60 to-neutral-900/60 backdrop-blur-md
+}
+
+.opaque-header {
+    @apply bg-gradient-to-r from-neutral-800 to-neutral-900
+}
+
+.drop-mobile-menu {
+    transform: translateY(0);
+    transition: 0.2s ease-in-out;
+}
+
+.hide-mobile-menu {
+    transform: translateY(-100%);
+    display: none;
+    transition: 0.2s ease-in;
 }

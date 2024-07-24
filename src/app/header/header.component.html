@@ -1,39 +1,40 @@
-<div [class.drop-header]="hidden" class="header drop-shadow-lg border-solid border-b-2 border-red-900 bg-gradient-to-r from-neutral-800 to-neutral-900 md:flex hidden z-50 w-full">
-    <div id="logo">
-        <img src="./assets/banner.png" alt="COALITION Logo" aria-hidden="true" width="400px">
-    </div>
-    <div id="links">
-        <a class="link" routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">Home</a>
-        <a class="link" routerLink="/stats" routerLinkActive="active" ariaCurrentWhenActive="page">Stats</a>
-        <a class="link" routerLink="/events" routerLinkActive="active" ariaCurrentWhenActive="page">Events</a>
-        <a class="link" href="https://discord.gg/the-coalition" target="_blank">Discord</a>
-        <div>|</div>
-    </div>
-    <div class="login p-5">
-        <button class="bg-red-900 text-white font-semibold py-2 px-5 rounded"> <!-- needs login svg added to button imo -->
-            Login
-        </button>
-    </div>
-</div>
+<!-- https://www.conceptart.cgmasteracademy.com/courses/128-absolute-beginners -->
+<div [class.drop-header]="visible" [class.hide-header]="!visible" class="w-full z-50 fixed">
+    <div [class.transparent-header]="transparentHeader" [class.opaque-header]="!transparentHeader" id="header-main">
+    <!-- Desktop Header -->
+        <div class="m-auto header drop-shadow-lg md:flex hidden w-full lg:w-2/3 bg-transparent">
+            <div id="logo bg-transparent">
+                <img src="./assets/banner.png" alt="COALITION Logo" aria-hidden="true" width="400px">
+            </div>
+            <div id="links">
+                <a class="link" routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">Home</a>
+                <a class="link" routerLink="/stats" routerLinkActive="active" ariaCurrentWhenActive="page">Stats</a>
+                <a class="link" routerLink="/events" routerLinkActive="active" ariaCurrentWhenActive="page">Events</a>
+                <a class="link" href="https://discord.gg/the-coalition" target="_blank">Discord</a>
+                <div>|</div>
+            </div>
+            <div class="login p-5">
+                <button class="bg-red-900 text-white font-semibold py-2 px-5 rounded"> <!-- needs login svg added to button imo -->
+                    Login
+                </button>
+            </div>
+        </div>
 
-<div class="header header-mobile drop-shadow-lg border-solid border-b-2 border-red-900 bg-gradient-to-r from-neutral-800 to-neutral-900 md:hidden flex">
-    <div id="logo">
-        <img src="./assets/banner.png" alt="COALITION Logo" aria-hidden="true" width="300px">
+        <!-- Mobile Header -->
+        <div class="m-auto header header-mobile dropshadow-lg md:hidden flex w-full">
+            <a id="logo" class="py-2 pl-6" routerLink="/">
+                <img src="./assets/logo_cropped.png" alt="COALITION Logo" aria-hidden="true" width="50px">
+            </a>
+            
+            <button id="menu" class="place-self-center my-auto ml-auto justify-self-end pr-6" (click)="mobileMenuClicked()">
+                <svg [cIcon]="icons.cilHamburgerMenu" width="50"></svg>
+            </button>
+        </div>
     </div>
-    
-    <div id="menu" class="place-self-center my-auto ml-auto mr-10 justify-self-end">
-        <svg [cIcon]="icons.cilHamburgerMenu" width="50"></svg>
+
+    <div id="mobileMenu" class="flex flex-col justify-start backdrop-blur-md bg-gradient-to-r from-neutral-800/60 to-neutral-900/60" [class.drop-mobile-menu]="mobileMenuVisible" [class.hide-mobile-menu]="!mobileMenuVisible">
+        <a class="w-full text-center text-4xl text-white bg-transparent" routerLink="/stats" routerLinkActive="active" ariaCurrentWhenActive="page">Stats</a>
+        <a class="w-full text-center text-4xl text-white bg-transparent" routerLink="/events" routerLinkActive="active" ariaCurrentWhenActive="page">Events</a>
+        <a class="w-full text-center text-4xl text-white bg-transparent" href="https://discord.gg/the-coalition" target="_blank">Discord</a>
     </div>
-    <!-- <div id="links">
-        <a class="link" routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">Home</a>
-        <a class="link" routerLink="/stats" routerLinkActive="active" ariaCurrentWhenActive="page">Stats</a>
-        <a class="link" routerLink="/events" routerLinkActive="active" ariaCurrentWhenActive="page">Events</a>
-        <a class="link" href="https://discord.gg/the-coalition" target="_blank">Discord</a>
-        <div>|</div>
-    </div>
-    <div class="login p-5">
-        <button class="bg-red-900 text-white font-semibold py-2 px-5 rounded">
-            Login
-        </button>
-    </div> -->
 </div>
