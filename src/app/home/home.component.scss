@@ -1,0 +1,33 @@
+.home-title {
+    @media (screen(lg)) {
+        @apply text-3xl;
+    }
+    text-shadow: 1px 1px 2px black;
+    @apply text-xl;
+    @apply text-white font-bold font-sans;
+}
+
+.home-medium-title {
+    @media (screen(lg)) {
+        @apply text-xl;
+    }
+    text-shadow: 1px 1px 2px black;
+    @apply text-base;
+    @apply text-white text-xl font-sans;
+}
+
+.home-small-title {
+    text-shadow: 1px 1px 2px black;
+    @apply text-white text-sm font-sans;
+}
+
+.home-text {
+    @media (screen(lg)) {
+        @apply text-lg;
+    }
+
+    text-shadow: 1px 1px 2px black;
+    @apply text-sm;
+    @apply text-white text-justify;
+    
+}

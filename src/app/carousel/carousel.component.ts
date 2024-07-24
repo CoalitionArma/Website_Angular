@@ -5,9 +5,9 @@ import { CarouselComponent, CarouselInnerComponent, CarouselItemComponent, Theme
 @Component({
   selector: 'app-carousel',
   standalone: true,
-  imports: [ThemeDirective, CarouselComponent, CarouselInnerComponent, NgFor, CarouselItemComponent],
+  imports: [ThemeDirective, CarouselComponent, CarouselInnerComponent, NgFor, CarouselItemComponent, ThemeDirective],
   templateUrl: './carousel.component.html',
-  styleUrl: './carousel.component.css'
+  styleUrl: './carousel.component.scss'
 })
 export class CoalitionCarouselComponent implements OnInit {
   slides: any[] = new Array(3).fill({ id: -1, src: '', title: '', subtitle: '' });

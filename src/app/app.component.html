@@ -1,6 +1,6 @@
-<app-header></app-header>
+<app-header [osInstance]="osInstance" id="header" class="w-full inset-y-0 z-50 header-visible"></app-header>
 <main>
-    <section class="content">
+    <section id="content" class="content header-visible-content">
         <router-outlet></router-outlet>
     </section>
 </main>
