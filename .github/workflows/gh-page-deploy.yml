@@ -26,7 +26,7 @@ jobs:
         run: npm run build --prod
 
       - name: Configure Git user
-        run:
+        run: |
           git config --global user.email "armacoalition@gmail.com"
           git config --global user.name "Automated Deployment"
 
