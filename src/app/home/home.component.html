@@ -4,14 +4,14 @@
 
 <div class="home text-white justify-center content-center text-center">
   <div class="relative h-dvh">
-    <div class="absolute inset-0 bg-cover bg-center justify-center content-center bg-fixed" style="background-image: url('./assets/multi-piece/Coalition_Reforger_Spiral_Blur_USSR_Tunnel.png'); background-repeat: no-repeat;"></div>
+    <div class="absolute inset-0 bg-cover bg-center justify-center content-center bg-fixed" style="background-image: url('./assets/images/multi-piece/Coalition_Reforger_Spiral_Blur_USSR_Tunnel.png'); background-repeat: no-repeat;"></div>
     <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center flex-col">
-      <img class="h-1/2 z-20 lg:z-0" src="./assets/Coalition.png"/>
+      <img class="h-2/5 w-auto z-20 lg:z-0" ngSrc="./assets/images/logo_cropped.png" width="100" height="100" priority>
       <div class="z-20 lg:z-0">
         <p class="text-white lg:text-5xl text-4xl font-bold font-sans lg:z-0">ACCESSIBLE MILSIM</p>
         <p class="text-white lg:text-xl text-large font-sans lg:z-0">AND GAMING</p>
       </div>
-      <div class="absolute inset-0 bg-cover bg-center justify-center content-center bg-fixed lg:z-10" style="background-image: url('./assets/multi-piece/Coalition_Reforger_Cutout_USSR_Tunnel.png'); background-repeat: no-repeat;"></div>
+      <div class="absolute inset-0 bg-cover bg-center justify-center content-center bg-fixed lg:z-10" style="background-image: url('./assets/images/multi-piece/Coalition_Reforger_Cutout_USSR_Tunnel.png'); background-repeat: no-repeat;"></div>
     </div>
   </div>
 
@@ -33,12 +33,12 @@
         </div>
   
         <div class="w-2/5 my-auto mx-auto lg:mx-0 lg:block hidden">
-          <img class="object-cover h-full w-auto" src="./assets/images/1874880_20240517211236_1.png" alt="">
+          <img class="object-cover h-full w-auto" ngSrc="./assets/images/line_formation.jpg" alt="" width="100" height="100" priority>
         </div>
       </div>
 
       <div class="center-content flex flex-col justify-center">
-        <span class="text-md" style="text-shadow: 1px 1px 2px black;">GET INVOLVED</span>
+        <span class="text-md" style="text-shadow: 1px 1px 2px black;">WHAT WE</span>
         <svg [cIcon]="icons.cilChevronBottom" customClass="self-center" class="self-center" width="50"></svg>
       </div>
     </section>
@@ -58,7 +58,7 @@
           <c-carousel-item *ngFor="let event of events" class="">
             <div class="w-full flex flex-col lg:flex-row h-dvh justify-center">
               <div class="w-1/2 lg:w-2/5 mx-auto lg:mr-0 my-auto">
-                <img class="object-cover h-full w-auto" src="{{event.src}}" alt="">
+                <img class="object-cover h-full w-auto" ngSrc="{{event.src}}" alt="" width="100" height="100">
               </div>
               <span class="h-5"></span>
               <div class="w-3/5 mx-auto lg:ml-0 lg:w-2/5 my-auto">
@@ -66,7 +66,7 @@
                   <div class="px-10 justify-center">
                     <h2 class="home-title">{{event.title}}</h2>
                     <h3 class="home-medium-title"> {{ event.nextEventDate.cstDay }} &#64; {{ event.nextEventDate.cstHour }}  {{ coalTimezoneStr }}</h3>
-                    @if (event.nextEventDate.cstDay != event.nextEventDate.localDay && event.nextEventDate.cstHour != event.nextEventDate.localHour) {
+                    @if (localTimezone != coalTimezone) {
                       <p class="home-medium-title">&#40; {{ event.nextEventDate.localDay }} &#64; {{ event.nextEventDate.localHour }} {{ localTimezoneStr }} &#41;<p>
                     }
                     <br>
@@ -87,7 +87,7 @@
   </div>
 
   <section class="relative h-dvh">
-    <div class="flex h-full absolute inset-0 bg-cover bg-center bg-fixed justify-center content-center" style="background-image: url('./assets/images/lmg.png'); background-repeat: no-repeat;">
+    <div class="flex h-full absolute inset-0 bg-cover bg-center bg-fixed justify-center content-center" style="background-image: url('./assets/images/lmg.jpg'); background-repeat: no-repeat;">
       <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center flex-col place-content-center">
         <div class="w-1/2">
           <h2 class="text-white lg:text-5xl md:text-4xl text-3xl font-bold font-sans">Wanna get in on the action?</h2>

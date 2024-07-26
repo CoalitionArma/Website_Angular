@@ -11,13 +11,15 @@ import { IconDirective } from '@coreui/icons-angular';
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 import { OverlayScrollbars } from 'overlayscrollbars';
 
+import { NgOptimizedImage } from '@angular/common';
+
 import Aos from 'aos';
 import 'aos/dist/aos.css';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CoalitionCarouselComponent, CarouselComponent, CarouselInnerComponent, NgFor, CarouselItemComponent, CarouselControlComponent, RouterLink, CarouselIndicatorsComponent, IconDirective, OverlayscrollbarsModule],
+  imports: [NgOptimizedImage, CoalitionCarouselComponent, CarouselComponent, CarouselInnerComponent, NgFor, CarouselItemComponent, CarouselControlComponent, RouterLink, CarouselIndicatorsComponent, IconDirective, OverlayscrollbarsModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -28,7 +30,8 @@ export class HomeComponent implements OnInit {
     },
   };
   icons = { cilChevronBottom }
-
+  
+  localTimezone = DateTime.local().zoneName
   localTimezoneStr = DateTime.now().toFormat('ZZZZ')
   coalTimezone = 'America/Chicago'
   coalTimezoneStr = DateTime.now().setZone(this.coalTimezone).toFormat('ZZZZ')
@@ -92,6 +95,7 @@ export class HomeComponent implements OnInit {
 
     const nextCSTCFCDate = DateTime.now().setZone(this.coalTimezone).plus({days: dateDifference}).set({hour: eventHour, minute: eventMinute, second: 0});
     const nextLocalCFCDate = DateTime.now().setZone(this.coalTimezone).plus({days: dateDifference}).set({hour: eventHour, minute: eventMinute, second: 0}).setZone("local");
+
     return {
       cstHour: nextCSTCFCDate.toLocaleString(DateTime.TIME_SIMPLE),
       cstDay: nextCSTCFCDate.weekdayShort,
@@ -104,7 +108,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.events[0] = {
       id: 0,
-      src: "./assets/images/bmp.png",
+      src: "./assets/images/bmp.jpg",
       title: "COALITION Fight Club",
       nextEventDate: this.getNextEventDate(5, 18, 0),
       about: [
@@ -113,7 +117,7 @@ export class HomeComponent implements OnInit {
     }
     this.events[1] = {
       id: 1,
-      src: "./assets/images/btr90.png",
+      src: "./assets/images/btr90.jpg",
       title: "COALITION Reforger Church",
       nextEventDate: this.getNextEventDate(7, 18, 0),
       about: [
@@ -122,7 +126,7 @@ export class HomeComponent implements OnInit {
     }
     this.events[2] = {
       id: 2,
-      src: "./assets/images/timber_ridge.png",
+      src: "./assets/images/timber_ridge.jpg",
       title: "COALITION Campaign",
       nextEventDate: this.getNextEventDate(6, 12, 0),
       about: [
@@ -131,7 +135,7 @@ export class HomeComponent implements OnInit {
     }
     this.events[3] = {
       id: 3,
-      src: "./assets/images/1874880_20240517212309_1.png",
+      src: "./assets/images/bmp_smoke.jpg",
       title: "COALITION Community Operations",
       nextEventDate: this.getNextEventDate(6, 12, 0),
       about: [
@@ -147,4 +151,6 @@ export class HomeComponent implements OnInit {
   onItemChange($event: any): void {
     // console.log('Carousel onItemChange', $event);
   }
+
+  //https://stackoverflow.com/questions/14373683/how-to-show-image-only-when-it-is-completely-loaded
 }
