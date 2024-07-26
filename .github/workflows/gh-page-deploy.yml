@@ -1,0 +1,31 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - development
+      - dev-pipeline-test
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the Angular app
+        run: npm run build --prod
+
+      - name: Deploy to GitHub Pages
+        run: npx angular-cli-ghpages --dir=dist/coalition-website/browser
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
