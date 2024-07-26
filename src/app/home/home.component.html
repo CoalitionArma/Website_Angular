@@ -33,12 +33,12 @@
         </div>
   
         <div class="w-2/5 my-auto mx-auto lg:mx-0 lg:block hidden">
-          <img class="object-cover h-full w-auto" ngSrc="./assets/images/line_formation.jpg" alt="" width="100" height="100" priority>
+          <img class="object-cover h-full w-auto drop-shadow-lg" ngSrc="./assets/images/line_formation.jpg" alt="" width="100" height="100" priority>
         </div>
       </div>
 
       <div class="center-content flex flex-col justify-center">
-        <span class="text-md" style="text-shadow: 1px 1px 2px black;">WHAT WE</span>
+        <span class="text-md" style="text-shadow: 1px 1px 2px black;">WHAT WE DO</span>
         <svg [cIcon]="icons.cilChevronBottom" customClass="self-center" class="self-center" width="50"></svg>
       </div>
     </section>
@@ -58,7 +58,7 @@
           <c-carousel-item *ngFor="let event of events" class="">
             <div class="w-full flex flex-col lg:flex-row h-dvh justify-center">
               <div class="w-1/2 lg:w-2/5 mx-auto lg:mr-0 my-auto">
-                <img class="object-cover h-full w-auto" ngSrc="{{event.src}}" alt="" width="100" height="100">
+                <img class="object-cover h-full w-auto drop-shadow-lg" ngSrc="{{event.src}}" alt="" width="100" height="100">
               </div>
               <span class="h-5"></span>
               <div class="w-3/5 mx-auto lg:ml-0 lg:w-2/5 my-auto">
