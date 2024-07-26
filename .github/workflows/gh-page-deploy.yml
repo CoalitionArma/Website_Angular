@@ -25,6 +25,11 @@ jobs:
       - name: Build the Angular app
         run: npm run build --prod
 
+      - name: Configure Git user
+        run:
+          git config --global user.email "armacoalition@gmail.com"
+          git config --global user.name "Automated Deployment"
+
       - name: Deploy to GitHub Pages
         run: npx angular-cli-ghpages --dir=dist/coalition-website/browser --no-silent
         env:
