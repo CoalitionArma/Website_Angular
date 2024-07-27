@@ -73,7 +73,6 @@ on:
   push:
     branches:
       - development
-      - dev-pipeline-test
 
 jobs:
   build:
