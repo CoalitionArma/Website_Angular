@@ -5,19 +5,35 @@ import { NgFor } from '@angular/common';
 import { CarouselComponent, CarouselInnerComponent, CarouselItemComponent, CarouselControlComponent, CarouselIndicatorsComponent } from '@coreui/angular';
 import { RouterLink } from '@angular/router';
 
+import { cilChevronBottom } from '@coreui/icons';
+import { IconDirective } from '@coreui/icons-angular';
+
+import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
+import { OverlayScrollbars } from 'overlayscrollbars';
+
+import Aos from 'aos';
+import 'aos/dist/aos.css';
+
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CoalitionCarouselComponent, CarouselComponent, CarouselInnerComponent, NgFor, CarouselItemComponent, CarouselControlComponent, RouterLink, CarouselIndicatorsComponent],
+  imports: [CoalitionCarouselComponent, CarouselComponent, CarouselInnerComponent, NgFor, CarouselItemComponent, CarouselControlComponent, RouterLink, CarouselIndicatorsComponent, IconDirective, OverlayscrollbarsModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
+  options = {
+    scrollbars: {
+      theme: 'os-theme-light',
+    },
+  };
+  icons = { cilChevronBottom }
+
   localTimezoneStr = DateTime.now().toFormat('ZZZZ')
   coalTimezone = 'America/Chicago'
   coalTimezoneStr = DateTime.now().setZone(this.coalTimezone).toFormat('ZZZZ')
 
-  events: any[] = new Array(2).fill({ id: -1, src: '', title: '', nextEventDate: {cstDay: '', cstHour: '', localDay: '', localHour: ''}, infoPoints: []})
+  events: any[] = new Array(4).fill({ id: -1, src: '', title: '', nextEventDate: {cstDay: '', cstHour: '', localDay: '', localHour: ''}, infoPoints: []})
 
   quotes: string[] = [
     "'The only way to do great work is to love what you do.'",
@@ -39,7 +55,7 @@ export class HomeComponent implements OnInit {
     "'Guys. I swear. Armakart really works now.'",
     "'That's nice bud.'",
     "'I'm not a doctor, but I play one in Arma.'",
-    "'We're going to finally take Polishkino this time!'",
+    "'We're going to finally take Polshishkino this time!'",
     "'There's two types of men: those who know of banana business and those who haven't been affected by it yet.'",
     "'Ohhhhhhhhhhh, see ya goober!'",
     "'From the rapturous applause'",
@@ -53,7 +69,10 @@ export class HomeComponent implements OnInit {
     "'To the left of south.'",
     "'Tank is on me.'",
     "'This is me in plain clothes.'",
-    "'Peace in Varistan, at last.'"
+    "'Peace in Varistan, at last.'",
+    "'I'm up, they see me, I'm in spectator'",
+    "'The sniper's dea-'",
+    "'Check the wiki.'"
   ];
 
   quoteToDisplay = this.quotes[Math.floor(Math.random() * this.quotes.length)];
@@ -85,27 +104,47 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.events[0] = {
       id: 0,
-      src: "./assets/images/btr90.png",
+      src: "./assets/images/bmp.png",
       title: "COALITION Fight Club",
       nextEventDate: this.getNextEventDate(5, 18, 0),
-      infoPoints: [
-        "One-Life Intense TvT Action", "3 Unqiue Missions per night", "Large Variety of Maps and Factions"
+      about: [
+        "Three back-to-back, one-life, high-intensity TVT missions, featuring organized and structured gameplay, as well as a variety of maps, factions and roles."
       ]
     }
     this.events[1] = {
       id: 1,
-      src: "./assets/images/bmp.png",
+      src: "./assets/images/btr90.png",
       title: "COALITION Reforger Church",
       nextEventDate: this.getNextEventDate(7, 18, 0),
-      infoPoints: [
-        "Relaxed COOP Experience", "3 Unqiue Missions per night", "Large Variety of Maps and Factions"
+      about: [
+        "A laid back extended COOP mission, featuring respawns, a dedicated gamemaster, and a fun and unique experience."
+      ]
+    }
+    this.events[2] = {
+      id: 2,
+      src: "./assets/images/timber_ridge.png",
+      title: "COALITION Campaign",
+      nextEventDate: this.getNextEventDate(6, 12, 0),
+      about: [
+        "Our members-only campaign where you can join specialized combat sections and engage in a persistent, story-driven campaign experience."
+      ]
+    }
+    this.events[3] = {
+      id: 3,
+      src: "./assets/images/1874880_20240517212309_1.png",
+      title: "COALITION Community Operations",
+      nextEventDate: this.getNextEventDate(6, 12, 0),
+      about: [
+        "The premier 128+ player, multi-community event. Featuring multiple weeks of planning and organization culminating in a singular or even multiple days of combat."
       ]
     }
 
-    console.log(this.events)
+    Aos.init({
+      once: true
+    })
   }
 
   onItemChange($event: any): void {
-    console.log('Carousel onItemChange', $event);
+    // console.log('Carousel onItemChange', $event);
   }
 }

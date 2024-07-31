@@ -1,111 +1,78 @@
-<!-- <div class="header drop-shadow-lg border-solid border-b-2 border-red-900 bg-gradient-to-r from-neutral-800 to-neutral-900 overflow-visible z-50">
+<div class="header drop-shadow-lg border-solid border-b-2 border-red-900 bg-gradient-to-r from-neutral-800 to-neutral-900">
     <div id="logo">
         <img src="/assets/banner.png" alt="COALITION Logo" aria-hidden="true" width="400px">
     </div>
-    <div id="links" class="overflow-visible">
-        <a class="link" routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">Home</a>
-        <a class="link" routerLink="/stats" routerLinkActive="active" ariaCurrentWhenActive="page">Stats</a>
-        <a class="link" routerLink="/events" routerLinkActive="active" ariaCurrentWhenActive="page">Events</a>
-        <a class="link" href="https://discord.gg/the-coalition" target="_blank">Discord</a>
-        <c-dropdown alignment="end">
-          <button cButton cDropdownToggle>
-            Games
+    <div id="links">
+      <div id="links">
+        <div>
+          <button mat-button>
+            <a
+              class="link"
+              routerLink="/"
+              routerLinkActive="active"
+              ariaCurrentWhenActive="page"
+              >Home</a
+            >
           </button>
-          <ul cDropdownMenu>
-            <li><a [routerLink]="[]" cDropdownItem>Arma</a></li>
-            <li><a [routerLink]="[]" cDropdownItem>Warthunder</a></li>
-            <li><a [routerLink]="[]" cDropdownItem>DCS</a></li>
-          </ul>
-        </c-dropdown>
+    
+          <button mat-button [matMenuTriggerFor]="games">Games</button>
+          <mat-menu #games="matMenu">
+            <button mat-menu-item [matMenuTriggerFor]="arma">Arma</button>
+            <button mat-menu-item>War Thunder</button>
+            <button mat-menu-item>DCS World</button>
+          </mat-menu>
+    
+          <mat-menu #arma="matMenu">
+            <button mat-menu-item>
+              <a
+                class="link"
+                routerLink="/cfc"
+                routerLinkActive="active"
+                ariaCurrentWhenActive="page"
+                >Fight Club</a
+              >
+            </button>
+            <button mat-menu-item>
+              <a
+                class="link"
+                href="https://coalitiongroup.net/wiki/index.php/Main_Page"
+                target="_blank"
+                >Wiki</a
+              >
+            </button>
+          </mat-menu>
+    
+          <button mat-button>
+            <a
+              class="link"
+              routerLink="/stats"
+              routerLinkActive="active"
+              ariaCurrentWhenActive="page"
+              >Stats</a
+            >
+          </button>
+          <button mat-button>
+            <a
+              class="link"
+              routerLink="/events"
+              routerLinkActive="active"
+              ariaCurrentWhenActive="page"
+              >Events</a
+            >
+          </button>
+          <button mat-button>
+            <a class="link" href="https://discord.gg/the-coalition" target="_blank"
+              >Discord</a
+            >
+          </button>
+        </div>
+        <div class="translate-y-[20%]">|</div>
+      </div>
         <div>|</div>
     </div>
     <div class="login p-5">
         <button class="bg-red-900 text-white font-semibold py-2 px-5 rounded"> <!-- needs login svg added to button imo -->
-<!-- Login -->
-<!-- </button>
-    </div>
-</div> -->
-
-<div
-  class="header drop-shadow-lg border-solid border-b-2 border-red-900 bg-gradient-to-r from-neutral-800 to-neutral-900 overflow-visible z-50"
->
-  <div id="logo">
-    <img
-      src="/assets/banner.png"
-      alt="COALITION Logo"
-      aria-hidden="true"
-      width="400px"
-    />
-  </div>
-  <div id="links">
-    <div>
-      <button mat-button>
-        <a
-          class="link"
-          routerLink="/"
-          routerLinkActive="active"
-          ariaCurrentWhenActive="page"
-          >Home</a
-        >
-      </button>
-
-      <button mat-button [matMenuTriggerFor]="games">Games</button>
-      <mat-menu #games="matMenu">
-        <button mat-menu-item [matMenuTriggerFor]="arma">Arma</button>
-        <button mat-menu-item>War Thunder</button>
-        <button mat-menu-item>DCS World</button>
-      </mat-menu>
-
-      <mat-menu #arma="matMenu">
-        <button mat-menu-item>
-          <a
-            class="link"
-            routerLink="/cfc"
-            routerLinkActive="active"
-            ariaCurrentWhenActive="page"
-            >Fight Club</a
-          >
+            Login
         </button>
-        <button mat-menu-item>
-          <a
-            class="link"
-            href="https://coalitiongroup.net/wiki/index.php/Main_Page"
-            target="_blank"
-            >Wiki</a
-          >
-        </button>
-      </mat-menu>
-
-      <button mat-button>
-        <a
-          class="link"
-          routerLink="/stats"
-          routerLinkActive="active"
-          ariaCurrentWhenActive="page"
-          >Stats</a
-        >
-      </button>
-      <button mat-button>
-        <a
-          class="link"
-          routerLink="/events"
-          routerLinkActive="active"
-          ariaCurrentWhenActive="page"
-          >Events</a
-        >
-      </button>
-      <button mat-button>
-        <a class="link" href="https://discord.gg/the-coalition" target="_blank"
-          >Discord</a
-        >
-      </button>
     </div>
-    <div class="translate-y-[20%]">|</div>
-  </div>
-  <div class="login p-5">
-    <button class="bg-red-900 text-white font-semibold py-2 px-5 rounded">
-      <!-- needs login svg added to button imo -->
-      Login
-    </button>
-  </div>
 </div>

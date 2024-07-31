@@ -39,6 +39,9 @@ $CoalitionWebsite-theme: mat.define-theme((
 @tailwind components;
 @tailwind utilities;
 
+@import "overlayscrollbars/overlayscrollbars.css";
+
+
 // https://coreui.io/angular/docs/customize/sass/
 
 // 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
