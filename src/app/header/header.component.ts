@@ -5,14 +5,13 @@ import { cilHamburgerMenu } from '@coreui/icons';
 import { IconDirective } from '@coreui/icons-angular';
 import { OverlayScrollbars } from 'overlayscrollbars';
 
-import { DropdownModule, GridModule, NavModule, HeaderModule} from '@coreui/angular';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink,RouterLinkActive,RouterOutlet, IconDirective, DropdownModule, HeaderModule, GridModule, NavModule, MatMenuModule, MatButtonModule],
+  imports: [RouterLink,RouterLinkActive,RouterOutlet, IconDirective, MatMenuModule, MatButtonModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })

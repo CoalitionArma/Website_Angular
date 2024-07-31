@@ -64,10 +64,6 @@ $header-brand-color: #fff;
 
 // 6. Optionally include any other parts as needed
 @import "../node_modules/@coreui/coreui/scss/carousel";
-@import "../node_modules/@coreui/coreui/scss/dropdown";
-@import "../node_modules/@coreui/coreui/scss/nav";
-@import "../node_modules/@coreui/coreui/scss/header";
-@import "../node_modules/@coreui/coreui/scss/grid";
 
 // 7. Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`
 
@@ -77,6 +73,7 @@ $header-brand-color: #fff;
 html {
     font-family: 'Roboto', sans-serif;
     background-color: rgb(45, 45, 45);
+    scroll-behavior: smooth;
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
