@@ -33,11 +33,11 @@
 }
 
 .transparent-header {
-    @apply bg-gradient-to-r from-neutral-800/60 to-neutral-900/60 backdrop-blur-md
+    @apply bg-neutral-900/60 backdrop-blur-md
 }
 
 .opaque-header {
-    @apply bg-gradient-to-r from-neutral-800 to-neutral-900
+    @apply bg-neutral-900
 }
 
 .drop-mobile-menu {

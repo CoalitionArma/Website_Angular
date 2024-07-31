@@ -1,13 +1,14 @@
 .game-card {
-    height: 200px;
-    width: 200px;
+    height: 400px;
+    width: 400px;
     background-color: white;
     align-content: center;
+    overflow: hidden;
 }
 
 .game-card-img { // Change to .game-card > img
-    height: 100px;
-    width: 100px;
+    height: 50%;
+    width: 50%;
     background-color: greenyellow;
     margin: auto;
     transform: scale(1);
