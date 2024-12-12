@@ -11,7 +11,7 @@ import { UserResponse } from './interfaces/userresponse.interface';
 dotenv.config();
 
 const app = express();
-const port = 3000;
+const port = 3157;
 const allowedOrigins = ['http://localhost:4200', 'http://coalitiongroup.net', 'https://coalitiongroup.net'];
 
 // TODO: Move elsewhere
