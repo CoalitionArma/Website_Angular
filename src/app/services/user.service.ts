@@ -8,10 +8,10 @@ import { TokenResponse } from '../../../backend/interfaces/tokenresponse.interfa
   providedIn: 'root'
 })
 export class UserService {
-    private CREATEUSER = 'http://localhost:3000/api/users';
-    private TOKENURL = 'http://localhost:3000/api/oauth/token';
+    private CREATEUSER = 'http://localhost:3157/api/users';
+    private TOKENURL = 'http://localhost:3157/api/oauth/token';
     private USERURL = 'https://discord.com/api/users/@me';
-    private UPDATEURL = 'http://localhost:3000/api/update/user';
+    private UPDATEURL = 'http://localhost:3157/api/update/user';
     loggedIn = localStorage.getItem('access_token') ? true : false;
     user: UserResponse | null = null;
     avatarUrl: string | null = null;
