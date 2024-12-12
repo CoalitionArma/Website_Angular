@@ -25,7 +25,6 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.osInstance.on("scroll", (instance, event) => {
-      console.log(`Avatar: ${this.userService.getAvatarUrl()}`);
       const currentScroll = instance.elements().scrollOffsetElement.scrollTop
       if (currentScroll <= this.lastScroll) {
         this.visible = true
