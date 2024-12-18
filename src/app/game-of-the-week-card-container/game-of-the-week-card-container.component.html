@@ -1,0 +1,5 @@
+<div class="flex-1 h-full w-full"> <!-- maybe make these components-->
+    <div [@shiftLeftReset]="isCycle ? 'shiftLeft' : 'normal'" (@shiftLeftReset.done)="animationDone($event)" class="flex whitespace-nowrap h-full w-full">
+        <span #cardInsert></span>
+    </div>
+</div>

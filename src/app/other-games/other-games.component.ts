@@ -1,44 +1,38 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, HostBinding } from '@angular/core';
+import { AfterViewInit, Component,QueryList,ViewChild, ViewChildren } from '@angular/core';
 import { GameOfTheWeekCardComponent } from '../game-of-the-week-card/game-of-the-week-card.component';
-
-import {
-  trigger,
-  state,
-  style,
-  animate,
-  transition,
-  // ...
-} from '@angular/animations';
+import { GameOfTheWeekCardContainerComponent } from "../game-of-the-week-card-container/game-of-the-week-card-container.component";
+import { GameCardService } from '../game-of-the-week-card-container/game-card.service';
+import { NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-other-games',
   standalone: true,
-  imports: [GameOfTheWeekCardComponent],
+  imports: [GameOfTheWeekCardComponent, GameOfTheWeekCardContainerComponent, NgFor],
   templateUrl: './other-games.component.html',
   styleUrl: './other-games.component.scss',
-  animations: [
-    trigger("shiftLeftReset", [
-      state('shiftLeft', 
-        style({
-          transform: "translateX(-100%)"
-        })
-      ),
-      state('normal', 
-        style({
-        })
-      ),
-      transition("normal => shiftLeft", [animate(500)]),
-      transition("shiftLeft => normal", [animate(500)])
-    ])
-  ]
 })
-export class OtherGamesComponent {
-  @ViewChild('otherGames1') otherGames1!: ElementRef
 
-  isCycle = false
+export class OtherGamesComponent implements AfterViewInit{
+  @ViewChildren("otherGameCard") otherGameCards!: QueryList<GameOfTheWeekCardContainerComponent>
 
-  cycleGame() {
-    this.isCycle = !this.isCycle
+
+  constructor (private gameCardService: GameCardService) {
+  }
+
+  gameImgs = this.gameCardService.getGames()
+
+
+  startAnimation() {
+    setTimeout(this.cycleRandomCard, 3000, this.otherGameCards)
+  }
+
+  cycleRandomCard(otherGameCards: QueryList<GameOfTheWeekCardContainerComponent>) {
+    const i = Math.floor(Math.random() * 5)
+    otherGameCards.get(i)!.cycleGame()
+  }
+
+  ngAfterViewInit(): void {
+    this.startAnimation()
   }
 
   //https://stackoverflow.com/questions/44939878/dynamically-adding-and-removing-components-in-angular

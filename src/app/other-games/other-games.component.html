@@ -42,45 +42,17 @@
 </section>
 
 <section id="gamesOfTheWeek" class="game-section">
-    <div #otherGames class="flex flex-row -z-10 w-full h-full absolute">
-        <div #otherGames1 class="flex-1 overflow-hidden"> <!-- maybe make these components-->
-            <div [@shiftLeftReset]="isCycle ? 'shiftLeft' : 'normal'" class="w-[400px] whitespace-nowrap h-full">
-                <div class="w-[400px] h-full inline-block bg-white"></div>
-                <div class="w-[400px] h-full inline-block bg-orange-500"></div>
-            </div>
-        </div>
-        <div #otherGames2 class="flex-1 overflow-hidden">
-            <div class="w-full h-full bg-blue-500"></div>
-        </div>
-        <div #otherGames3 class="flex-1 overflow-hidden">
-            <div class="w-full h-full bg-yellow-500"></div>
-        </div>
-        <div #otherGames4 class="flex-1 overflow-hidden">
-            <div class="w-full h-full bg-red-500"></div>
-        </div>
-        <div #otherGames5 class="flex-1 overflow-hidden">
-            <div class="w-full h-full bg-green-500"></div>
-        </div>
+    <div #otherGames class="flex -z-10 w-full h-full absolute">
+        <app-game-of-the-week-card-container #otherGameCard (animationDoneEvent)="startAnimation()"/>
+        <app-game-of-the-week-card-container #otherGameCard (animationDoneEvent)="startAnimation()"/>
+        <app-game-of-the-week-card-container #otherGameCard (animationDoneEvent)="startAnimation()"/>
+        <app-game-of-the-week-card-container #otherGameCard (animationDoneEvent)="startAnimation()"/>
+        <app-game-of-the-week-card-container #otherGameCard (animationDoneEvent)="startAnimation()"/>
     </div>
 
-    <button (click)="cycleGame()">Cycle Game</button>
+    <!-- https://developer.mozilla.org/en-US/docs/Web/CSS/flex-->
+    <!-- <button (click)="cycleGame()">Cycle Game</button> -->
     <p class="m-auto text-center">Games of the Week</p>
 </section>
 
-<!-- <div #otherGames class="flex flex-row -z-10 w-full h-full absolute">
-    <div #otherGames1 class="flex-1 overflow-hidden">
-        <app-game-of-the-week-card bgColor="bg-white"></app-game-of-the-week-card>
-    </div>
-    <div #otherGames2 class="flex-1 overflow-hidden">
-        <app-game-of-the-week-card bgColor="bg-blue-500"></app-game-of-the-week-card>
-    </div>
-    <div #otherGames3 class="flex-1 overflow-hidden">
-        <app-game-of-the-week-card bgColor="bg-yellow-500"></app-game-of-the-week-card>
-    </div>
-    <div #otherGames4 class="flex-1 overflow-hidden">
-        <app-game-of-the-week-card bgColor="bg-red-500"></app-game-of-the-week-card>
-    </div>
-    <div #otherGames5 class="flex-1 overflow-hidden">
-        <app-game-of-the-week-card bgColor="bg-green-500"></app-game-of-the-week-card>
-    </div>
-</div> -->
+<app-game-of-the-week-card *ngFor="let g of gameImgs" class="hidden" imgSrc={{g}}/>

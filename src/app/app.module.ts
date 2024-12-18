@@ -14,7 +14,7 @@ import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
     BrowserAnimationsModule,
     AppComponent,
     IconModule,
-    OverlayscrollbarsModule
+    OverlayscrollbarsModule,
   ],
   providers: [
     IconSetService

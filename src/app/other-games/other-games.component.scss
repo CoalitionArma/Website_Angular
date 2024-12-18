@@ -23,7 +23,8 @@
 }
 
 .game-section{
-    height: 400px;
+    aspect-ratio: 15 / 4.5;
+    width: 100%;
     position: relative;
     overflow: hidden;
 }
@@ -32,4 +33,14 @@
     object-fit: none;
     position: absolute;
     z-index: -1;
+}
+
+.other-games-row {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+app-game-of-the-week-card-container {
+    height: 100%;
+    display: inline-block;
+    overflow: hidden;
 }
