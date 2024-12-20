@@ -1,0 +1,52 @@
+@use '@angular/material' as mat;
+
+
+:root {
+    @include mat.card-overrides((
+        container-color: rgb(45, 45, 45),
+        subtitle-text-color: white
+    ));
+  }
+
+div {
+    color: white;
+}
+
+h1 {
+    color: red;
+    font-size: 36px;
+}
+
+:host ::ng-deep div.mat-mdc-form-field-subscript-wrapper.mat-mdc-form-field-bottom-align {
+    // display: none;
+}
+
+:host ::ng-deep mat-form-field > div > div.mdc-line-ripple {
+    display: none;
+}
+
+:host ::ng-deep .mdc-text-field {
+    padding: 0px
+}
+
+mat-form-field {
+    width: 350px;
+}
+
+:host ::ng-deep input.mat-mdc-input-element {
+    border: 2px solid white;
+    padding: 2px 4px;
+}
+
+:host ::ng-deep data-changed-component-snack {
+    color: white
+}
+
+
+:host ::ng-deep button.mat-mdc-raised-button {
+    background-color: white;
+    color: rgb(45, 45, 45)
+}
+// :host ::ng-deep input {
+//     color: green
+// }

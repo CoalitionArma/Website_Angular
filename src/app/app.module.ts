@@ -5,16 +5,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
+import { OauthComponent } from './oauth/oauth.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
+  declarations: [
+    OauthComponent,
+  ],
   imports: [
+    CommonModule,
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    AppComponent,
     IconModule,
-    OverlayscrollbarsModule
+    OverlayscrollbarsModule,
+    AppComponent
   ],
   providers: [
     IconSetService
