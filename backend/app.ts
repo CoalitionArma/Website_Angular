@@ -96,7 +96,7 @@ app.post('/api/users', async (req: Request, res: Response) => {
 });
 
 app.post('/api/update/user', authenticateToken, async (req: Request, res: Response) => {
-    console.log(req.body);
+    //console.log(req.body);
     const { id, discordid, steamid, email, teamspeakid, username, section, veterancy, armaguid } = req.body;
     try {
         let user = await SQLUsers.findOne({ where: { discordid: discordid} });
