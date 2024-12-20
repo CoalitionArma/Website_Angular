@@ -3,13 +3,66 @@
 <br>
 <br> <!-- This is header space. I hate it.-->
 <br>
-<br>
-<div style="text-align: center;">
-    <h1>THIS IS A TEST PROFILE</h1>
+<div id="main" class="py-24 flex flex-col items-center h-dvh bg-cover bg-center" style="background-image: url('./assets/images/profile_bg.jpg'); background-repeat: no-repeat;">
+    <section id="profile-header" class="w-2/3 h-[300px]">
+        <div class="flex flex-row float-left w-full h-full">
+            <img [src]=userService.avatarUrl class="h-full">
+            <div class="pl-10">
+                <div class="bg-neutral-800 px-2 py-1 bg-opacity-60 text-4xl">{{userService.user?.global_name?.toUpperCase()}}</div>
+            </div>
+        </div>
+    </section>
+    <div class="h-[50px]"></div>
+    <div class="w-2/3">
+        <div class="bg-neutral-800 px-2 py-1 bg-opacity-60 text-3xl float-left">SETTINGS</div>
+    </div>
+    <div class="h-[10px]"></div>
+    <section id="settings" class="w-2/3">
+        <div class="bg-neutral-800 w-2/3 px-1 mb-1">INFO</div>
+
+        <div class="coal-input" class="bg-neutral-800 bg-opacity-60 w-full h-full flex flex-col">
+            <div id="email" class="flex flex-row items-end items-center float-left gap-x-4 px-6 py-2">
+                <img src="./assets/icons/email.png" class="w-[40px]">
+                <div class="flex flex-col">
+                    <span class="text-neutral-400 text-s">EMAIL</span>
+                    <mat-form-field>
+                        <input type="email" matInput [formControl]="emailFormControl" [errorStateMatcher]="emailMatcher" placeholder="ex. coalition@example.com">
+                        @if (emailFormControl.hasError('email') && !emailFormControl.hasError('required')) {
+                            <mat-error>Please enter a valid email address</mat-error>
+                          }
+                          @if (emailFormControl.hasError('required')) {
+                            <mat-error>Email is <strong>required</strong></mat-error>
+                          }
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div id="arma" class="flex flex-row items-end items-center float-left gap-x-4 px-6 py-2">
+                <img src="./assets/icons/arma.png" class="w-[40px]">
+                <div class="flex flex-col">
+                    <span class="text-neutral-400 text-s">ARMA ID</span>
+                    <mat-form-field>
+                        <input type="string" matInput [formControl]="armaIDFormControl" [errorStateMatcher]="armaIDMatcher" placeholder="ex. abcd0123-ab01-ab01-ab01-abcdef012345">
+                        @if (armaIDFormControl.hasError('pattern') && !armaIDFormControl.hasError('required')) {
+                            <mat-error>Please enter a valid ARMA ID</mat-error>
+                          }
+                          @if (armaIDFormControl.hasError('required')) {
+                            <mat-error>ARMA ID is <strong>required</strong></mat-error>
+                          }
+                    </mat-form-field>
+                </div>
+            </div>
+            
+            <div>
+                <button mat-button (click)="discardChanges()">DISCARD</button>
+                <button mat-raised-button (click)="saveChanges()">SAVE</button>
+                @if (saveFailed) {
+                    <span>{{saveFailedReason}}</span>
+                }
+                @if (saved) {
+                    <span>Saved Changes</span>
+                }
+            </div>
+        </div>
+    </section>
 </div>
-<br>
-<br>
-<br>
-<p>{{ email }}</p>
-<input type="email" [(ngModel)]="email" placeholder="Enter new email">
-<button (click)="updateEmail()">Update Email</button>
