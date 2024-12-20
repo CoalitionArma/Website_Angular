@@ -20,7 +20,7 @@ function generateToken(userId: string): string {
     return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '1h' });
 }
 function authenticateToken(req: Request, res: Response, next: () => void) {
-    console.log(req.headers);
+    //console.log(req.headers);
     const token = req.headers['access_token'] as string;
     if (!token) return res.status(401).json({ error: 'Unauthenticated' });
 
