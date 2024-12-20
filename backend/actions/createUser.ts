@@ -1,6 +1,6 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import SQLUsers from '../models/userModel.interface';
-import { UserResponse } from '../interfaces/userresponse.interface';
+import { DiscordUserResponse } from '../interfaces/userresponse.interface';
 
 export class CreateUser {
     static async checkIfUserExists(discordid: string): Promise<boolean> {
@@ -8,7 +8,7 @@ export class CreateUser {
         return user !== null;
     }
 
-    static async createNewUser(user: UserResponse): Promise<void> {
+    static async createNewUser(user: DiscordUserResponse): Promise<void> {
         await SQLUsers.create({
             discordid: user.id,
             steamid: null,

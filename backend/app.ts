@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 import SQLUsers from './models/userModel.interface';
 import sequelize from './db';
 import jwt from 'jsonwebtoken';
-import { UserResponse } from './interfaces/userresponse.interface';
+import { DiscordUserResponse } from './interfaces/userresponse.interface';
 
 dotenv.config();
 
@@ -96,25 +96,27 @@ app.post('/api/users', async (req: Request, res: Response) => {
 });
 
 app.post('/api/update/user', authenticateToken, async (req: Request, res: Response) => {
-    const { email } = req.body;
-    const userId = req.body.id;
-
-    if (!email) {
-        return res.status(400).send('Email is required');
-    }
-
+    console.log(req.body);
+    const { id, discordid, steamid, email, teamspeakid, username, section, veterancy, armaguid } = req.body;
     try {
-        let user = await SQLUsers.findOne({ where: { discordid: userId } });
+        let user = await SQLUsers.findOne({ where: { discordid: discordid} });
+
         if (user) {
+            user.steamid = steamid;
             user.email = email;
-            await user.save();
-            res.status(200).json({ message: 'Email updated successfully' });
-        } else {
-            res.status(404).send('User not found');
+            user.teamspeakid = teamspeakid;
+            user.username = username;
+            user.section = section;
+            user.veterancy = veterancy;
+            user.armaguid = armaguid;
+
+            await user.save().then(() => {
+                res.status(200);
+            });
         }
-    } catch (error) {
-        console.error('Error updating email:', error);
-        res.status(500).send('Internal Server Error');
+    } catch (e) {
+        console.error('Error updating user:', e);
+        res.status(500).send('Error updating user');
     }
 });
 

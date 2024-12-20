@@ -6,6 +6,8 @@ import { MatInputModule } from '@angular/material/input';
 import { ErrorStateMatcher } from '@angular/material/core';
 import {MAT_SNACK_BAR_DATA, MatSnackBar, MatSnackBarAction, MatSnackBarActions, MatSnackBarLabel, MatSnackBarModule, MatSnackBarRef} from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
+import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -25,17 +27,18 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   styleUrl: './profile.component.scss'
 })
 export class ProfileComponent implements OnInit {
-  constructor(public userService: UserService) {}
-  
-  email: string = this.userService.user?.email || '';
-  armaID: string = this.userService.user?.id || '';
+  constructor(public userService: UserService, private fb: FormBuilder, private router: Router) {}
 
-  emailFormControl = new FormControl(this.userService.user?.email || this.email, [Validators.required, Validators.email]);
-  emailMatcher = new MyErrorStateMatcher();
-
-  armaIDRegex = /^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$/;
-  armaIDFormControl = new FormControl(this.userService.user?.id || this.armaID,  [Validators.required, Validators.pattern(this.armaIDRegex)]);
-  armaIDMatcher = new MyErrorStateMatcher();
+  armaGUIDRegex = /^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$/;
+  steamid64Regex = /^[0-9]{17}$/;
+  userInfoForm = this.fb.group({
+    email: [this.userService.dbUser?.email, Validators.required],
+    armaID: [this.userService.dbUser?.armaguid, [
+      Validators.required,
+      Validators.pattern(this.armaGUIDRegex)
+    ]],
+    steamID: [this.userService.dbUser?.steamid, Validators.pattern(this.steamid64Regex)],
+  });
 
   // private _snackBar = inject(MatSnackBar);
   // openSnackBar() {
@@ -50,11 +53,13 @@ export class ProfileComponent implements OnInit {
   saveChanges() {
     this.saveFailed = false
     this.saved = false
-    if (this.emailFormControl.valid && this.armaIDFormControl.valid) {
-      this.email = (this.emailFormControl.value as string)
-      this.armaID = (this.armaIDFormControl.value as string)
+    if (this.userInfoForm.valid && (this.userInfoForm.dirty || this.userInfoForm.touched)) { 
+      // Update the user object with the new values
+      this.userService.updateLocalUser(this.userInfoForm);
+      // Call the service to update the user
+      this.userService.updateUserInfo().subscribe()
       this.saved = true
-      new Promise(r => setTimeout(r, 4000)).then(() => this.saved = false)
+      window.location.reload()
     } else {
       this.saveFailed = true
       this.saveFailedReason = "Invalid Inputs"
@@ -67,67 +72,37 @@ export class ProfileComponent implements OnInit {
   saved = false
 
   discardChanges() {
-    this.emailFormControl.setValue(this.email)
-    this.armaIDFormControl.setValue(this.armaID)
-  }
-
-  updateEmail() {
-    this.userService.updateEmail(this.email).subscribe(
-      (response) => {
-        console.log('Email updated:', response);
-      },
-      (error) => {
-        console.error('Error updating email:', error);
-      }
-    );
+    this.userInfoForm.reset()
   }
 
   ngOnInit(): void {
-    // this.emailFormControl.valueChanges.subscribe(value => {
-    //   if ((value as string) != this.armaID || value != this.email) {
-    //     if (!this._snackBar._openedSnackBarRef) {
-    //       this.openSnackBar()
-    //     }
-    //   } else {
-    //     this._snackBar.dismiss()
-    //   }
-    // })
-
-    // this.armaIDFormControl.valueChanges.subscribe(value => {
-    //   if ((value as string) != this.armaID || value != this.email) {
-    //     if (!this._snackBar._openedSnackBarRef) {
-    //       this.openSnackBar()
-    //     }
-    //   } else {
-    //     this._snackBar.dismiss()
-    //   }
-    // })
+    //console.log(this.userService.dbUser)
   }
 }
 
-@Component({
-  selector: 'data-changed-component-snack',
-  standalone: true,
-  templateUrl: 'data-changed-component-snack.html',
-  styles: `
-    :host {
-      display: flex;
-    }
+// @Component({
+//   selector: 'data-changed-component-snack',
+//   standalone: true,
+//   templateUrl: 'data-changed-component-snack.html',
+//   styles: `
+//     :host {
+//       display: flex;
+//     }
 
-    .example-pizza-party {
-      color: hotpink;
-    }
-  `,
-  imports: [MatButtonModule, MatSnackBarLabel, MatSnackBarActions, MatSnackBarAction],
-})
-export class DataChangedComponent {
-  snackBarRef = inject(MatSnackBarRef);
+//     .example-pizza-party {
+//       color: hotpink;
+//     }
+//   `,
+//   imports: [MatButtonModule, MatSnackBarLabel, MatSnackBarActions, MatSnackBarAction],
+// })
+// export class DataChangedComponent {
+//   snackBarRef = inject(MatSnackBarRef);
 
-  discardChanges() { 
-    this.snackBarRef.dismiss()
-  }
+//   discardChanges() { 
+//     this.snackBarRef.dismiss()
+//   }
   
-  saveChanges() {
-    this.snackBarRef.dismissWithAction()
-  }
-}
+//   saveChanges() {
+//     this.snackBarRef.dismissWithAction()
+//   }
+// }

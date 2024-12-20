@@ -1,4 +1,4 @@
-export interface User {
+export interface DBUser {
     discordid: string;
     steamid: string | null;
     email: string;
@@ -7,4 +7,9 @@ export interface User {
     section: string | null;
     veterancy: string | null;
     armaguid: string | null;
+}
+
+export interface DBUserResponse extends DBUser {
+    token: string;
+    user: DBUser;
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../services/user.service';
+import { DBUserResponse } from '../interfaces/user.interface';
 
 @Component({
   selector: 'app-oauth',
@@ -19,11 +20,9 @@ export class OauthComponent implements OnInit {
       if (code) {
         this.userService.getToken(code).subscribe(
           (response) => {
-            // console.log('Token:', response);
             // Get the discord user
-            this.userService.getUser(response.access_token).subscribe(
+            this.userService.getDiscordUser(response.access_token).subscribe(
               (user) => {
-                // console.log('User:', user);
                 // Call API to create user
                 this.userService.createOrUpdateUser(user).subscribe(
                   (response) => {

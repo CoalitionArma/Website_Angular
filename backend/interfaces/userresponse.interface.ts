@@ -2,7 +2,7 @@ export interface Token {
     token: string;
 }
 
-export interface UserResponse {
+export interface DiscordUserResponse {
     id: string;
     avatar: string;
     global_name: string;
