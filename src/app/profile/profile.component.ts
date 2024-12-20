@@ -8,6 +8,7 @@ import {MAT_SNACK_BAR_DATA, MatSnackBar, MatSnackBarAction, MatSnackBarActions, 
 import { MatButtonModule } from '@angular/material/button';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -21,7 +22,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   selector: 'app-profile',
   standalone: true,
   imports: [
-    FormsModule, MatCardModule, MatInputModule, ReactiveFormsModule, MatSnackBarModule, MatButtonModule
+    FormsModule, MatCardModule, MatInputModule, ReactiveFormsModule, MatSnackBarModule, MatButtonModule, CommonModule
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
