@@ -59,7 +59,7 @@ export class ProfileComponent implements OnInit {
       // Call the service to update the user
       this.userService.updateUserInfo().subscribe()
       this.saved = true
-      window.location.reload()
+      //window.location.reload()
     } else {
       this.saveFailed = true
       this.saveFailedReason = "Invalid Inputs"
