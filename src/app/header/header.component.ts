@@ -49,8 +49,9 @@ export class HeaderComponent implements OnInit {
 
   loginWithDiscord() {
     // check angular development environment
-    const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=1311851378875830354&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A4200%2Foauth%2F&scope=identify+email+connections+guilds+guilds.join`;
-    window.location.href = discordAuthUrl;
+    const local = `https://discord.com/oauth2/authorize?client_id=1311851378875830354&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A4200%2Foauth%2F&scope=identify+email+connections+guilds+guilds.join`;
+    const prod = `https://discord.com/oauth2/authorize?client_id=1311851378875830354&response_type=code&redirect_uri=https%3A%2F%2Fcoalitiongroup.net%2Foauth%2F&scope=identify+email+connections+guilds+guilds.join`;
+    window.location.href = prod;
   }
 
   logout() {
