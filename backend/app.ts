@@ -135,10 +135,6 @@ app.post('/api/update/user', authenticateToken, async (req: Request, res: Respon
     }
 });
 
-app.get('/api/hello', (req: Request, res: Response) => {
-    res.status(200).send('Hello, world!');
-});
-
 sequelize.sync().then(() => {
     console.log('Database synced');
     app.listen(port, () => {
