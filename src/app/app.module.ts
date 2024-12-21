@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 import { OauthComponent } from './oauth/oauth.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -23,7 +23,8 @@ import { CommonModule } from '@angular/common';
     AppComponent
   ],
   providers: [
-    IconSetService
+    IconSetService,
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
   ]
 })
 export class AppModule { }
