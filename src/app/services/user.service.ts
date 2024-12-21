@@ -10,10 +10,10 @@ import { FormGroup } from '@angular/forms';
   providedIn: 'root'
 })
 export class UserService {
-    private CREATEUSER = 'http://localhost:3157/api/users';
-    private TOKENURL = 'http://localhost:3157/api/oauth/token';
+    private CREATEUSER = 'https://api.coalitiongroup.net/api/users';
+    private TOKENURL = 'https://api.coalitiongroup.net/api/oauth/token';
     private USERURL = 'https://discord.com/api/users/@me';
-    private UPDATEURL = 'http://localhost:3157/api/update/user';
+    private UPDATEURL = 'https://api.coalitiongroup.net/api/update/user';
     loggedIn = localStorage.getItem('access_token') ? true : false;
     // Response data we care about from discord
     discordUser: DiscordUserResponse | null = null;

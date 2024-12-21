@@ -39,7 +39,16 @@ function authenticateToken(req: Request, res: Response, next: () => void) {
 }
 
 app.use(bodyParser.json());
-app.use(cors({ origin: allowedOrigins }));
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+}));
 
 app.post('/api/oauth/token', async (req: Request, res: Response) => {
     const { code } = req.body;
@@ -126,10 +135,14 @@ app.post('/api/update/user', authenticateToken, async (req: Request, res: Respon
     }
 });
 
+app.get('/api/hello', (req: Request, res: Response) => {
+    res.status(200).send('Hello, world!');
+});
+
 sequelize.sync().then(() => {
     console.log('Database synced');
     app.listen(port, () => {
-        console.log(`Server running at http://localhost:${port}`);
+        console.log(`Server running at https://api.coalitiongroup.net port ${port}`);
     })
 }).catch((error) => {
     console.error('Error syncing database:', error);
