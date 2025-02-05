@@ -7,6 +7,7 @@ import SQLUsers from './models/userModel.interface';
 import sequelize from './db';
 import jwt from 'jsonwebtoken';
 import { DiscordUserResponse } from './interfaces/userresponse.interface';
+import { environment } from '../src/environments/environment';
 
 dotenv.config();
 
@@ -62,7 +63,7 @@ app.post('/api/oauth/token', async (req: Request, res: Response) => {
         params.append('client_secret', process.env['CLIENT_SECRET'] as string);
         params.append('grant_type', 'authorization_code');
         params.append('code', code);
-        params.append('redirect_uri', process.env['REDIRECT_URI'] as string);
+        params.append('redirect_uri', environment.RETURN_URL as string);
         params.append('scope', 'identify');
         
         const response = await axios.post('https://discord.com/api/oauth2/token', params, {
@@ -138,7 +139,7 @@ app.post('/api/update/user', authenticateToken, async (req: Request, res: Respon
 sequelize.sync().then(() => {
     console.log('Database synced');
     app.listen(port, () => {
-        console.log(`Server running at https://api.coalitiongroup.net port ${port}`);
+        console.log(`Server running at http://localhost:${port}`);
     })
 }).catch((error) => {
     console.error('Error syncing database:', error);

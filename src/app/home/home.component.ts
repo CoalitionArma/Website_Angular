@@ -4,15 +4,13 @@ import { DateTime } from 'luxon';
 import { NgFor } from '@angular/common';
 import { CarouselComponent, CarouselInnerComponent, CarouselItemComponent, CarouselControlComponent, CarouselIndicatorsComponent } from '@coreui/angular';
 import { RouterLink } from '@angular/router';
-
 import { cilChevronBottom } from '@coreui/icons';
 import { IconDirective } from '@coreui/icons-angular';
-
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 import { OverlayScrollbars } from 'overlayscrollbars';
-
 import Aos from 'aos';
 import 'aos/dist/aos.css';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-home',

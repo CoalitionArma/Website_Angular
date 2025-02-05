@@ -5,15 +5,16 @@ import { DiscordUserResponse } from '../../../backend/interfaces/userresponse.in
 import { TokenResponse } from '../../../backend/interfaces/tokenresponse.interface';
 import { DBUser, DBUserResponse } from '../interfaces/user.interface';
 import { FormGroup } from '@angular/forms';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-    private CREATEUSER = 'https://api.coalitiongroup.net/api/users';
-    private TOKENURL = 'https://api.coalitiongroup.net/api/oauth/token';
+    CREATEUSER = `${environment.API_URL}/api/users`;
+    private TOKENURL = `${environment.API_URL}/api/oauth/token`;
+    private UPDATEURL = `${environment.API_URL}/api/update/user`;
     private USERURL = 'https://discord.com/api/users/@me';
-    private UPDATEURL = 'https://api.coalitiongroup.net/api/update/user';
     loggedIn = localStorage.getItem('access_token') ? true : false;
     // Response data we care about from discord
     discordUser: DiscordUserResponse | null = null;
