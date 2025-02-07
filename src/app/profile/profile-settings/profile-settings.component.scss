@@ -1,11 +1,5 @@
 @use '@angular/material' as mat;
 
-body {
-    background-image: url('../../assets/images/charlet_bay_dusk.jpg'); 
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-}
 
 :root {
     @include mat.card-overrides((
@@ -52,20 +46,6 @@ mat-form-field {
 :host ::ng-deep button.mat-mdc-raised-button {
     background-color: white;
     color: rgb(45, 45, 45)
-}
-
-
-:host ::ng-deep .mat-mdc-tab-group {
-    width: 70%;
-}
-
-:host ::ng-deep .mdc-tab{
-    background-color: grey;
-}
-
-:host ::ng-deep .mdc-tab--active {
-    background-color: white;
-    color: black;
 }
 // :host ::ng-deep input {
 //     color: green

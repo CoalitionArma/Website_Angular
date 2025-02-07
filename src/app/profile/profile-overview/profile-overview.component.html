@@ -1,0 +1,152 @@
+<section id="general" class="w-full">
+    <div class="section-header">
+        <span class="section-header-title">GENERAL</span>
+    </div>
+
+    <div class="section-content grid grid-cols-3 gap-1 mb-1 h-[250px]">
+        <section id="wins" class="bg-neutral-800/40 h-full flex">
+            <div class="self-center flex flex-row m-auto place-items-center">
+                <img class="w-[200px]" src="./assets/dev-assets/circle thing.png">
+                <div class="self-center ml-[20px] flex flex-col">
+                    <span class="card-title">WINS</span>
+                    <div class="flex flex-col">
+                        <span class="card-value">72 %</span>
+                        <span class="card-subvalue">27 WINS</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <app-stat-card>
+            <app-slide-bar-stat-card
+            title="K:D"
+            [value]="winsValue"
+            [subvalue]="winsSubvalue"
+            [statPercentage]="winsStatPercentage"
+            >
+            </app-slide-bar-stat-card>
+        </app-stat-card>
+
+        <app-stat-card>
+            <app-slide-bar-stat-card
+            title="ACCURACY"
+            [value]="accuracyValue"
+            [subvalue]="accuracySubvalue"
+            [statPercentage]="accuracyStatPercentage"
+            >
+            </app-slide-bar-stat-card>
+        </app-stat-card>
+    </div>
+</section>
+
+<section id="last-mission" class="w-full">
+    <div class="section-header">
+        <span class="section-header-title">LAST MISSION</span>
+    </div>
+
+    <div class="section-content bg-neutral-800/40 p-6 mb-1">
+        <div class="mission-info-grid w-full">
+            <div class="relative"> <!-- map -->
+                <img class="h-[375px]" src="./assets/dev-assets/everon.png">
+                <div class="absolute bottom-0 left-0 m-4 bg-neutral-800/60 pr-6 pl-1t">
+                    <span class="text-7xl italic">Everon</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col flex-grow"> <!-- Round info-->
+                <div class="flex flex-row flex-grow">
+                    <div class="ml-6 flex flex-col">
+                        <div class="text-6xl font-bold">Swing Past</div>
+                        <div class="text-3xl text-neutral-400 italic">By: FanServ</div>
+                        <div class="text-4xl">Search And Destroy</div>
+                        <div class="h-6"></div>
+                        <div class="">December 7th, 2024</div>
+                        <div class="">6:00 pm - 7:24 pm</div>
+                    </div>
+
+                    <div class="ml-auto text-3xl font-bold flex flex-col gap-1">
+                        <div class="ml-auto">
+                            <img class="inline h-[1em]" src="./assets/dev-assets/fia.png">
+                            <span class="text-green-600"> FIA</span>
+                        </div>
+                        <div class="ml-auto">
+                            <img class="inline h-[1em]" src="./assets/dev-assets/ussr.png">
+                            <span class="text-red-600"> USSR</span>
+                        </div>
+                        <div class="ml-auto font-normal">vs</div>
+                        <div class="ml-auto">
+                            <img class="inline h-[1em]" src="./assets/dev-assets/usa.png">
+                            <span class="text-blue-600"> US Army</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="m-auto">
+                    <span class="text-[7.5rem] font-bold text-red-600 tracking-wide">DEFEAT</span>
+                    <span class="text-5xl font-bold text-red-800">(KIA)</span>
+                </div>
+            </div>
+
+            <div class="flex-shrink">
+                <span class="text-3xl ml-6">REPORT</span>
+                <div class="w-[300px] h-[1px] bg-white"></div>
+            </div>
+            <div></div>
+            <div class="ml-10">
+                <div class="text-2xl"> <!-- Kills -->
+                    <div class="mb-4 mt-1">
+                        <div class="inline text-green-600 font-bold">FIA </div>
+                        <img class="inline h-[1.5em]" src="./assets/dev-assets/fia.png">
+                        <div class="inline text-white"> Cell 1 Automatic Rifleman</div>
+                    </div>
+
+                    <div class="grid grid-cols-2 grid-rows-3 w-[200px] gap-x-5">
+                        <img class="inline h-[2em] mr-4" src="./assets/dev-assets/guy.png">
+                        <div> 
+                            <span class="inline font-bold">4</span>
+                            <span class="inline text-neutral-400"> KILLS</span>
+                        </div>
+                        <img class="inline h-[2em] mr-4" src="./assets/dev-assets/vic.png">
+                        <div> 
+                            <span class="inline font-bold">4</span>
+                            <span class="inline text-neutral-400"> KILLS</span>
+                        </div>
+                        <img class="inline h-[2em] mr-4" src="./assets/dev-assets/heli.png">
+                        <div> 
+                            <span class="inline font-bold">4</span>
+                            <span class="inline text-neutral-400"> KILLS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-2xl ml-6">
+                <div>Killed By</div>
+                <div>
+                    <span>Tanaka </span>
+                    <span class="text-red-600">USSR </span>
+                    <img class="inline h-[1.5em]" src="./assets/dev-assets/ussr.png">
+                    <span> (S-8 HEAT Rocket)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="bests" class="w-full">
+    <div class="section-header">
+        <span class="section-header-title">BEST</span>
+    </div>
+
+    
+    <div class="section-content grid grid-cols-3 gap-1 mb-1 h-[500px]">
+        <app-stat-card *ngFor="let card of bestCards">
+            <app-slide-bar-stat-card 
+                [title]="card.title"
+                [value]="card.value"
+                [subvalue]="card.subvalue"
+                [statPercentage]="card.statPercentage">
+            </app-slide-bar-stat-card>
+        </app-stat-card>
+    </div>
+</section>

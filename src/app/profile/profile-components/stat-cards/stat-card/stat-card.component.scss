@@ -1,0 +1,21 @@
+:host {
+    --card-title-font-size: 40px;
+    --card-title-color: rgb(200, 200, 200);
+
+    --card-value-font-size: 55px;
+    --card-value-font-weight: bolder;
+    --card-value-color: white;
+
+    --card-subvalue-font-size: 25px;
+    --card-subvalue-font-weight: bold;
+    --card-subvalue-color: white;
+
+}
+
+.stat-card-container {
+    background-color: rgb(38 38 38 / 0.4);
+    height: 250px;
+    display: flex;
+    place-items: center;
+    place-content: center;
+}

@@ -1,8 +1,10 @@
 <br>
 <br>
 <br> <!-- This is header space. I hate it.-->
-<div id="main" class="py-24 flex flex-col items-center h-dvh bg-cover bg-center" style="background-image: url('./assets/images/profile_bg.jpg'); background-repeat: no-repeat;">
-    <section id="profile-header" class="w-2/3 h-[300px]">
+<div id="main" class="py-24 flex flex-col items-center h-dvh bg-cover bg-center bg-fixed" style="overflow: auto; background-image: url('./assets/images/profile_bg.jpg'); background-repeat: no-repeat;">
+
+
+    <section id="profile-header" class="w-2/3 h-[300px] shrink-0">
         <div class="flex flex-row float-left w-full h-full">
             <img [src]=userService.avatarUrl class="h-full">
             <div class="pl-10">
@@ -12,72 +14,14 @@
             </div>
         </div>
     </section>
-    <div class="h-[50px]"></div>
-    <div class="w-2/3">
-        <div class="bg-neutral-800 px-2 py-1 bg-opacity-60 text-3xl float-left">SETTINGS</div>
-    </div>
-    <div class="h-[10px]"></div>
-    <section id="settings" class="w-2/3">
-        <div class="bg-neutral-800 w-2/3 px-1 mb-1">INFO</div>
-
-        <div class="coal-input" class="bg-neutral-800 bg-opacity-60 w-full h-full flex flex-col">
-            <form [formGroup]="userInfoForm" (ngSubmit)="saveChanges()">
-                <div id="email" class="flex flex-row items-end items-center float-left gap-x-4 px-6 py-2" matTooltip="Self explanatory. Enter your email address">
-                    <img src="./assets/icons/email.png" class="w-[40px]">
-                    <div class="flex flex-col">
-                        <span class="text-neutral-400 text-s">EMAIL</span>
-                        <mat-form-field>
-                            <input type="email" matInput formControlName="email">
-                            <mat-error *ngIf="userInfoForm.get('email').hasError('email') && !userInfoForm.get('email').hasError('required')">
-                                Please enter a valid email address
-                            </mat-error>
-                            <mat-error *ngIf="userInfoForm.get('email').hasError('required')">
-                                Email is <strong>required</strong>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                </div>
-
-                <div id="arma" class="flex flex-row items-end items-center float-left gap-x-4 px-6 py-2">
-                    <img src="./assets/icons/arma.png" class="w-[40px]">
-                    <div class="flex flex-col">
-                        <span class="text-neutral-400 text-s">ARMA GUID</span>
-                        <mat-form-field>
-                            <input type="text" matInput formControlName="armaID">
-                            <mat-error *ngIf="userInfoForm.get('armaID').hasError('pattern') && !userInfoForm.get('armaID').hasError('required')">
-                                Please enter a valid ARMA GUID
-                            </mat-error>
-                            <mat-error *ngIf="userInfoForm.get('armaID').hasError('required')">
-                                ARMA GUID is <strong>required</strong>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                </div>
-
-                <div id="steam" class="flex flex-row items-end items-center float-left gap-x-4 px-6 py-2">
-                    <img src="./assets/icons/steam-logo.png" class="w-[40px]">
-                    <div class="flex flex-col">
-                        <span class="text-neutral-400 text-s">STEAMID64</span>
-                        <mat-form-field>
-                            <input type="text" matInput formControlName="steamID">
-                            <mat-error *ngIf="userInfoForm.get('steamID').hasError('pattern')">
-                                Please enter a valid SteamID64
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                </div>
-            </form>
-            
-            <div>
-                <button mat-button (click)="discardChanges()">DISCARD</button>
-                <button mat-raised-button (click)="saveChanges()">SAVE</button>
-                @if (saveFailed) {
-                    <span>{{saveFailedReason}}</span>
-                }
-                @if (saved) {
-                    <span>  Account Updated/Saved</span>
-                }
-            </div>
-        </div>
-    </section>
+    <div class="h-[50px] shrink-0"></div>
+    <mat-tab-group>
+        <mat-tab label="OVERVIEW">
+            <app-profile-overview/>
+        </mat-tab>
+        <mat-tab label="STATS"></mat-tab>
+        <mat-tab label="SETTINGS">
+            <app-profile-settings/>
+        </mat-tab>
+    </mat-tab-group>
 </div>

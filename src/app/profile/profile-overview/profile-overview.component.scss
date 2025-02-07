@@ -1,0 +1,27 @@
+.section-header {
+    background-color: rgb(38, 38, 38);
+    width: 100%;
+    padding: 5px 0px;
+}
+
+.section-header-title {
+    font-size: 1.5em;
+    font-weight: 500;
+    line-height: 1em;
+    margin: 0px 10px
+}
+
+.section-content {
+    width: 100%;
+}
+
+.mission-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto
+}
+
+.best-content {
+    display: grid;
+    gap: 1px;
+}

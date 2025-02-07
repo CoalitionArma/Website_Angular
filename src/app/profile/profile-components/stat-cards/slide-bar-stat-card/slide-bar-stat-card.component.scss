@@ -1,0 +1,39 @@
+.card-title {
+    font-size: var(--card-title-font-size);
+    color: var(--card-title-color);
+    margin-bottom: 40px;
+}
+.card-value {
+    font-size: var(--card-value-font-size);
+    font-weight: var(--card-value-font-weight);
+    color: var(--card-value-color);
+    margin-bottom: 20px;
+}
+.card-subvalue {
+    font-size: var(--card-subvalue-font-size);
+    font-weight: var(--card-subvalue-font-weight);
+    color: var(--card-subvalue-color);
+}
+
+.card-value-content {
+    display: flex;
+    flex-direction: column;
+    place-items: center;
+    margin-bottom: 10px;
+}
+
+.slide-bar {
+    border: 2px solid;
+    height: 20px;
+    width: 300px;
+    border-color: white;
+    background-color: black;
+}
+
+.slide-bar-dot {
+    background-color: white;
+    width: 25px;
+    height: 18px;
+    display: block;
+    margin: 0, auto
+}
