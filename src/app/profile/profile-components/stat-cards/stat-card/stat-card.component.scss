@@ -1,13 +1,14 @@
 :host {
     --card-title-font-size: 40px;
+    --card-title-font-weight: 1;
     --card-title-color: rgb(200, 200, 200);
 
-    --card-value-font-size: 55px;
+    --card-value-font-size: 50px;
     --card-value-font-weight: bolder;
     --card-value-color: white;
 
     --card-subvalue-font-size: 25px;
-    --card-subvalue-font-weight: bold;
+    --card-subvalue-font-weight: 400;
     --card-subvalue-color: white;
 
 }

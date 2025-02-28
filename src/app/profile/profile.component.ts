@@ -3,6 +3,7 @@ import { UserService } from '../services/user.service';
 import { MatTabsModule} from '@angular/material/tabs';
 import { ProfileSettingsComponent } from "./profile-settings/profile-settings.component";
 import { ProfileOverviewComponent } from "./profile-overview/profile-overview.component";
+import { ProfileSocialIconComponent } from "./profile-components/profile-social-icon/profile-social-icon.component";
 
 /** Error when invalid control is dirty, touched, or submitted. */
 
@@ -12,7 +13,8 @@ import { ProfileOverviewComponent } from "./profile-overview/profile-overview.co
   imports: [
     MatTabsModule,
     ProfileSettingsComponent,
-    ProfileOverviewComponent
+    ProfileOverviewComponent,
+    ProfileSocialIconComponent
 ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'

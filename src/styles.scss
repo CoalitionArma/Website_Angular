@@ -23,6 +23,10 @@ $CoalitionWebsite-theme: m3-theme.$dark-theme;
   --mdc-snackbar-supporting-text-color: white !important;
   --mdc-snackbar-container-color: rgb(45 45 45) !important;
   --mdc-snackbar-container-shape: 0px !important;
+
+  --coal-bg: rgb(20, 20, 20);
+  --coal-bg-opacity-primary: rgb(20, 20, 20, .8);
+  --coal-bg-opacity-secondary: rgb(20, 20, 20, .6);
 }
 
 // Comment out the line below if you want to use the pre-defined typography utility classes.

@@ -2,26 +2,76 @@
 <br>
 <br> <!-- This is header space. I hate it.-->
 <div id="main" class="py-24 flex flex-col items-center h-dvh bg-cover bg-center bg-fixed" style="overflow: auto; background-image: url('./assets/images/profile_bg.jpg'); background-repeat: no-repeat;">
+    <div class=" w-[70%] ">
 
-
-    <section id="profile-header" class="w-2/3 h-[300px] shrink-0">
-        <div class="flex flex-row float-left w-full h-full">
-            <img [src]=userService.avatarUrl class="h-full">
-            <div class="pl-10">
-                <div class="bg-neutral-800 px-2 py-1 bg-opacity-60 text-4xl">{{userService.discordUser?.global_name?.toUpperCase()}}</div>
-                <div class="bg-neutral-800 px-2 py-1 bg-opacity-60 text-sm">RANK: {{userService.dbUser?.veterancy?.toUpperCase()}}</div>
-                <div class="bg-neutral-800 px-2 py-1 bg-opacity-60 text-sm">SECTION: {{userService.dbUser?.section?.toUpperCase()}}</div>
+        <!-- <section id="profile-header" class="w-2/3 h-[300px] shrink-0">
+            <div class="flex flex-row float-left w-full h-full">
+                <img [src]=userService.avatarUrl class="h-full">
+                <div class="pl-10">
+                    <div class="bg-neutral-800 px-2 py-1 bg-opacity-60 text-4xl">{{userService.discordUser?.global_name?.toUpperCase()}}</div>
+                    <div class="bg-neutral-800 px-2 py-1 bg-opacity-60 text-sm">RANK: {{userService.dbUser?.veterancy?.toUpperCase()}}</div>
+                    <div class="bg-neutral-800 px-2 py-1 bg-opacity-60 text-sm">SECTION: {{userService.dbUser?.section?.toUpperCase()}}</div>
+                </div>
             </div>
-        </div>
-    </section>
-    <div class="h-[50px] shrink-0"></div>
-    <mat-tab-group>
-        <mat-tab label="OVERVIEW">
-            <app-profile-overview/>
-        </mat-tab>
-        <mat-tab label="STATS"></mat-tab>
-        <mat-tab label="SETTINGS">
-            <app-profile-settings/>
-        </mat-tab>
-    </mat-tab-group>
+        </section> -->
+
+        <section id="profile-header" class="w-full shrink-0">
+            <div class="flex flex-row float-left w-full h-full mb-[12px]">
+                <img src="https://cdn.discordapp.com/avatars/132360665078824968/6512cdbd776504451cb7b1634fd5364b.png" class="h-[300px]">
+                <div class="pl-4">
+                    <div class="bg-neutral-800 px-2 py-1 bg-opacity-60 text-5xl font-bold">KALTAG</div>
+                    <div>
+                        <span class="pl-2 py-1 text-sm font-medium">RANK: Private</span>
+                        <span class="px-2 py-1 text-sm font-medium">SECTION: 1ST</span>
+                    </div>
+                    <div class="flex flex-row gap-[5px]"> <!-- https://gist.github.com/ghostrider-05/8f1a0bfc27c7c4509b4ea4e8ce718af0 -->
+                        <!-- https://pqina.nl/blog/animating-width-and-height-without-the-squish-effect/ -->
+                        
+                        <app-profile-social-icon 
+                            href="discord://-/users/132360665078824968" 
+                            imgsrc="./assets/dev-assets/discord.png"
+                            user="kaltag"/>
+                        
+                        <app-profile-social-icon 
+                            href="https://steamcommunity.com/profiles/76561198069234954/" 
+                            imgsrc="./assets/dev-assets/steam.png"
+                            user="Suburban Wolf Dad"/>
+
+                        <app-profile-social-icon 
+                            href="https://www.youtube.com/" 
+                            imgsrc="./assets/dev-assets/youtube.png"
+                            user="Kaltag"/>
+
+                        <app-profile-social-icon 
+                            href="https://twitch.tv/kaltag1925/" 
+                            imgsrc="./assets/dev-assets/twitch.png"
+                            user="kaltag1925"/>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+
+        <div class="h-[50px] shrink-0"></div>
+        <!-- <div class="profile-tab grid grid-cols-2 gap-[2px] w-full">
+            <div class="tab-label tab-label--active">
+                <span>OVERVIEW</span>
+            </div>
+
+            <div class="tab-label">
+                <span>STATS</span>
+            </div>
+        </div> -->
+        <mat-tab-group class="w-full">
+            <mat-tab label="OVERVIEW">
+                <app-profile-overview/>
+            </mat-tab>
+            <!-- <mat-tab label="STATS">
+                test
+            </mat-tab> -->
+            <mat-tab label="SETTINGS">
+                <app-profile-settings/>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
 </div>

@@ -2,11 +2,16 @@
 <div class="self-conter flex flex-col m-auto place-items-center w-full">
     <div class="card-title">{{title}}</div>
     <div class="card-value-content">
-        <div class="card-value">{{value}}</div>
+        <div class="card-value">
+            <span>{{counter.getValue()}}</span>
+            @if (unit != "") {
+                <span>{{unit}}</span>
+            }
+        </div>
         <div class="card-subvalue">{{subvalue}}</div>
     </div>
 
     <div class="slide-bar">
-        <div class="slide-bar-dot" id="kd-dot"></div>
+        <div class="slide-bar-dot" id="kd-dot" [@slideToValue]="{value: 'slideIn', params:{percentage: statPercentage * 300 + 'px'}}"></div>
     </div>
 </div>

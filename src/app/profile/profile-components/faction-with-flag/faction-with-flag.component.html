@@ -1,0 +1,10 @@
+<span class="inline-flex whitespace-pre-wrap" [ngClass]="{'blufor' : 'blufor', 'indfor' : 'indfor', 'opfor' : 'opfor'}[faction.side]">
+    @if (flagSide == 'left') {
+        <img class="inline h-[1em] my-auto" [src]="faction.img" *ngIf="flagSide == 'left'">
+        <span> {{faction.name}}</span>
+    }
+    @else {
+        <span>{{faction.name}} </span>
+        <img class="inline h-[1em] my-auto" [src]="faction.img" *ngIf="flagSide == 'right'">
+    }
+</span>

@@ -1,0 +1,13 @@
+div {
+    text-shadow: 0px 2px 4px rgb(0, 0, 0, .5);
+}
+
+span {
+    text-shadow: 0px 2px 4px rgb(0, 0, 0, .5);
+}
+
+.mission-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto
+}
