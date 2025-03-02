@@ -16,6 +16,7 @@ export class MissionCardComponent implements OnInit {
   startDateString: String = ""
   startTimeString: String = ""
   endTimeString: String = ""
+  killersToList: any = []
 
   ngOnInit(): void {
     this.startDateString = this.missionData.date.start.toLocaleString(DateTime.DATE_FULL)
@@ -28,6 +29,8 @@ export class MissionCardComponent implements OnInit {
     else {
       this.missionData.kia = false
     }
+
+    this.killersToList = this.missionData.killers.slice(0, 3)
   }
 
   // mission name: String

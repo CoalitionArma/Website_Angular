@@ -5,14 +5,15 @@
 
     <div class="section-content grid grid-cols-3 gap-[2px] my-[2px] h-[250px]">
         <app-stat-card>
-            <app-circle-bar-stat-card
-            title="WINS"
+            <app-slide-bar-stat-card
+            title="WIN RATE"
             [value]="winsValue"
-            [subValue]="winsSubvalue"
+            [subvalue]="winsSubvalue"
+            [statPercentage]="winsStatPercentage"
             unit="%"
             >
 
-            </app-circle-bar-stat-card>
+            </app-slide-bar-stat-card>
         </app-stat-card>
         
         <app-stat-card>

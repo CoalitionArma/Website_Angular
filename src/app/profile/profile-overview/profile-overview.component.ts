@@ -15,8 +15,9 @@ import { CircleBarStatCardComponent } from "../profile-components/stat-cards/cir
 })
 export class ProfileOverviewComponent {
 
-  winsValue = "72"
-  winsSubvalue = "27 WINS"
+  winsValue = "23"
+  winsSubvalue = "27 VICTORIES"
+  winsStatPercentage = 0.2
 
   kdValue = "69"
   kdSubvalue = "10 KILLS"
@@ -30,7 +31,7 @@ export class ProfileOverviewComponent {
   oneLifeMission = {
     missionName: "Swing Past",
     author: "FanServ",
-    gamemode: "Search and Destory",
+    gamemode: "Search and Destroy",
     style: "onelife",
     date:  {
       start: DateTime.fromSeconds(1733616000),
@@ -99,7 +100,7 @@ export class ProfileOverviewComponent {
     ]
   }
 
-  mission = this.repsawnMission
+  mission = this.oneLifeMission
 
 
   bestCards = [

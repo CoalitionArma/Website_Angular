@@ -68,12 +68,36 @@
                     <span class="inline text-neutral-400"> KILLS</span>
                 </div>
             </div>
+
+            <!-- <div>Kills</div>
+            <div>
+                <div>
+                    <span>Lazz</span>
+                    <app-faction-with-flag factionID="fia">
+                    </app-faction-with-flag>
+                    <span> M242 Bushmaster (M792)</span>
+                </div>
+
+                <div>
+                    <span>Tanaka</span>
+                    <app-faction-with-flag factionID="usarmy">
+                    </app-faction-with-flag>
+                    <span> M242 Bushmaster (M792)</span>
+                    <span class="text-red-600 font-bold">
+                        (Friendly Fire)
+                    </span>
+                </div>
+
+                <div>
+                    + 10 other kills
+                </div>
+            </div> -->
         </div>
     </div>
 
     <div class="text-2xl ml-6">
         <div>Killed By</div>
-        <div *ngFor="let killer of missionData.killers">
+        <div *ngFor="let killer of killersToList">
             <div>
                 <span>{{killer.name}} </span>
                 <app-faction-with-flag [factionID]="killer.side">
@@ -83,6 +107,9 @@
                     (Friendly Fire)
                 </span>
             </div>
+        </div>
+        <div *ngIf="missionData.killers.length > 3">
+            + {{missionData.killers.length - 3}} other deaths
         </div>
     </div>
 </div>
