@@ -1,1 +1,111 @@
-<div class="h-[50px] w-2/3 bg-neutral-800"></div>
+<mat-tab-group class="w-full">
+    <mat-tab label="WEAPONS">
+        <div class="stats-tab-content">
+            <div>
+                <table mat-table [dataSource]="weaponsStats" matSort >
+                    <ng-container matColumnDef="rank">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+                        <td mat-cell *matCellDef="let weapon">{{weapon.rank}}</td>
+                    </ng-container>
+                    
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>WEAPON</th>
+                        <td mat-cell *matCellDef="let weapon">{{weapon.name}}</td>
+                    </ng-container>
+            
+                    <ng-container matColumnDef="kills">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>KILLS</th>
+                        <td mat-cell *matCellDef="let weapon">{{weapon.kills}}</td>
+                    </ng-container>
+                    
+                    <ng-container matColumnDef="accuracy">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>ACCURACY</th>
+                        <td mat-cell *matCellDef="let weapon">{{weapon.accuracy.toFixed(2)}}%</td>
+                    </ng-container>
+            
+                    <ng-container matColumnDef="timesDeployed">
+                        <th mat-header-cell *matHeaderCellDef>DEPLOYMENTS</th>
+                        <td mat-cell *matCellDef="let weapon">{{weapon.deployments.totalDeployments}} / {{weapon.killsPerDeployment.toFixed(2)}}</td>
+                    </ng-container>
+            
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                        (click)="selectWeapon(row)"
+                        [class.row-selected]="selectedWeapon.getValue() == row"
+                    ></tr>
+                </table>
+            </div>
+            <div class="selected-info">
+                <div class="selected-info-header">
+                    @if (selectedWeapon.getValue() == -1) {
+                        <div class="selected-info-header-no-selected-item">
+                            Select a weapon in the list to view details
+                        </div>
+                    }
+                    @else {
+                        <div>{{selectedWeapon.getValue().name}}</div>
+                    }
+                </div>
+                @if (selectedWeapon.getValue() != -1) {
+                    <div class="selected-info-content">
+                        <div class="statistics-table">
+                            <div>KILLS: </div>
+                            <div> {{selectedWeapon.getValue().kills}}</div>
+
+                            <div>ACCURACY: </div>
+                            <div> {{(selectedWeapon.getValue().accuracy * 100).toFixed(2)}}</div>
+                            
+                            <div>SHOTS: </div>
+                            <div> {{selectedWeapon.getValue().shots}}</div>
+
+                            <div>HITS: </div>
+                            <div> {{selectedWeapon.getValue().hits}}</div>
+                        </div>
+                    </div>
+                    <div class="selected-info-subheader">
+                        <span>RECENT KILLS</span>
+                    </div>
+                    <div class="selected-info-content">
+                        @for (kill of selectedWeapon.getValue().recentKills; track $index) {
+                            <div>
+                                <span>{{kill.victim}} </span>
+                                <app-faction-with-flag
+                                    [factionID]="kill.faction"
+                                />
+                                <span> {{kill.distance}}M</span>
+                                @if (kill.headshot) {
+                                    <span> HS</span>
+                                }
+                                @if (kill.friendlyFire) {
+                                    <span> (FRIENDLY FIRE)</span>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div class="selected-info-subheader">
+                        <span>DEPLOYMENT DATA</span>
+                    </div>
+                    <div class="selected-info-content">
+                        @for (fac of selectedWeapon.getValue().deployments.factionDeployments; track $index) {
+                            <div>
+                                <app-faction-with-flag
+                                    [factionID]="fac.faction"
+                                    flagSide="left"
+                                />
+                                <span> {{(fac.deployments / selectedWeapon.getValue().deployments.totalDeployments * 100).toFixed(2)}}%</span>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="VEHICLES">
+    </mat-tab>
+    <mat-tab label="ROLES">
+    </mat-tab>
+    <mat-tab label="MAPS">
+    </mat-tab>
+    <mat-tab label="DETAILS">
+    </mat-tab>
+</mat-tab-group>

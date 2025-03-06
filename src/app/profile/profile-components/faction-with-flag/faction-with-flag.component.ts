@@ -4,7 +4,7 @@ import { NgClass, NgIf, NgFor } from '@angular/common';
 @Component({
   selector: 'app-faction-with-flag',
   standalone: true,
-  imports: [NgClass, NgIf, NgFor],
+  imports: [NgClass, NgIf],
   templateUrl: './faction-with-flag.component.html',
   styleUrl: './faction-with-flag.component.scss'
 })

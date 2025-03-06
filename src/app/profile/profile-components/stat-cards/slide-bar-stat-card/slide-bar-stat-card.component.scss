@@ -10,7 +10,9 @@
     font-weight: var(--card-value-font-weight);
     color: var(--card-value-color);
     margin-bottom: 20px;
+    text-shadow: 0px 0px 4px white !important;
 }
+
 .card-subvalue {
     font-size: var(--card-subvalue-font-size);
     font-weight: var(--card-subvalue-font-weight);
@@ -46,4 +48,12 @@ div {
 
 span {
     text-shadow: 0px 2px 4px rgb(0, 0, 0, .5);
+}
+
+.card-value span{
+    font-size: var(--card-value-font-size);
+    font-weight: var(--card-value-font-weight);
+    color: var(--card-value-color);
+    margin-bottom: 20px;
+    text-shadow: 0px 0px 4px rgb(255, 255, 255, .3);
 }
