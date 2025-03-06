@@ -57,6 +57,37 @@ export class ProfileStatsComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatSort) sort!: MatSort;
 
+  // Player Colliders
+  /*
+   Arm (L R)
+   Buttocks
+   Calf (L R)
+   Forearm (L R)
+   Neck
+   Thigh (L R)
+   Belly
+   Chest
+   Foot (L R)
+   Hand (L R)
+   Head
+  */
+
+  /* Vehcile Colliders
+  BTR
+  Battery (2)
+  Radiator (2)
+  Diff (4)
+  Driveshaft (4)
+  Gearbox (4)
+  Body
+  Wheel
+  Engine (2)
+  Fuel Tank (2)
+  Door
+  Hatch
+  Windshield
+  */
+
   ngAfterViewInit() {
     
     this.weaponsStats!.sort = this.sort;
