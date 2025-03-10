@@ -21,7 +21,7 @@ export const routes: Routes = [
     { path: 'oauth', component: OauthComponent },
     { path: 'profile', 
         component: ProfileComponent,
-        canActivate: [AuthGuard],
+        //canActivate: [AuthGuard],
     }
 
 ];

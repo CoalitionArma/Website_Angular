@@ -1,24 +1,53 @@
 <!-- https://www.conceptart.cgmasteracademy.com/courses/128-absolute-beginners -->
+<!-- <div [class.drop-header]="visible" [class.hide-header]="!visible" class="w-full z-50 fixed">
+    <div [class.transparent-header]="transparentHeader" [class.opaque-header]="!transparentHeader" id="header-main"> -->
+
 <div [class.drop-header]="visible" [class.hide-header]="!visible" class="w-full z-50 fixed">
-    <div [class.transparent-header]="transparentHeader" [class.opaque-header]="!transparentHeader" id="header-main">
+    <div class="header-main" id="header-main">
     <!-- Desktop Header -->
-        <div class="m-auto header drop-shadow-lg md:flex hidden w-full lg:w-2/3 bg-transparent">
-            <div id="logo bg-transparent">
-                <img src="./assets/banner.png" alt="COALITION Logo" aria-hidden="true" width="400px">
-            </div>
+        <!-- <div class="header-spacer"></div> -->
+        <div class="mx-auto header drop-shadow-lg md:flex hidden w-full lg:w-2/3 bg-transparent">
+            <a routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">
+                <div id="logo bg-transparent">
+                    <img src="./assets/banner.png" alt="COALITION Logo" aria-hidden="true" width="400px">
+                </div>
+            </a>
             <div id="links">
-                <a class="link" routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">Home</a>
-                <a class="link" routerLink="/stats" routerLinkActive="active" ariaCurrentWhenActive="page">Stats</a>
-                <a class="link" routerLink="/events" routerLinkActive="active" ariaCurrentWhenActive="page">Events</a>
-                <a class="link" href="https://coalitiongroup.net/wiki/" target="_blank">Wiki</a>
-                <a class="link" href="https://discord.gg/the-coalition" target="_blank">Discord</a>
-                <div>|</div>
-                <a *ngIf="this.userService.loggedIn" class="link" routerLink="/profile">Profile</a>
-            </div>
-            <div *ngIf="!this.userService.loggedIn; else loggedInTemplate" class="login p-5">
-                <button class="bg-red-900 text-white font-semibold py-2 px-5 rounded" (click)="loginWithDiscord()">
-                    Login
-                </button>
+                <a class="header-button" routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">
+                    <div>STATS</div>
+                </a>
+                <!-- <div class="header-spacer"></div> -->
+                <a class="header-button" routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">
+                    <div>EVENTS</div>
+                </a>
+                <!-- <div class="header-spacer"></div> -->
+                <a class="header-button" routerLink="https://coalitiongroup.net/wiki/" routerLinkActive="active" ariaCurrentWhenActive="page">
+                    <div>WIKI</div>
+                </a>
+                <!-- <div class="header-spacer"></div> -->
+                <a class="header-button" routerLink="https://discord.gg/the-coalition" routerLinkActive="active" ariaCurrentWhenActive="page">
+                    <div>DISCORD</div>
+                </a>
+                <div class="header-spacer"></div>
+
+                @if (!this.userService.loggedIn) {
+                    <div class="profile">
+                        <img src="https://cdn.discordapp.com/avatars/132360665078824968/6512cdbd776504451cb7b1634fd5364b.png"/>
+                        <a class="header-button" routerLink="/profile">
+                            <div>KALTAG</div>
+                        </a>
+                    </div>
+                } 
+
+                @else {
+                    <div class="header-button">
+                        <button class="" (click)="loginWithDiscord()">
+                            LOGIN
+                        </button>
+        
+                        <!--bg-red-900 text-white font-semibold py-2 px-5 rounded-->
+                    </div>
+                }
             </div>
             <ng-template #loggedInTemplate>
                 <div class="avatar pl-2 pt-4">

@@ -1,10 +1,21 @@
-import { NgFor } from '@angular/common';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, HostBinding } from '@angular/core';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import { MatTableDataSource, MatTableModule} from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
+
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition,
+  // ...
+} from '@angular/animations';
+
 import { BehaviorSubject } from 'rxjs';
 import { FactionWithFlagComponent } from "../faction-with-flag/faction-with-flag.component";
+
+import { ChartjsComponent } from '@coreui/angular-chartjs';
 
 export interface Weapon {
   name: String
@@ -40,9 +51,26 @@ export interface Vehicle {
 @Component({
   selector: 'app-profile-stats',
   standalone: true,
-  imports: [MatTableModule, MatTabsModule, MatSortModule, FactionWithFlagComponent, NgFor],
+  imports: [MatTableModule, MatTabsModule, MatSortModule, FactionWithFlagComponent, ChartjsComponent],
   templateUrl: './profile-stats.component.html',
-  styleUrl: './profile-stats.component.scss'
+  styleUrl: './profile-stats.component.scss',
+  animations: [
+    trigger("slideReturn", [
+      state(
+        "slide",
+        style({
+            transform: "translateX(-66%)"
+        })
+      ),
+      state(
+        "return",
+        style({
+            transform: "translateX(0px)"
+        })
+      ),
+      transition("* => *", [animate("0.5s")])
+    ])
+  ]
 })
 export class ProfileStatsComponent implements OnInit, AfterViewInit {
 
@@ -54,6 +82,29 @@ export class ProfileStatsComponent implements OnInit, AfterViewInit {
   selectedWeapon: BehaviorSubject<any> = new BehaviorSubject(-1);
 
   weaponsStats: any = null
+
+  isFullInfo = false
+  showFullStats() {
+    this.isFullInfo = true
+  }
+
+
+  deploymentData = {
+    labels: ["USSR", "FIA", "US Army"],
+    datasets: [{
+      data: [20, 50, 30],
+      backgroundColor: [
+        "rgb(196, 43, 43)",
+        "rgb(43, 196, 43)",
+        "rgb(36, 129, 221)"
+      ],
+      hoverOffset: 4
+    }],
+  }
+
+  deploymentOptions = {
+    borderWidth: 0
+  }
 
   @ViewChild(MatSort) sort!: MatSort;
 

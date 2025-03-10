@@ -25,10 +25,15 @@ $CoalitionWebsite-theme: m3-theme.$dark-theme;
   --mdc-snackbar-container-shape: 0px !important;
 
   --coal-bg: rgb(20, 20, 20);
+  --coal-bg-secondary: rgb(38, 38, 38);
   --coal-bg-opacity-primary: rgb(20, 20, 20, .8);
   --coal-bg-opacity-secondary: rgb(38, 38, 38,  0.4);
   --coal-bg-opacity-secondary--active: rgba(20, 20, 20, 0.4);
   --coal-bg-selected: linear-gradient(180deg, rgba(226,226,226,1) 0%, rgba(255,255,255,1) 20%, rgba(255,255,255,1) 80%, rgba(226,226,226,1) 100%);
+
+  --coal-blufor: rgb(36, 129, 221);
+  --coal-opfor: rgb(196, 43, 43);
+  --coal-indfor: rgb(43, 196, 43);
 }
 
 // Comment out the line below if you want to use the pre-defined typography utility classes.

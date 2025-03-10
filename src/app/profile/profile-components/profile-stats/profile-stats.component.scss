@@ -73,7 +73,7 @@
     height: fit-content;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    // gap: 2px;
     margin-top: 1px;
 }
 
@@ -93,12 +93,14 @@
     color: white;
     margin: auto;
     text-shadow: 0px 0px 4px rgb(255, 255, 255, .3);
+    padding-left: 12px;
 }
 
 .selected-info-content {
     color: white;
     height: fit-content;
     background: var(--coal-bg-opacity-secondary);
+    padding: 10px
 }
 
 .selected-info-subheader {
@@ -106,14 +108,77 @@
     color: white;
     text-shadow: 0px 0px 4px rgb(255, 255, 255, .3);
     background: var(--coal-bg-opacity-primary);
+    box-shadow: 0px 2px 5px var(--coal-bg-opacity-primary);;
     height: 1.25em;
+}
+
+.first-info-subheader {
+    margin-top: 2px !important;
 }
 
 .selected-info-subheader > span {
     vertical-align: middle;
 }
 
+.basic-statistics-table {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
+}
+
 .statistics-table {
     display: grid;
     grid-template-columns: 1fr 1fr;
+}
+
+.stat-output {
+    justify-self:end
+}
+
+.inner-bar {
+    background-color: rgba(220, 220, 220);
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) 24%, transparent 25%, transparent);
+    background-position: left;
+    background-size: 4px 100%;
+    box-shadow: 0px 0px 4px rgb(220, 220, 220, 1);
+    height: 100%;
+    width: 70%;
+}
+
+.outer-bar {
+    background-color: grey;
+    height: 40%;
+    width: 80%;
+    margin: auto;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) 24%, transparent 25%, transparent);
+    background-size: 4px 100%;
+    background-color: rgba(176, 176, 177, 0.5);
+    overflow: visible;
+    background-position: right;
+}
+
+.bar-container {
+    display: flex;
+}
+
+.full-stats-button {
+    margin-top: 20px;
+    font-size: 30px;
+    color: white;
+    text-shadow: 0px 0px 4px rgb(255, 255, 255, .3);
+    background-color: var(--coal-bg-opacity-secondary);
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent);
+    height: 3em;
+    border-width: 2px;
+    border-color: lightgrey;
+}
+
+.full-stats-button:hover {
+    background: var(--coal-bg-opacity-primary);
+    text-shadow: 0px 0px 10px rgb(255, 255, 255, .7);
+    border-color: white
+}
+
+.full-stats-button:hover > span {
+    //box-shadow: 0px 0px 4px rgb(255, 255, 255, .3);
+    text-shadow: 0px 0px 4px white;
 }

@@ -1,6 +1,6 @@
 <mat-tab-group class="w-full">
     <mat-tab label="WEAPONS">
-        <div class="stats-tab-content">
+        <div class="stats-tab-content" [@slideReturn]="isFullInfo ? 'slide' : 'return'">
             <div>
                 <table mat-table [dataSource]="weaponsStats" matSort >
                     <ng-container matColumnDef="rank">
@@ -47,21 +47,64 @@
                     }
                 </div>
                 @if (selectedWeapon.getValue() != -1) {
+                    <div class="selected-info-subheader first-info-subheader">
+                        STATISTICS
+                    </div>
                     <div class="selected-info-content">
-                        <div class="statistics-table">
+                        <div class="basic-statistics-table">
                             <div>KILLS: </div>
-                            <div> {{selectedWeapon.getValue().kills}}</div>
+                            <div class="stat-output"> {{selectedWeapon.getValue().kills}}</div>
+                            <div class="bar-container">
+                                <div class="outer-bar">
+                                    <div class="inner-bar"></div>
+                                </div>
+                            </div>
 
                             <div>ACCURACY: </div>
-                            <div> {{(selectedWeapon.getValue().accuracy * 100).toFixed(2)}}</div>
-                            
+                            <div class="stat-output"> {{(selectedWeapon.getValue().accuracy * 100).toFixed(2)}}</div>
+                            <div class="bar-container">
+                                <div class="outer-bar">
+                                    <div class="inner-bar"></div>
+                                </div>
+                            </div>
+
                             <div>SHOTS: </div>
-                            <div> {{selectedWeapon.getValue().shots}}</div>
+                            <div class="stat-output"> {{selectedWeapon.getValue().shots}}</div>
+                            <div class="bar-container">
+                                <div class="outer-bar">
+                                    <div class="inner-bar"></div>
+                                </div>
+                            </div>
 
                             <div>HITS: </div>
-                            <div> {{selectedWeapon.getValue().hits}}</div>
+                            <div class="stat-output"> {{selectedWeapon.getValue().hits}}</div>
+                            <div class="bar-container">
+                                <div class="outer-bar">
+                                    <div class="inner-bar"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    
+                    <!-- <div class="selected-info-subheader">
+                        <span>DEPLOYMENT DATA</span>
+                    </div>
+                    <div class="selected-info-content">
+                        @for (fac of selectedWeapon.getValue().deployments.factionDeployments; track $index) {
+                            <div>
+                                <app-faction-with-flag
+                                    [factionID]="fac.faction"
+                                    flagSide="left"
+                                />
+                                <span> {{(fac.deployments / selectedWeapon.getValue().deployments.totalDeployments * 100).toFixed(2)}}%</span>
+                            </div>
+                        }
+
+                        <div class="p-10">
+                            <c-chart [data]="deploymentData" type="doughnut"/>
+                        </div>
+                    </div> -->
+
                     <div class="selected-info-subheader">
                         <span>RECENT KILLS</span>
                     </div>
@@ -82,20 +125,10 @@
                             </div>
                         }
                     </div>
-                    <div class="selected-info-subheader">
-                        <span>DEPLOYMENT DATA</span>
-                    </div>
-                    <div class="selected-info-content">
-                        @for (fac of selectedWeapon.getValue().deployments.factionDeployments; track $index) {
-                            <div>
-                                <app-faction-with-flag
-                                    [factionID]="fac.faction"
-                                    flagSide="left"
-                                />
-                                <span> {{(fac.deployments / selectedWeapon.getValue().deployments.totalDeployments * 100).toFixed(2)}}%</span>
-                            </div>
-                        }
-                    </div>
+
+                    <button (click)="showFullStats()" class="full-stats-button">
+                        <span>FULL STATS</span>
+                    </button>
                 }
             </div>
         </div>
