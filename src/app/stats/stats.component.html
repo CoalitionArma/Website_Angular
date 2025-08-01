@@ -17,6 +17,7 @@
             <mat-label>Search missions</mat-label>
             <input matInput 
                    [(ngModel)]="searchTerm" 
+                   (input)="onSearchInput($event.target?.value || '')"
                    (keyup.enter)="onFilterChange()"
                    placeholder="Mission name or description...">
           </mat-form-field>
@@ -58,37 +59,40 @@
           <button mat-raised-button (click)="clearFilters()">
             Clear Filters
           </button>
+          <button mat-raised-button color="accent" (click)="refreshMissions()">
+            Refresh
+          </button>
         </div>
       </mat-card-content>
     </mat-card>
 
     <!-- Loading Spinner -->
-    <div *ngIf="loading" class="flex justify-center items-center py-12">
+    <div *ngIf="loading$ | async" class="flex justify-center items-center py-12">
       <mat-spinner diameter="50"></mat-spinner>
       <span class="ml-4 text-white text-lg">Loading missions...</span>
     </div>
 
     <!-- Error Message -->
-    <div *ngIf="error" class="bg-red-600 bg-opacity-90 text-white p-4 rounded mb-6">
+    <div *ngIf="error$ | async as errorMessage" class="bg-red-600 bg-opacity-90 text-white p-4 rounded mb-6">
       <h3 class="font-bold mb-2">Error</h3>
-      <p>{{error}}</p>
-      <button mat-raised-button color="accent" (click)="loadMissions()" class="mt-2">
+      <p>{{errorMessage}}</p>
+      <button mat-raised-button color="accent" (click)="refreshMissions()" class="mt-2">
         Retry
       </button>
     </div>
 
     <!-- Missions Table -->
-    <mat-card *ngIf="!loading && !error" class="bg-neutral-800 bg-opacity-90">
+    <mat-card *ngIf="!(loading$ | async) && !(error$ | async)" class="bg-neutral-800 bg-opacity-90">
       <mat-card-content>
         
         <!-- Results Info -->
         <div class="mb-4 text-white">
-          <p>Showing {{missions.length}} of {{totalMissions}} missions</p>
+          <p>Showing {{(missions$ | async)?.length}} of {{totalMissions$ | async}} missions</p>
         </div>
 
         <!-- Table -->
         <div class="overflow-x-auto">
-          <table mat-table [dataSource]="missions" class="w-full">
+          <table mat-table [dataSource]="missions$ | async" class="w-full">
             
             <!-- Mission Name Column -->
             <ng-container matColumnDef="name">
@@ -144,7 +148,7 @@
 
         <!-- Pagination -->
         <mat-paginator 
-          [length]="totalMissions"
+          [length]="totalMissions$ | async"
           [pageSize]="pageSize"
           [pageIndex]="currentPage"
           [pageSizeOptions]="[10, 20, 50, 100]"
@@ -156,7 +160,7 @@
     </mat-card>
 
     <!-- Empty State -->
-    <div *ngIf="!loading && !error && missions.length === 0" class="text-center py-12">
+    <div *ngIf="!(loading$ | async) && !(error$ | async) && (missions$ | async)?.length === 0" class="text-center py-12">
       <div class="bg-neutral-800 bg-opacity-90 p-8 rounded-lg max-w-md mx-auto">
         <h3 class="text-white text-xl font-bold mb-4">No missions found</h3>
         <p class="text-neutral-300 mb-4">Try adjusting your search criteria or clearing the filters.</p>

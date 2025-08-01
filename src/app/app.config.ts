@@ -10,6 +10,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { statsReducer } from './store/stats.reducer';
 import { StatsEffects } from './store/stats.effects';
+import { missionsReducer } from './store/missions.reducer';
+import { MissionsEffects } from './store/missions.effects';
 import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
@@ -20,9 +22,10 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(), 
     provideAnimationsAsync(),
     provideStore({
-      stats: statsReducer
+      stats: statsReducer,
+      missions: missionsReducer
     }),
-    provideEffects(StatsEffects),
+    provideEffects(StatsEffects, MissionsEffects),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: environment.production

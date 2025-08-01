@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -8,8 +8,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Mission, MissionsResponse, MissionFilters } from '../interfaces/mission.interface';
-import { MissionService } from '../services/mission.service';
+import { Store } from '@ngrx/store';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Mission, MissionFilters } from '../interfaces/mission.interface';
+import * as MissionsActions from '../store/missions.actions';
+import * as MissionsSelectors from '../store/missions.selectors';
 
 @Component({
   selector: 'app-stats',
@@ -28,13 +32,19 @@ import { MissionService } from '../services/mission.service';
   templateUrl: './stats.component.html',
   styleUrl: './stats.component.scss'
 })
-export class StatsComponent implements OnInit {
-  missions: Mission[] = [];
-  loading = false;
-  error: string | null = null;
+export class StatsComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+  private searchSubject = new Subject<string>();
   
-  // Pagination
-  totalMissions = 0;
+  // Observables from store
+  missions$: Observable<Mission[]>;
+  loading$: Observable<boolean>;
+  error$: Observable<string | null>;
+  totalMissions$: Observable<number>;
+  currentPage$: Observable<number>;
+  totalPages$: Observable<number>;
+  
+  // Local component state
   pageSize = 20;
   currentPage = 0;
   
@@ -47,21 +57,49 @@ export class StatsComponent implements OnInit {
   // Table columns
   displayedColumns: string[] = ['name', 'author', 'terrain', 'gametype', 'players', 'description'];
   
-  // Filter options (will be populated from data)
+  // Filter options (computed from store data)
   gametypes: string[] = [];
   terrains: string[] = [];
   authors: string[] = [];
 
-  constructor(private missionService: MissionService) {}
+  constructor(private store: Store) {
+    // Initialize observables
+    this.missions$ = this.store.select(MissionsSelectors.selectMissions);
+    this.loading$ = this.store.select(MissionsSelectors.selectMissionsLoading);
+    this.error$ = this.store.select(MissionsSelectors.selectMissionsError);
+    this.totalMissions$ = this.store.select(MissionsSelectors.selectMissionsTotalCount);
+    this.currentPage$ = this.store.select(MissionsSelectors.selectMissionsCurrentPage);
+    this.totalPages$ = this.store.select(MissionsSelectors.selectMissionsTotalPages);
+  }
 
   ngOnInit() {
+    // Set up search debouncing
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
+    ).subscribe(searchTerm => {
+      this.searchTerm = searchTerm;
+      this.onFilterChange();
+    });
+
+    // Subscribe to missions to update filter options
+    this.missions$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(missions => {
+      this.updateFilterOptions(missions);
+    });
+
+    // Load initial missions
     this.loadMissions();
   }
 
-  loadMissions() {
-    this.loading = true;
-    this.error = null;
-    
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  loadMissions(forceRefresh: boolean = false) {
     const filters: MissionFilters = {
       limit: this.pageSize,
       offset: this.currentPage * this.pageSize,
@@ -71,19 +109,7 @@ export class StatsComponent implements OnInit {
       author: this.selectedAuthor || undefined
     };
 
-    this.missionService.getMissions(filters).subscribe({
-      next: (response: MissionsResponse) => {
-        this.missions = response.missions;
-        this.totalMissions = response.total_count;
-        this.updateFilterOptions();
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error loading missions:', error);
-        this.error = 'Failed to load missions. Please try again.';
-        this.loading = false;
-      }
-    });
+    this.store.dispatch(MissionsActions.loadMissions({ filters, forceRefresh }));
   }
 
   onPageChange(event: PageEvent) {
@@ -97,6 +123,10 @@ export class StatsComponent implements OnInit {
     this.loadMissions();
   }
 
+  onSearchInput(searchTerm: string) {
+    this.searchSubject.next(searchTerm);
+  }
+
   clearFilters() {
     this.searchTerm = '';
     this.selectedGametype = '';
@@ -106,10 +136,14 @@ export class StatsComponent implements OnInit {
     this.loadMissions();
   }
 
-  private updateFilterOptions() {
+  refreshMissions() {
+    this.loadMissions(true); // Force refresh
+  }
+
+  private updateFilterOptions(missions: Mission[]) {
     // Extract unique values for filter dropdowns
-    this.gametypes = [...new Set(this.missions.map(m => m.gametype))].sort();
-    this.terrains = [...new Set(this.missions.map(m => m.terrain))].sort();
-    this.authors = [...new Set(this.missions.map(m => m.author))].sort();
+    this.gametypes = [...new Set(missions.map(m => m.gametype))].sort();
+    this.terrains = [...new Set(missions.map(m => m.terrain))].sort();
+    this.authors = [...new Set(missions.map(m => m.author))].sort();
   }
 }
