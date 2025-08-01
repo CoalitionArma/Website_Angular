@@ -17,10 +17,6 @@ h1 {
     font-size: 36px;
 }
 
-:host ::ng-deep div.mat-mdc-form-field-subscript-wrapper.mat-mdc-form-field-bottom-align {
-    // display: none;
-}
-
 :host ::ng-deep mat-form-field > div > div.mdc-line-ripple {
     display: none;
 }
@@ -50,3 +46,19 @@ mat-form-field {
 // :host ::ng-deep input {
 //     color: green
 // }
+
+// Toast notification animations
+.animate-slide-down {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

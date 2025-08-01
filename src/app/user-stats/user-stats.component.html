@@ -1,0 +1,159 @@
+<div class="stats-container">
+  @if (statsLoading$ | async) {
+    <div class="loading-container">
+      <mat-progress-spinner diameter="40" color="primary"></mat-progress-spinner>
+      <span>Loading your statistics...</span>
+    </div>
+  }
+  
+  @if (statsError$ | async; as error) {
+    <div class="error-container">
+      <h4>❌ Unable to load statistics</h4>
+      <p>{{ error }}</p>
+    </div>
+  }
+  
+  @if (userStats$ | async; as stats) {
+    <div class="stats-grid">
+      <!-- Server Rank Card -->
+      @if (rankInfo$ | async; as rank) {
+        <mat-card class="stat-card ranking-card">
+          <mat-card-header>
+            <mat-card-title class="text-orange-400">🏆 Server Ranking</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="stat-item">
+              <span class="stat-label">Server Rank:</span>
+              <span class="stat-value">#{{ rank.position }}/{{ rank.totalPlayers }}</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+
+      <!-- Combat Stats -->
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-card-title class="text-green-400">🎯 Team vs Team</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="stat-item">
+            <span class="stat-label">Kills:</span>
+            <span class="stat-value">{{ stats.kills | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Deaths:</span>
+            <span class="stat-value">{{ stats.deaths | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">K/D Ratio:</span>
+            <span class="stat-value">{{ stats.kd_ratio | number:'1.2-2' }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">TvT K/D:</span>
+            <span class="stat-value">{{ stats.tvt_kdr | number:'1.2-2' }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- AI Combat Stats -->
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-card-title class="text-blue-400">🤖 vs AI</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="stat-item">
+            <span class="stat-label">AI Kills:</span>
+            <span class="stat-value">{{ stats.ai_kills | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">AI Deaths:</span>
+            <span class="stat-value">{{ stats.ai_deaths | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Coop K/D:</span>
+            <span class="stat-value">{{ stats.coop_kdr | number:'1.2-2' }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Activity Stats -->
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-card-title class="text-purple-400">📊 Combat Details</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="stat-item">
+            <span class="stat-label">Shots Fired:</span>
+            <span class="stat-value">{{ stats.shots_fired | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Kill Accuracy:</span>
+            <span class="stat-value">{{ stats.accuracy_percentage | number:'1.2-2' }}%</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Grenades Thrown:</span>
+            <span class="stat-value">{{ stats.grenades_thrown | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Friendly Fire:</span>
+            <span class="stat-value">{{ stats.friendly_fire_events | number }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Violations & Connection Stats -->
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-card-title class="text-yellow-400">⚠️ Events & Connection</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="stat-item">
+            <span class="stat-label">Civilians Killed:</span>
+            <span class="stat-value">{{ stats.civilians_killed | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Connections:</span>
+            <span class="stat-value">{{ stats.connections | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Disconnections:</span>
+            <span class="stat-value">{{ stats.disconnections | number }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Player Information -->
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-card-title class="text-indigo-400">👤 Player Info</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="stat-item">
+            <span class="stat-label">Player Name:</span>
+            <span class="stat-value">{{ stats.name }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Steam ID:</span>
+            <span class="stat-value text-xs">{{ stats.steamid }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">ARMA GUID:</span>
+            <span class="stat-value text-xs">{{ stats.guid }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">COALITION ID:</span>
+            <span class="stat-value">#{{ stats.id }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+  
+  @if (!(hasStats$ | async) && !(statsLoading$ | async) && !(statsError$ | async)) {
+    <div class="no-stats-container">
+      <h4>🎮 No Statistics Available</h4>
+      <p>You haven't participated in any ARMA 4 missions yet.</p>
+      <p class="text-sm">Join a mission to start tracking your statistics!</p>
+    </div>
+  }
+</div>

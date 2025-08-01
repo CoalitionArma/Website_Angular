@@ -38,31 +38,15 @@ $CoalitionWebsite-theme: m3-theme.$dark-theme;
 
 @import "overlayscrollbars/overlayscrollbars.css";
 
-
-// https://coreui.io/angular/docs/customize/sass/
-
-// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
+// CoreUI - complete import to ensure compatibility
 @import "../node_modules/@coreui/coreui/scss/functions";
-
-// 2. Include any default variable overrides here
-
-// 3. Include remainder of required CoreUI stylesheets
 @import "../node_modules/@coreui/coreui/scss/variables";
-
-// 4. Include any default map overrides here
-
-// 5. Include remainder of required parts
 @import "../node_modules/@coreui/coreui/scss/maps";
 @import "../node_modules/@coreui/coreui/scss/mixins";
 @import "../node_modules/@coreui/coreui/scss/root";
-
-// 6. Optionally include any other parts as needed
 @import "../node_modules/@coreui/coreui/scss/carousel";
 
-
-// 7. Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`
-
-// 8. Add additional custom code here
+// Custom styles
 
 html {
     font-family: 'Roboto', sans-serif;

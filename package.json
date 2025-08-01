@@ -4,9 +4,18 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --o",
+    "start:dev": "ng serve --configuration development --o",
+    "start:prod": "ng serve --configuration production --o",
     "build": "ng build",
+    "build:dev": "ng build --configuration development",
+    "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "backend:dev": "cd backend && npm run dev",
+    "backend:prod": "cd backend && npm run start",
+    "dev": "concurrently \"npm run backend:dev\" \"npm run start:dev\"",
+    "prod": "concurrently \"npm run backend:prod\" \"npm run start:prod\"",
+    "install:all": "npm install && cd backend && npm install"
   },
   "private": true,
   "dependencies": {
@@ -23,6 +32,9 @@
     "@coreui/angular": "5.2.2",
     "@coreui/coreui": "^5.0.2",
     "@coreui/icons": "^3.0.1",
+    "@ngrx/effects": "^18.1.1",
+    "@ngrx/store": "^18.1.1",
+    "@ngrx/store-devtools": "^18.1.1",
     "aos": "^2.3.4",
     "axios": "^1.7.9",
     "discord-oauth2": "^2.12.1",
@@ -51,6 +63,8 @@
     "@types/node": "^22.10.1",
     "angular-cli-ghpages": "^2.0.1",
     "autoprefixer": "^10.4.19",
+    "concurrently": "^8.2.2",
+    "cross-env": "^10.0.0",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",

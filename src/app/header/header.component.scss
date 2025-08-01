@@ -1,21 +1,51 @@
 .header {
-    padding: 10px 30px; 
+    padding: 15px 30px; 
     color: white;
+    display: flex;
+    align-items: center; // Align logo, links, and login button on same line
+
+    #logo {
+        display: flex;
+        align-items: center;
+        
+        img {
+            max-height: 60px; // Limit logo height for compact header
+        }
+    }
 
     #links {
         flex-grow: 1;
-        padding-top: 28px;
+        padding-top: 0; // Remove padding to align with other elements
         display: flex;
         gap: 20px;
         justify-content: right;
         font-size: 15px;
+        align-items: center; // Align links vertically
 
         .link {
             cursor: pointer;
+            display: flex;
+            align-items: center; // Align icon and text within each link
             &:hover {
                 color: rgb(182, 65, 65);
             }
         }
+    }
+
+    // Align login/logout sections
+    .login, .logout {
+        display: flex;
+        align-items: center;
+        padding: 5px; // Reduce padding for better alignment
+        margin-left: 10px; // Add space before login button to match divider spacing
+    }
+
+    // Align avatar properly
+    .avatar {
+        display: flex;
+        align-items: center;
+        padding-left: 8px;
+        padding-top: 0; // Remove top padding for alignment
     }
 }
 
@@ -34,11 +64,13 @@
 }
 
 .transparent-header {
-    @apply bg-gradient-to-r from-neutral-800/60 to-neutral-900/60 backdrop-blur-md
+    @apply bg-gradient-to-r from-neutral-800/60 to-neutral-900/60 backdrop-blur-md;
+    box-shadow: 0 4px 12px rgba(182, 65, 65, 0.3), 0 2px 6px rgba(182, 65, 65, 0.2);
 }
 
 .opaque-header {
-    @apply bg-gradient-to-r from-neutral-800 to-neutral-900
+    @apply bg-gradient-to-r from-neutral-800 to-neutral-900;
+    box-shadow: 0 4px 12px rgba(182, 65, 65, 0.4), 0 2px 6px rgba(182, 65, 65, 0.3);
 }
 
 .drop-mobile-menu {
@@ -52,6 +84,111 @@
     transition: 0.2s ease-in;
 }
 
+#mobileMenu {
+    display: none !important; // Hidden by default, important to override any conflicting styles
+}
+
+#mobileMenu.drop-mobile-menu {
+    display: flex !important; // Show when active
+    flex-direction: column; // Ensure proper layout when shown
+}
+
 avatar {
     max-width: fit-content;
+}
+
+.discord-icon {
+    transition: color 0.2s ease;
+    color: white; // Make the SVG white to match the text
+    margin-right: 8px; // Add space between icon and text
+}
+
+.link:hover .discord-icon {
+    color: #5865F2; // Discord blue on hover
+}
+
+.menu-icon {
+    transition: color 0.2s ease;
+    color: white; // Make the SVG white to match the text
+    margin-right: 8px; // Add space between icon and text
+}
+
+.link:hover .menu-icon {
+    color: rgb(182, 65, 65); // Match the link hover color
+}
+
+// Profile dropdown styles
+.profile-dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-dropdown-trigger {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    
+    .dropdown-arrow {
+        transition: transform 0.2s ease;
+        margin-left: 4px;
+    }
+    
+    &:hover .dropdown-arrow {
+        transform: rotate(180deg);
+    }
+}
+
+.profile-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: linear-gradient(to right, rgba(64, 64, 64, 0.6), rgba(38, 38, 38, 0.6));
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(74, 85, 104, 0.3);
+    border-radius: 6px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    min-width: 120px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    margin-top: 8px;
+    
+    &.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+    
+    .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 12px;
+        color: white;
+        text-decoration: none;
+        transition: background-color 0.2s ease;
+        font-size: 14px;
+        
+        &:hover {
+            background-color: rgba(182, 65, 65, 0.1);
+            color: rgb(182, 65, 65);
+        }
+        
+        &:first-child {
+            border-radius: 5px 5px 0 0;
+        }
+        
+        &:last-child {
+            border-radius: 0 0 5px 5px;
+        }
+        
+        svg {
+            flex-shrink: 0;
+            width: 16px;
+            height: 16px;
+        }
+    }
 }

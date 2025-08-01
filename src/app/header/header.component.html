@@ -3,50 +3,93 @@
     <div [class.transparent-header]="transparentHeader" [class.opaque-header]="!transparentHeader" id="header-main">
     <!-- Desktop Header -->
         <div class="m-auto header drop-shadow-lg md:flex hidden w-full lg:w-2/3 bg-transparent">
-            <div id="logo bg-transparent">
-                <img src="./assets/banner.png" alt="COALITION Logo" aria-hidden="true" width="400px">
+            <div id="logo">
+                <img src="./assets/banner.png" alt="COALITION Logo" aria-hidden="true" width="350px" loading="eager" fetchpriority="high">
             </div>
             <div id="links">
-                <a class="link" routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">Home</a>
-                <a class="link" routerLink="/stats" routerLinkActive="active" ariaCurrentWhenActive="page">Stats</a>
-                <a class="link" routerLink="/events" routerLinkActive="active" ariaCurrentWhenActive="page">Events</a>
-                <a class="link" href="https://coalitiongroup.net/wiki/" target="_blank">Wiki</a>
-                <a class="link" href="https://discord.gg/the-coalition" target="_blank">Discord</a>
+                <a class="link" routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="menu-icon">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                    </svg>
+                    Home
+                </a>
+                <a class="link" routerLink="/stats" routerLinkActive="active" ariaCurrentWhenActive="page">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="menu-icon">
+                        <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z"/>
+                    </svg>
+                    Stats
+                </a>
+                <a class="link" routerLink="/events" routerLinkActive="active" ariaCurrentWhenActive="page">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="menu-icon">
+                        <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-2 .89-2 2v1c0 1.11.89 2 2 2h1v9c0 1.11.89 2 2 2h10c1.11 0 2-.89 2-2v-9h1c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-1.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5S13.5 6.83 13.5 6s.67-1.5 1.5-1.5zM8.5 6c0-.83.67-1.5 1.5-1.5S11.5 5.17 11.5 6s-.67 1.5-1.5 1.5S8.5 6.83 8.5 6zM7 20v-9h10v9H7z"/>
+                    </svg>
+                    Events
+                </a>
+                <a class="link" href="https://coalitiongroup.net/wiki/" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="menu-icon">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                    </svg>
+                    Wiki
+                </a>
+                <a class="link" href="https://discord.gg/the-coalition" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="discord-icon">
+                        <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.8773.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>
+                    </svg>
+                    Discord
+                </a>
                 <div>|</div>
-                <a *ngIf="this.userService.loggedIn" class="link" routerLink="/profile">Profile</a>
+                <!-- Profile Dropdown -->
+                @if (this.userService.loggedIn) {
+                    <div class="profile-dropdown-container" (mouseenter)="toggleProfileDropdown()" (mouseleave)="closeProfileDropdown()">
+                        <a class="link profile-dropdown-trigger" routerLink="/profile">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="menu-icon">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>
+                            Profile
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="dropdown-arrow">
+                                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                            </svg>
+                        </a>
+                        <div class="profile-dropdown-menu" [class.show]="profileDropdownVisible">
+                            <a href="https://amp.coalitiongroup.net" target="_blank" class="dropdown-item">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="menu-icon">
+                                    <path d="M7.5 4C5.567 4 4 5.567 4 7.5v9C4 18.433 5.567 20 7.5 20h9c1.933 0 3.5-1.567 3.5-3.5v-9C20 5.567 18.433 4 16.5 4h-9zM6 7.5C6 6.672 6.672 6 7.5 6h9c.828 0 1.5.672 1.5 1.5v9c0 .828-.672 1.5-1.5 1.5h-9c-.828 0-1.5-.672-1.5-1.5v-9zm2.5 1c-.276 0-.5.224-.5.5v1h-1c-.276 0-.5.224-.5.5s.224.5.5.5h1v1c0 .276.224.5.5.5s.5-.224.5-.5v-1h1c.276 0 .5-.224.5-.5s-.224-.5-.5-.5h-1v-1c0-.276-.224-.5-.5-.5zm6.5 1.5c-.552 0-1 .448-1 1s.448 1 1 1 1-.448 1-1-.448-1-1-1zm-1 3.5c-.552 0-1 .448-1 1s.448 1 1 1 1-.448 1-1-.448-1-1-1zm2-1.5c-.552 0-1 .448-1 1s.448 1 1 1 1-.448 1-1-.448-1-1-1z"/>
+                                </svg>
+                                AMP
+                            </a>
+                        </div>
+                    </div>
+                }
             </div>
-            <div *ngIf="!this.userService.loggedIn; else loggedInTemplate" class="login p-5">
-                <button class="bg-red-900 text-white font-semibold py-2 px-5 rounded" (click)="loginWithDiscord()">
-                    Login
-                </button>
-            </div>
-            <ng-template #loggedInTemplate>
-                <div class="avatar pl-2 pt-4">
+            @if (!this.userService.loggedIn) {
+                <div class="login">
+                    <button class="bg-red-900 text-white font-semibold py-2 px-5 rounded" (click)="loginWithDiscord()">
+                        Login
+                    </button>
+                </div>
+            } @else {
+                <div class="avatar">
                     <img [src]="userService.getAvatarUrl()" alt="User Avatar" class="rounded-full w-12 h-12">
                 </div>
-                <div class="logout p-5">
+                <div class="logout">
                     <button class="bg-red-900 text-white font-semibold py-2 px-5 rounded" (click)="logout()">
                         Logout
                     </button>
                 </div>
-            </ng-template>
+            }
         </div>
 
         <!-- Mobile Header -->
-        <div class="m-auto header header-mobile dropshadow-lg md:hidden flex w-full">
-            <a id="logo" class="py-2 pl-6" routerLink="/">
-                <img src="./assets/logo_cropped.png" alt="COALITION Logo" aria-hidden="true" width="50px">
-            </a>
-            
-            <button id="menu" class="place-self-center my-auto ml-auto justify-self-end pr-6" (click)="mobileMenuClicked()">
-                <svg [cIcon]="icons.cilHamburgerMenu" width="50"></svg>
-            </button>
-        </div>
     </div>
 
-    <div id="mobileMenu" class="flex flex-col justify-start backdrop-blur-md bg-gradient-to-r from-neutral-800/60 to-neutral-900/60" [class.drop-mobile-menu]="mobileMenuVisible" [class.hide-mobile-menu]="!mobileMenuVisible">
+    <div id="mobileMenu" class="md:hidden flex-col justify-start backdrop-blur-md bg-gradient-to-r from-neutral-800/60 to-neutral-900/60" [class.drop-mobile-menu]="mobileMenuVisible" [class.hide-mobile-menu]="!mobileMenuVisible">
         <a class="w-full text-center text-4xl text-white bg-transparent" routerLink="/stats" routerLinkActive="active" ariaCurrentWhenActive="page">Stats</a>
         <a class="w-full text-center text-4xl text-white bg-transparent" routerLink="/events" routerLinkActive="active" ariaCurrentWhenActive="page">Events</a>
-        <a class="w-full text-center text-4xl text-white bg-transparent" href="https://discord.gg/the-coalition" target="_blank">Discord</a>
+        <a class="w-full text-center text-4xl text-white bg-transparent flex items-center justify-center gap-3" href="https://discord.gg/the-coalition" target="_blank">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" class="discord-icon">
+                <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.8773.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>
+            </svg>
+            Discord
+        </a>
     </div>
 </div>
