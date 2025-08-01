@@ -299,6 +299,102 @@ app.get('/api/user/stats/:userId', authenticateToken, async (req: Request<{ user
     }
 });
 
+// Missions List Endpoint
+app.get('/api/missions', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const {
+            limit = '50',
+            offset = '0',
+            gametype,
+            terrain,
+            author,
+            search
+        } = req.query;
+
+        console.log('Missions request params:', { limit, offset, gametype, terrain, author, search });
+
+        // Call the stored procedure to get missions list
+        const results = await sequelize.query('CALL GetMissionsList(?, ?, ?, ?, ?, ?)', {
+            replacements: [
+                parseInt(limit as string),
+                parseInt(offset as string),
+                gametype || null,
+                terrain || null,
+                author || null,
+                search || null
+            ],
+            type: QueryTypes.RAW
+        });
+
+        console.log('Raw stored procedure results:', JSON.stringify(results, null, 2));
+
+        // MySQL stored procedures return results in a nested array format
+        // results[0] is the actual data array
+        let missionsData: any[] = [];
+        
+        if (Array.isArray(results) && results.length > 0) {
+            if (Array.isArray(results[0])) {
+                missionsData = results[0] as any[];
+            } else {
+                // Sometimes the result is directly the array
+                missionsData = results as any[];
+            }
+        }
+
+        console.log('Processed missions data:', missionsData);
+
+        if (!missionsData || missionsData.length === 0) {
+            res.status(200).json({
+                success: true,
+                missions: [],
+                total_count: 0,
+                current_page: Math.floor(parseInt(offset as string) / parseInt(limit as string)) + 1,
+                total_pages: 0
+            });
+            return;
+        }
+
+        // Extract total count from first row (all rows have same total_count)
+        const totalCount = missionsData[0]?.total_count || 0;
+        const totalPages = Math.ceil(totalCount / parseInt(limit as string));
+        const currentPage = Math.floor(parseInt(offset as string) / parseInt(limit as string)) + 1;
+
+        console.log('Total count from data:', totalCount);
+
+        // Remove total_count from individual mission objects and map fields correctly
+        const missions = missionsData.map(mission => ({
+            id: mission.id,
+            name: mission.name,
+            author: mission.author,
+            terrain: mission.terrain,
+            description: mission.details, // Map "details" from DB to "description" for frontend
+            gametype: mission.gametype,
+            players: mission.players,
+            sidecounts: mission.sidecounts
+        }));
+
+        const response = {
+            success: true,
+            missions: missions,
+            total_count: totalCount,
+            current_page: currentPage,
+            total_pages: totalPages,
+            limit: parseInt(limit as string),
+            offset: parseInt(offset as string)
+        };
+
+        console.log('Sending response:', response);
+        res.status(200).json(response);
+
+    } catch (error) {
+        console.error('Error fetching missions:', error);
+        res.status(500).json({
+            error: 'Failed to fetch missions',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
 // Server Initialization
 const startServer = async (): Promise<void> => {
     try {

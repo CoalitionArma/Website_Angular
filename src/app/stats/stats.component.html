@@ -1,1 +1,170 @@
-<p>stats works!</p>
+<div class="missions-container p-6 bg-cover bg-center min-h-screen" style="background-image: url('./assets/images/profile_bg.jpg');">
+  <div class="max-w-7xl mx-auto">
+    
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold text-white mb-2 bg-neutral-800 bg-opacity-60 px-4 py-2">MISSION DATABASE</h1>
+      <p class="text-neutral-300 bg-neutral-800 bg-opacity-60 px-4 py-2">Browse and search through our collection of ARMA 4 missions</p>
+    </div>
+
+    <!-- Filters Section -->
+    <mat-card class="mb-6 bg-neutral-800 bg-opacity-90">
+      <mat-card-content>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+          
+          <!-- Search -->
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Search missions</mat-label>
+            <input matInput 
+                   [(ngModel)]="searchTerm" 
+                   (keyup.enter)="onFilterChange()"
+                   placeholder="Mission name or description...">
+          </mat-form-field>
+
+          <!-- Gametype Filter -->
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Game Type</mat-label>
+            <mat-select [(ngModel)]="selectedGametype" (selectionChange)="onFilterChange()">
+              <mat-option value="">All Types</mat-option>
+              <mat-option *ngFor="let type of gametypes" [value]="type">{{type}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Terrain Filter -->
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Terrain</mat-label>
+            <mat-select [(ngModel)]="selectedTerrain" (selectionChange)="onFilterChange()">
+              <mat-option value="">All Terrains</mat-option>
+              <mat-option *ngFor="let terrain of terrains" [value]="terrain">{{terrain}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Author Filter -->
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Author</mat-label>
+            <mat-select [(ngModel)]="selectedAuthor" (selectionChange)="onFilterChange()">
+              <mat-option value="">All Authors</mat-option>
+              <mat-option *ngFor="let author of authors" [value]="author">{{author}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        </div>
+
+        <!-- Filter Actions -->
+        <div class="flex gap-2">
+          <button mat-raised-button color="primary" (click)="onFilterChange()">
+            Search
+          </button>
+          <button mat-raised-button (click)="clearFilters()">
+            Clear Filters
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="loading" class="flex justify-center items-center py-12">
+      <mat-spinner diameter="50"></mat-spinner>
+      <span class="ml-4 text-white text-lg">Loading missions...</span>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="error" class="bg-red-600 bg-opacity-90 text-white p-4 rounded mb-6">
+      <h3 class="font-bold mb-2">Error</h3>
+      <p>{{error}}</p>
+      <button mat-raised-button color="accent" (click)="loadMissions()" class="mt-2">
+        Retry
+      </button>
+    </div>
+
+    <!-- Missions Table -->
+    <mat-card *ngIf="!loading && !error" class="bg-neutral-800 bg-opacity-90">
+      <mat-card-content>
+        
+        <!-- Results Info -->
+        <div class="mb-4 text-white">
+          <p>Showing {{missions.length}} of {{totalMissions}} missions</p>
+        </div>
+
+        <!-- Table -->
+        <div class="overflow-x-auto">
+          <table mat-table [dataSource]="missions" class="w-full">
+            
+            <!-- Mission Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef class="text-white font-bold">Mission Name</th>
+              <td mat-cell *matCellDef="let mission" class="text-white">
+                <div class="font-medium">{{mission.name}}</div>
+              </td>
+            </ng-container>
+
+            <!-- Author Column -->
+            <ng-container matColumnDef="author">
+              <th mat-header-cell *matHeaderCellDef class="text-white font-bold">Author</th>
+              <td mat-cell *matCellDef="let mission" class="text-white">{{mission.author}}</td>
+            </ng-container>
+
+            <!-- Terrain Column -->
+            <ng-container matColumnDef="terrain">
+              <th mat-header-cell *matHeaderCellDef class="text-white font-bold">Terrain</th>
+              <td mat-cell *matCellDef="let mission" class="text-white">
+                <span class="bg-blue-600 bg-opacity-70 px-2 py-1 rounded text-sm">{{mission.terrain}}</span>
+              </td>
+            </ng-container>
+
+            <!-- Game Type Column -->
+            <ng-container matColumnDef="gametype">
+              <th mat-header-cell *matHeaderCellDef class="text-white font-bold">Type</th>
+              <td mat-cell *matCellDef="let mission" class="text-white">
+                <span class="bg-green-600 bg-opacity-70 px-2 py-1 rounded text-sm">{{mission.gametype}}</span>
+              </td>
+            </ng-container>
+
+            <!-- Players Column -->
+            <ng-container matColumnDef="players">
+              <th mat-header-cell *matHeaderCellDef class="text-white font-bold">Players</th>
+              <td mat-cell *matCellDef="let mission" class="text-white">{{mission.players}}</td>
+            </ng-container>
+
+            <!-- Description Column -->
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef class="text-white font-bold">Description</th>
+              <td mat-cell *matCellDef="let mission" class="text-white">
+                <div class="max-w-xs truncate" [title]="mission.description">
+                  {{mission.description}}
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+                class="hover:bg-neutral-700 hover:bg-opacity-50 cursor-pointer transition-colors"></tr>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <mat-paginator 
+          [length]="totalMissions"
+          [pageSize]="pageSize"
+          [pageIndex]="currentPage"
+          [pageSizeOptions]="[10, 20, 50, 100]"
+          (page)="onPageChange($event)"
+          class="bg-transparent text-white mt-4">
+        </mat-paginator>
+
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && !error && missions.length === 0" class="text-center py-12">
+      <div class="bg-neutral-800 bg-opacity-90 p-8 rounded-lg max-w-md mx-auto">
+        <h3 class="text-white text-xl font-bold mb-4">No missions found</h3>
+        <p class="text-neutral-300 mb-4">Try adjusting your search criteria or clearing the filters.</p>
+        <button mat-raised-button color="primary" (click)="clearFilters()">
+          Clear Filters
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

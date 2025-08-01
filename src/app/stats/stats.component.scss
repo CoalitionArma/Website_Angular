@@ -1,0 +1,95 @@
+.missions-container {
+  min-height: 100vh;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}
+
+// Material theme overrides for dark background
+::ng-deep {
+  .mat-mdc-card {
+    background-color: rgba(38, 38, 38, 0.9) !important;
+    color: white !important;
+  }
+
+  .mat-mdc-form-field {
+    .mat-mdc-text-field-wrapper {
+      background-color: rgba(64, 64, 64, 0.8) !important;
+    }
+    
+    .mdc-text-field--outlined .mdc-notched-outline__leading,
+    .mdc-text-field--outlined .mdc-notched-outline__notch,
+    .mdc-text-field--outlined .mdc-notched-outline__trailing {
+      border-color: rgba(255, 255, 255, 0.3) !important;
+    }
+    
+    .mdc-text-field--focused .mdc-notched-outline__leading,
+    .mdc-text-field--focused .mdc-notched-outline__notch,
+    .mdc-text-field--focused .mdc-notched-outline__trailing {
+      border-color: #3f51b5 !important;
+    }
+    
+    .mat-mdc-input-element {
+      color: white !important;
+    }
+    
+    .mat-mdc-floating-label {
+      color: rgba(255, 255, 255, 0.7) !important;
+    }
+    
+    .mat-mdc-floating-label.mdc-floating-label--float-above {
+      color: rgba(255, 255, 255, 0.9) !important;
+    }
+  }
+
+  .mat-mdc-table {
+    background-color: transparent !important;
+    
+    .mat-mdc-header-row {
+      background-color: rgba(64, 64, 64, 0.8) !important;
+    }
+    
+    .mat-mdc-row {
+      border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+      }
+    }
+    
+    .mat-mdc-header-cell,
+    .mat-mdc-cell {
+      border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+    }
+  }
+
+  .mat-mdc-paginator {
+    background-color: transparent !important;
+    color: white !important;
+    
+    .mat-mdc-icon-button {
+      color: white !important;
+    }
+    
+    .mat-mdc-select {
+      color: white !important;
+    }
+  }
+
+  .mat-mdc-select-panel {
+    background-color: rgba(38, 38, 38, 0.95) !important;
+    
+    .mat-mdc-option {
+      color: white !important;
+      
+      &:hover,
+      &.mdc-list-item--selected {
+        background-color: rgba(63, 81, 181, 0.3) !important;
+      }
+    }
+  }
+
+  .mat-mdc-option {
+    color: white !important;
+  }
+}
