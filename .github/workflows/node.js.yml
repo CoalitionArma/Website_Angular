@@ -19,7 +19,7 @@ jobs:
 
     -  run: npm run build
 
-    - uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+    - uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
         server: ${{ secrets.FTP_TARGET }}
         port: ${{secrets.FTP_PORT}}
