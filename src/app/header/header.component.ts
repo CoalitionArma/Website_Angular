@@ -5,6 +5,7 @@ import { IconDirective } from '@coreui/icons-angular';
 import { OverlayScrollbars } from 'overlayscrollbars';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../services/user.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-header',
@@ -43,15 +44,24 @@ export class HeaderComponent implements OnInit {
   }
 
   mobileMenuVisible = false;
+  profileDropdownVisible = false;
+
   mobileMenuClicked() {
     this.mobileMenuVisible = !this.mobileMenuVisible
   }
 
+  toggleProfileDropdown() {
+    this.profileDropdownVisible = !this.profileDropdownVisible;
+  }
+
+  closeProfileDropdown() {
+    this.profileDropdownVisible = false;
+  }
+
   loginWithDiscord() {
-    // check angular development environment
-    const local = `https://discord.com/oauth2/authorize?client_id=1311851378875830354&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A4200%2Foauth%2F&scope=identify+email+connections+guilds+guilds.join`;
-    const prod = `https://discord.com/oauth2/authorize?client_id=1311851378875830354&response_type=code&redirect_uri=https%3A%2F%2Fcoalitiongroup.net%2Foauth%2F&scope=identify+email+connections+guilds+guilds.join`;
-    window.location.href = prod;
+    const redirectUri = encodeURIComponent(environment.redirectUri);
+    const discordAuthUrl = `${environment.discordOAuthUrl}?client_id=${environment.clientId}&response_type=code&redirect_uri=${redirectUri}&scope=identify+email+connections+guilds+guilds.join`;
+    window.location.href = discordAuthUrl;
   }
 
   logout() {

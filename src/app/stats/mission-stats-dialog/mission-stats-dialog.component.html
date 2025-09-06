@@ -1,0 +1,241 @@
+<div class="mission-stats-dialog">
+  <h2 mat-dialog-title>
+    <span>{{ mission.name }} Statistics</span>
+    <button mat-icon-button class="close-button" (click)="closeDialog()" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </h2>
+
+  <mat-dialog-content class="dialog-content">
+    <!-- Loading spinner -->
+    <div *ngIf="loading" class="loading-container">
+      <mat-spinner diameter="60"></mat-spinner>
+      <p>Loading mission statistics...</p>
+    </div>
+
+    <!-- Error message -->
+    <div *ngIf="error && !loading" class="error-container">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ error }}</p>
+    </div>
+
+    <!-- Stats content -->
+    <div *ngIf="!loading && processedStats && !error" class="stats-content">
+      <!-- Tab navigation -->
+      <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="300ms" (selectedTabChange)="onTabChange($event)">
+        <!-- Summary tab -->
+        <mat-tab label="Summary">
+          <div class="summary-container summary-scrollable">
+            <!-- Mission metadata - Now placed first -->
+            <mat-card appearance="outlined">
+              <mat-card-header>
+                <mat-card-title>Mission Details</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="mission-details">
+                  <div class="detail-item">
+                    <span class="label">Author</span>
+                    <span class="value">{{ mission.author }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="label">Terrain</span>
+                    <span class="value">{{ mission.terrain }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="label">Game Type</span>
+                    <span class="value">{{ mission.gametype }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="label">Players</span>
+                    <span class="value">{{ mission.players }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="label">Side Counts</span>
+                    <span class="value">{{ formatSideCounts(mission.sidecounts) }}</span>
+                  </div>
+                  <div class="detail-item" *ngIf="processedStats.summary.duration">
+                    <span class="label">Duration</span>
+                    <span class="value">{{ formatDuration(processedStats.summary.duration) }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="label">Outcome</span>
+                    <span class="value">TBA</span>
+                  </div>
+                </div>
+                <p *ngIf="mission.description" class="mission-description">
+                  {{ mission.description }}
+                </p>
+              </mat-card-content>
+            </mat-card>
+
+            <!-- Mission Overview - with Total Kills removed -->
+            <mat-card appearance="outlined" *ngIf="processedStats.summary.mostActivePlayer || processedStats.summary.playerWithMostKills">
+              <mat-card-header>
+                <mat-card-title>Player Overview</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="summary-grid">
+                  <div class="summary-item" *ngIf="processedStats.summary.mostActivePlayer">
+                    <span class="label">Most Active</span>
+                    <span class="value">{{ processedStats.summary.mostActivePlayer }}</span>
+                  </div>
+                  <div class="summary-item" *ngIf="processedStats.summary.playerWithMostKills">
+                    <span class="label">Top Killer</span>
+                    <span class="value">{{ processedStats.summary.playerWithMostKills }}</span>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <!-- Kill Statistics -->
+            <mat-card appearance="outlined">
+              <mat-card-header>
+                <mat-card-title>Kill Statistics</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="summary-grid">
+                  <div class="summary-item" *ngIf="killStats.bestKdr">
+                    <span class="label">Best K/D Ratio</span>
+                    <span class="value">{{ killStats.bestKdr.player }} ({{ killStats.bestKdr.value }})</span>
+                  </div>
+                  <div class="summary-item" *ngIf="killStats.longestKill">
+                    <span class="label">Longest Kill</span>
+                    <span class="value">{{ killStats.longestKill.player }} ({{ killStats.longestKill.distance }})</span>
+                  </div>
+                  <div class="summary-item" *ngIf="killStats.mostUsedWeapon">
+                    <span class="label">Most Used Weapon</span>
+                    <span class="value">{{ killStats.mostUsedWeapon.name }} ({{ killStats.mostUsedWeapon.count }})</span>
+                  </div>
+                  <div class="summary-item" *ngIf="killStats.totalDistance">
+                    <span class="label">Total Kill Distance</span>
+                    <span class="value">{{ killStats.totalDistance }} m</span>
+                  </div>
+                  <div class="summary-item" *ngIf="killStats.avgDistance">
+                    <span class="label">Avg Kill Distance</span>
+                    <span class="value">{{ killStats.avgDistance }} m</span>
+                  </div>
+                  <div class="summary-item" *ngIf="killStats.playerKills">
+                    <span class="label">Player Kills</span>
+                    <span class="value">{{ killStats.playerKills }}</span>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+        
+        <!-- Kills tab -->
+        <mat-tab label="Kills" *ngIf="processedStats.sessions && processedStats.sessions.length > 0">
+          <div class="kills-container">
+            <h3>Mission Kills: {{ allKills.length }}</h3>
+            <div *ngIf="allKills && allKills.length > 0" class="kills-table-container">
+              <table mat-table [dataSource]="killsDataSource" matSort class="kills-table mat-elevation-z1">
+                <!-- Time Column -->
+                <ng-container matColumnDef="time">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Time</th>
+                  <td mat-cell *matCellDef="let kill">{{ kill.time || 'Unknown' }}</td>
+                </ng-container>
+  
+                <!-- Killer Column -->
+                <ng-container matColumnDef="killer">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Killer</th>
+                  <td mat-cell *matCellDef="let kill">
+                    <span [ngClass]="{'player-name': kill.killer !== 'AI', 'ai-name': kill.killer === 'AI'}">
+                      {{ kill.killer || 'Unknown' }}
+                    </span>
+                  </td>
+                </ng-container>
+  
+                <!-- Victim Column -->
+                <ng-container matColumnDef="victim">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Victim</th>
+                  <td mat-cell *matCellDef="let kill">
+                    <span [ngClass]="{'player-name': kill.victim !== 'AI', 'ai-name': kill.victim === 'AI'}">
+                      {{ kill.victim || 'Unknown' }}
+                    </span>
+                  </td>
+                </ng-container>
+  
+                <!-- Weapon Column -->
+                <ng-container matColumnDef="weapon">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Weapon</th>
+                  <td mat-cell *matCellDef="let kill">{{ kill.weapon || 'Unknown' }}</td>
+                </ng-container>
+                
+                <!-- Distance Column -->
+                <ng-container matColumnDef="distance">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Distance</th>
+                  <td mat-cell *matCellDef="let kill">{{ kill.distance || 'Unknown' }}</td>
+                </ng-container>
+  
+                <tr mat-header-row *matHeaderRowDef="killsDisplayColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: killsDisplayColumns;"></tr>
+              </table>
+            </div>
+            <div *ngIf="!allKills || allKills.length === 0" class="no-kills-message">
+              <p>No kills data available for this mission.</p>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Events tab (if events are available) -->
+        <mat-tab label="Events" *ngIf="processedStats.events && processedStats.events.length > 0">
+          <div class="events-container">
+            <h3>Total Events: {{ processedStats.events.length }}</h3>
+            <div class="events-table-container">
+              <table mat-table [dataSource]="processedStats.events" class="events-table">
+                <!-- Timestamp Column -->
+                <ng-container matColumnDef="timestamp">
+                  <th mat-header-cell *matHeaderCellDef>Time</th>
+                  <td mat-cell *matCellDef="let event">{{ event.timestamp }}</td>
+                </ng-container>
+
+                <!-- Type Column -->
+                <ng-container matColumnDef="type">
+                  <th mat-header-cell *matHeaderCellDef>Type</th>
+                  <td mat-cell *matCellDef="let event">
+                    <span class="event-type">{{ event.type }}</span>
+                  </td>
+                </ng-container>
+
+                <!-- Player Column -->
+                <ng-container matColumnDef="player">
+                  <th mat-header-cell *matHeaderCellDef>Player</th>
+                  <td mat-cell *matCellDef="let event">{{ event.player || 'N/A' }}</td>
+                </ng-container>
+
+                <!-- Description Column -->
+                <ng-container matColumnDef="description">
+                  <th mat-header-cell *matHeaderCellDef>Description</th>
+                  <td mat-cell *matCellDef="let event">{{ event.description }}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="['timestamp', 'type', 'player', 'description']; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['timestamp', 'type', 'player', 'description']"></tr>
+              </table>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Charts tab -->
+        <mat-tab label="Charts" *ngIf="chartOptions">
+          <div class="charts-container">
+            <!-- Charts would go here if you have a charting library -->
+            <p>Under Construction</p>
+          </div>
+        </mat-tab>
+
+        <!-- Raw Data tab -->
+        <mat-tab label="Raw Data" *ngIf="rawData">
+          <div class="raw-data-container">
+            <pre>{{ formatJson(rawData) }}</pre>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="centered-actions">
+    <button mat-button color="primary" (click)="closeDialog()">Close</button>
+  </mat-dialog-actions>
+</div>

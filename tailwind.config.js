@@ -3,6 +3,7 @@ module.exports = {
     content: [
       "./src/**/*.{html,ts}",
     ],
+    important: true, // Make all utilities !important to override Material Design
     theme: {
       extend: {
         screens: {

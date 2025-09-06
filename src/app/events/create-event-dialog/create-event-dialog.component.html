@@ -1,0 +1,102 @@
+<div class="create-event-dialog">
+  <h2 mat-dialog-title>Create New Event</h2>
+  
+  <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+    <mat-dialog-content class="dialog-content">
+      <!-- Basic Event Information -->
+      <div class="section">
+        <h3>Event Details</h3>
+        
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Event Title</mat-label>
+          <input matInput formControlName="title" placeholder="Enter event title" required>
+          <mat-error *ngIf="eventForm.get('title')?.invalid && eventForm.get('title')?.touched">
+            Event title is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="3" placeholder="Describe your event"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Banner URL (optional)</mat-label>
+          <input matInput formControlName="bannerUrl" placeholder="https://example.com/banner.jpg">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Event Date & Time</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dateTime" required>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="eventForm.get('dateTime')?.invalid && eventForm.get('dateTime')?.touched">
+            Event date is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Groups and Roles -->
+      <div class="section">
+        <div class="section-header">
+          <h3>ORBAT</h3>
+          <button type="button" mat-raised-button color="primary" (click)="addGroup()">
+            <mat-icon>add</mat-icon>
+            Add Group
+          </button>
+        </div>
+
+        <div formArrayName="groups" class="groups-container">
+          <mat-card *ngFor="let group of groups.controls; let groupIndex = index" class="group-card">
+            <mat-card-header>
+              <mat-card-title class="group-title">
+                <mat-form-field appearance="fill" class="group-name-field">
+                  <mat-label>Group Name</mat-label>
+                  <input matInput [formControlName]="groupIndex" placeholder="e.g., Alpha Squad, Bravo Team">
+                </mat-form-field>
+                <button type="button" mat-icon-button color="warn" (click)="removeGroup(groupIndex)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content>
+              <div class="roles-section" [formGroupName]="groupIndex">
+                <div class="roles-header">
+                  <h4>Roles</h4>
+                  <button type="button" mat-button color="primary" (click)="addRole(groupIndex)">
+                    <mat-icon>add</mat-icon>
+                    Add Role
+                  </button>
+                </div>
+
+                <div formArrayName="roles" class="roles-container">
+                  <div *ngFor="let role of getRolesArray(groupIndex).controls; let roleIndex = index" 
+                       class="role-item">
+                    <mat-form-field appearance="fill" class="role-name-field">
+                      <mat-label>Role Name</mat-label>
+                      <input matInput [formControlName]="roleIndex" placeholder="e.g., Squad Leader, Medic, Rifleman">
+                    </mat-form-field>
+                    <button type="button" mat-icon-button color="warn" (click)="removeRole(groupIndex, roleIndex)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button type="button" mat-button [mat-dialog-close]="false">Cancel</button>
+      <button type="submit" mat-raised-button color="primary" 
+              [disabled]="eventForm.invalid || isSubmitting">
+        {{ isSubmitting ? 'Creating...' : 'Create Event' }}
+      </button>
+    </mat-dialog-actions>
+  </form>
+</div>

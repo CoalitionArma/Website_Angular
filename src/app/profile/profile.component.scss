@@ -1,5 +1,15 @@
 @use '@angular/material' as mat;
 
+// Profile container styling
+#main {
+  position: relative;
+  overflow-y: auto; // Ensure the main container can scroll
+  background-attachment: scroll; // Better mobile compatibility
+  
+  @media (min-width: 1024px) {
+    background-attachment: fixed; // Fixed background on larger screens
+  }
+}
 
 :root {
     @include mat.card-overrides((
@@ -15,10 +25,6 @@ div {
 h1 {
     color: red;
     font-size: 36px;
-}
-
-:host ::ng-deep div.mat-mdc-form-field-subscript-wrapper.mat-mdc-form-field-bottom-align {
-    // display: none;
 }
 
 :host ::ng-deep mat-form-field > div > div.mdc-line-ripple {
@@ -50,3 +56,19 @@ mat-form-field {
 // :host ::ng-deep input {
 //     color: green
 // }
+
+// Toast notification animations
+.animate-slide-down {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

@@ -172,5 +172,13 @@ dist
 # SvelteKit build / generate output
 .svelte-kit
 
+# Backend environment files
+backend/.env
+backend/.env.development
+backend/.env.production
+backend/.env.local
+backend/dist
+backend/build
+
 # End of https://www.toptal.com/developers/gitignore/api/angular,node
 

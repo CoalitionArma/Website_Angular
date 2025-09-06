@@ -1,0 +1,252 @@
+.stats-container {
+  width: 100%;
+  max-width: none; /* Remove max-width to allow parent control */
+  margin: 0; /* Remove auto margin to allow parent control */
+  padding: 0; /* Remove padding to allow parent control */
+  background: transparent; /* Make transparent to inherit parent background */
+  
+  h3 {
+    font-weight: 700;
+    letter-spacing: 0.025em;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.stat-card {
+  background: rgba(31, 41, 55, 0.6); /* Reduce opacity to blend better */
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(55, 65, 81, 0.3); /* Reduce border opacity */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: rgba(31, 41, 55, 0.8); /* Slightly more opaque on hover */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    transform: scale(1.05);
+  }
+  
+  .mat-mdc-card-header {
+    padding-bottom: 0.5rem;
+    
+    .mat-mdc-card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+  
+  .mat-mdc-card-content {
+    padding-top: 0.5rem;
+  }
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.25rem;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  .stat-label {
+    color: rgb(209, 213, 219);
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .stat-value {
+    color: white;
+    font-weight: 600;
+    background: rgba(55, 65, 81, 0.5);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    min-width: 4rem;
+    text-align: center;
+    
+    &.text-xs {
+      font-size: 0.75rem;
+      max-width: 8rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+// Loading state styles
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  
+  .mat-mdc-progress-spinner {
+    margin-right: 1rem;
+  }
+  
+  span {
+    color: rgb(209, 213, 219);
+    font-weight: 500;
+  }
+}
+
+// Error state styles
+.error-container {
+  background: rgba(220, 38, 38, 0.2);
+  border: 1px solid rgb(220, 38, 38);
+  color: rgb(252, 165, 165);
+  padding: 1rem;
+  border-radius: 0.25rem;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  
+  h4 {
+    color: rgb(254, 202, 202);
+    font-weight: 600;
+  }
+  
+  p {
+    color: rgb(252, 165, 165);
+    opacity: 0.9;
+  }
+}
+
+// No stats state styles  
+.no-stats-container {
+  background: rgba(64, 64, 64, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgb(115, 115, 115);
+  color: rgb(212, 212, 212);
+  padding: 1.5rem;
+  border-radius: 0.25rem;
+  text-align: center;
+  
+  h4 {
+    color: rgb(229, 229, 229);
+    font-weight: 600;
+    font-size: 1.125rem;
+  }
+  
+  p {
+    color: rgb(163, 163, 163);
+    margin-top: 0.5rem;
+    
+    &.text-sm {
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+  }
+}
+
+// Responsive grid adjustments - use CSS custom properties for flexibility
+.stats-grid {
+  display: grid;
+  gap: 1rem;
+  
+  // Default grid (mobile first)
+  grid-template-columns: 1fr;
+  
+  // Tablet
+  @media (min-width: 769px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  // Desktop
+  @media (min-width: 1025px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+// Remove hover transform on mobile to prevent layout issues
+@media (max-width: 768px) {
+  .stat-card:hover {
+    transform: none;
+  }
+}
+
+// Color variants for different stat types
+.text-green-400 {
+  color: rgb(74, 222, 128);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.text-blue-400 {
+  color: rgb(96, 165, 250);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.text-purple-400 {
+  color: rgb(196, 181, 253);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.text-yellow-400 {
+  color: rgb(250, 204, 21);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.text-indigo-400 {
+  color: rgb(129, 140, 248);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.text-orange-400 {
+  color: rgb(251, 146, 60);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+// Server ranking card full-width styling
+.ranking-card {
+  grid-column: 1 / -1; // Span full width across all columns
+  margin-bottom: 1rem;
+  
+  .mat-mdc-card-content {
+    display: flex;
+    justify-content: center;
+    
+    .stat-item {
+      max-width: 300px;
+      border: none;
+      padding: 1rem;
+      
+      .stat-label {
+        font-size: 1rem;
+        font-weight: 600;
+      }
+      
+      .stat-value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        background: rgba(251, 146, 60, 0.2);
+        border: 1px solid rgba(251, 146, 60, 0.3);
+        color: rgb(251, 146, 60);
+        min-width: 5rem;
+      }
+    }
+  }
+}
+
+// Enhanced hover effects
+.stat-card:hover {
+  .stat-value {
+    background: rgba(75, 85, 99, 0.7);
+  }
+  
+  .mat-mdc-card-title {
+    opacity: 1;
+  }
+}
+
+// Animation for pulse effect
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
