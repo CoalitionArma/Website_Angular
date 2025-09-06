@@ -1,0 +1,141 @@
+// Shared component styles to reduce duplication across components
+
+// Dialog styles
+%dialog-container {
+  background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  position: relative;
+}
+
+%dialog-content {
+  max-height: 70vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px;
+  scrollbar-width: thin;
+  scrollbar-color: #777 #2a2a2a;
+  position: relative;
+}
+
+%dialog-title {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+  padding: 24px 24px 0;
+  text-align: center;
+  background: linear-gradient(45deg, rgb(182, 65, 65), rgb(200, 85, 85));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+%card-style {
+  background: rgba(64, 64, 64, 0.3);
+  border: 1px solid rgba(128, 128, 128, 0.2);
+  border-radius: 12px;
+  margin-bottom: 24px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+// Form field styles
+%form-field-base {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+// Button styles
+%button-primary {
+  background: linear-gradient(45deg, rgb(182, 65, 65), rgb(150, 45, 45));
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(182, 65, 65, 0.3);
+}
+
+%button-primary-hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(182, 65, 65, 0.4);
+}
+
+// Scrollbar styles
+%custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #777 #2a2a2a;
+  
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #2a2a2a;
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #777;
+    border-radius: 4px;
+  }
+}
+
+// Section headers
+%section-header {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 500;
+  position: relative;
+  padding-bottom: 8px;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(45deg, rgb(182, 65, 65), rgb(150, 45, 45));
+    border-radius: 2px;
+  }
+}
+
+// Form field styles
+%input-white-text {
+  color: #ffffff !important;
+}
+
+// Datepicker styles
+%datepicker-styles {
+  ::ng-deep .mat-datepicker-content {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+  }
+  
+  ::ng-deep .mat-calendar {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+  }
+  
+  ::ng-deep .mat-calendar-body-cell-content {
+    color: #ffffff !important;
+  }
+  
+  ::ng-deep .mat-calendar-body-selected {
+    background-color: rgb(182, 65, 65) !important;
+    color: #ffffff !important;
+  }
+}
+
+// Responsive styles
+@mixin mobile-styles {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
