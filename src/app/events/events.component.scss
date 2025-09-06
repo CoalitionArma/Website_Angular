@@ -1,0 +1,541 @@
+.events-container {
+  width: 100%;
+  background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 50%, #1a1a1a 100%);
+  min-height: 100vh;
+
+  .content-wrapper {
+    width: 80%;
+    margin: 0 auto;
+    padding: 32px;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    padding: 24px 0;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100px;
+      height: 2px;
+      background: linear-gradient(45deg, rgb(182, 65, 65), rgb(150, 45, 45));
+      border-radius: 1px;
+    }
+
+    h1 {
+      margin: 0;
+      color: #ffffff;
+      font-size: 36px;
+      font-weight: 700;
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      background: linear-gradient(45deg, rgb(182, 65, 65), rgb(200, 85, 85));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    button {
+      background: linear-gradient(45deg, rgb(182, 65, 65), rgb(150, 45, 45));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-weight: 600;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(182, 65, 65, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(182, 65, 65, 0.4);
+        background: linear-gradient(45deg, rgb(200, 85, 85), rgb(170, 55, 55));
+      }
+
+      &:disabled {
+        background: rgba(128, 128, 128, 0.3);
+        color: rgba(255, 255, 255, 0.5);
+        box-shadow: none;
+        cursor: not-allowed;
+      }
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  .login-notice {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, rgba(128, 128, 128, 0.15), rgba(96, 96, 96, 0.2));
+    border-radius: 12px;
+    margin-bottom: 32px;
+    border: 1px solid rgba(160, 160, 160, 0.3);
+    backdrop-filter: blur(10px);
+
+    mat-icon {
+      color: #d0d0d0;
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+
+    span {
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
+
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 80px;
+
+    mat-progress-spinner {
+      ::ng-deep circle {
+        stroke: rgb(182, 65, 65);
+      }
+    }
+
+    p {
+      margin: 0;
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 500;
+    }
+  }
+
+  .no-events {
+    text-align: center;
+    padding: 80px 32px;
+    color: #ffffff;
+    background: rgba(64, 64, 64, 0.3);
+    border-radius: 16px;
+    border: 1px dashed rgba(128, 128, 128, 0.3);
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      margin-bottom: 24px;
+      color: rgb(182, 65, 65);
+    }
+
+    h2 {
+      margin: 0 0 16px 0;
+      font-size: 28px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    p {
+      margin: 0;
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+
+  .events-list {
+    display: grid;
+    gap: 32px;
+    grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+  }
+
+  .event-card {
+    background: linear-gradient(135deg, rgba(64, 64, 64, 0.6), rgba(38, 38, 38, 0.6));
+    border: 1px solid rgba(128, 128, 128, 0.2);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+      transform: translateY(-5px);
+      border-color: rgba(182, 65, 65, 0.4);
+      box-shadow: 0 12px 40px rgba(182, 65, 65, 0.2);
+    }
+
+    &.past-event {
+      opacity: 0.6;
+      background: linear-gradient(135deg, rgba(96, 96, 96, 0.4), rgba(64, 64, 64, 0.4));
+      
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
+    ::ng-deep .mat-mdc-card-header {
+      padding: 24px 24px 16px;
+      background: linear-gradient(135deg, rgba(182, 65, 65, 0.15), rgba(150, 45, 45, 0.1));
+    }
+
+    ::ng-deep .mat-mdc-card-content {
+      padding: 0 24px 24px;
+    }
+
+    .event-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      
+      ::ng-deep .mat-mdc-card-title {
+        color: #ffffff;
+        font-size: 24px;
+        font-weight: 600;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    .event-actions {
+      display: flex;
+      gap: 8px;
+
+      button {
+        background: linear-gradient(45deg, rgb(182, 65, 65), rgb(150, 45, 45));
+        color: white;
+        border: none;
+        border-radius: 8px;
+        width: 40px;
+        height: 40px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(182, 65, 65, 0.4);
+        }
+      }
+    }
+
+    .event-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 16px;
+
+      .event-date,
+      .event-creator {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 15px;
+        padding: 8px 12px;
+        border-radius: 8px;
+        backdrop-filter: blur(5px);
+
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+        }
+      }
+
+      .event-date {
+        background: rgba(128, 128, 128, 0.2);
+        color: #e0e0e0;
+        border: 1px solid rgba(160, 160, 160, 0.3);
+      }
+
+      .event-creator {
+        background: rgba(182, 65, 65, 0.15);
+        color: #f0c0c0;
+        border: 1px solid rgba(182, 65, 65, 0.3);
+      }
+    }
+
+    .event-banner {
+      margin: 20px 0;
+
+      img {
+        width: 100%;
+        max-height: 300px;
+        object-fit: cover;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    .event-description {
+      margin-bottom: 32px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 16px;
+      padding: 16px;
+      background: rgba(64, 64, 64, 0.3);
+      border-radius: 8px;
+      border-left: 4px solid rgb(182, 65, 65);
+    }
+
+    .roster-section {
+      h3 {
+        margin: 0 0 24px 0;
+        color: #ffffff;
+        font-size: 22px;
+        font-weight: 600;
+        padding-bottom: 12px;
+        border-bottom: 2px solid rgba(128, 128, 128, 0.2);
+        position: relative;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          width: 60px;
+          height: 2px;
+          background: linear-gradient(45deg, rgb(182, 65, 65), rgb(150, 45, 45));
+          border-radius: 1px;
+        }
+      }
+
+      .group-section {
+        margin-bottom: 32px;
+        background: rgba(64, 64, 64, 0.3);
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid rgba(128, 128, 128, 0.2);
+
+        .group-name {
+          margin: 0 0 20px 0;
+          color: rgb(200, 85, 85);
+          font-weight: 600;
+          font-size: 18px;
+          padding: 12px 16px;
+          background: rgba(182, 65, 65, 0.15);
+          border-radius: 8px;
+          border-left: 4px solid rgb(182, 65, 65);
+        }
+
+        .roles-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+          gap: 16px;
+        }
+
+        .role-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 16px;
+          border: 1px solid rgba(128, 128, 128, 0.2);
+          border-radius: 10px;
+          background: rgba(64, 64, 64, 0.4);
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: rgba(80, 80, 80, 0.5);
+            border-color: rgba(182, 65, 65, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+          }
+
+          .role-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+
+            .role-name {
+              font-weight: 600;
+              color: #ffffff;
+              font-size: 16px;
+            }
+
+            .role-status {
+              font-size: 14px;
+              color: rgba(255, 255, 255, 0.6);
+              padding: 4px 8px;
+              border-radius: 4px;
+              background: rgba(128, 128, 128, 0.2);
+              display: inline-block;
+              width: fit-content;
+
+              &.slotted {
+                color: #90EE90;
+                background: rgba(144, 238, 144, 0.15);
+                border: 1px solid rgba(144, 238, 144, 0.3);
+                font-weight: 500;
+              }
+            }
+          }
+
+          .role-actions {
+            display: flex;
+            gap: 8px;
+
+            .slot-button {
+              background: linear-gradient(45deg, #4a7c59, #3d6b47);
+              color: white;
+              border: none;
+              border-radius: 8px;
+              padding: 8px 16px;
+              font-weight: 500;
+              transition: all 0.3s ease;
+              box-shadow: 0 4px 12px rgba(74, 124, 89, 0.3);
+
+              &:hover:not(:disabled) {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba(74, 124, 89, 0.4);
+                background: linear-gradient(45deg, #5a8c69, #4d7b57);
+              }
+
+              &:disabled {
+                background: rgba(128, 128, 128, 0.3);
+                color: rgba(255, 255, 255, 0.5);
+                box-shadow: none;
+                cursor: not-allowed;
+              }
+            }
+
+            .unslot-button {
+              background: linear-gradient(45deg, rgb(182, 65, 65), rgb(150, 45, 45));
+              color: white;
+              border: none;
+              border-radius: 8px;
+              padding: 8px 16px;
+              font-weight: 500;
+              transition: all 0.3s ease;
+              box-shadow: 0 4px 12px rgba(182, 65, 65, 0.3);
+
+              &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba(182, 65, 65, 0.4);
+                background: linear-gradient(45deg, rgb(200, 85, 85), rgb(170, 55, 55));
+              }
+            }
+          }
+        }
+      }
+    }
+
+    ::ng-deep .mat-mdc-card-actions {
+      padding: 16px 24px 24px;
+      background: rgba(64, 64, 64, 0.2);
+
+      mat-chip-set {
+        justify-content: center;
+
+        mat-chip {
+          background: linear-gradient(45deg, #6b6b6b, #5a5a5a);
+          color: white;
+          font-weight: 500;
+          padding: 8px 16px;
+          border-radius: 20px;
+        }
+      }
+    }
+  }
+}
+
+// Enhanced responsive design
+@media (max-width: 1200px) {
+  .events-container {
+    .events-list {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .events-container {
+    padding: 16px;
+
+    .header {
+      flex-direction: column;
+      gap: 20px;
+      align-items: stretch;
+      text-align: center;
+
+      h1 {
+        font-size: 28px;
+      }
+
+      button {
+        align-self: center;
+      }
+    }
+
+    .event-card {
+      ::ng-deep .mat-mdc-card-header {
+        padding: 16px 16px 12px;
+      }
+
+      ::ng-deep .mat-mdc-card-content {
+        padding: 0 16px 16px;
+      }
+
+      .event-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .event-meta {
+        .event-date,
+        .event-creator {
+          font-size: 13px;
+        }
+      }
+
+      .roster-section {
+        .group-section {
+          padding: 16px;
+
+          .roles-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .role-item {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+
+            .role-actions {
+              justify-content: center;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .events-container {
+    padding: 12px;
+
+    .header h1 {
+      font-size: 24px;
+    }
+
+    .event-card {
+      .roster-section {
+        .group-section {
+          padding: 12px;
+
+          .role-item {
+            padding: 12px;
+          }
+        }
+      }
+    }
+  }
+}

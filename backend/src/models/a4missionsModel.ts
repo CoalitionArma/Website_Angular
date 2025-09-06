@@ -10,6 +10,8 @@ class A4Missions extends Model {
     public gametype!: string;
     public players!: string;
     public sidecounts!: string;
+    public jsonlink!: string;
+    public jsondata!: string;
 }
 
 A4Missions.init({
@@ -46,6 +48,14 @@ A4Missions.init({
     sidecounts: {
         type: DataTypes.STRING(255),
         allowNull: false
+    },
+    jsonlink: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    jsondata: {
+        type: DataTypes.TEXT,
+        allowNull: true
     }
 }, {
     sequelize,

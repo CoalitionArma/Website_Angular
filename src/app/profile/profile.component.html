@@ -1,7 +1,4 @@
-<br>
-<br>
-<br> <!-- This is header space. I hate it.-->
-<div id="main" class="py-24 flex flex-col items-center h-dvh bg-cover bg-center" style="background-image: url('./assets/images/profile_bg.jpg'); background-repeat: no-repeat;">
+<div id="main" class="py-24 flex flex-col items-center min-h-screen bg-cover bg-center bg-fixed" style="background-image: url('./assets/images/profile_bg.jpg'); background-repeat: no-repeat;">
     <section id="profile-header" class="w-2/3 h-[300px]">
         <div class="flex flex-row w-full h-full">
             <img [src]=userService.avatarUrl class="h-full">
@@ -85,10 +82,10 @@
                         } @else {
                             <mat-form-field>
                                 <input type="email" matInput formControlName="email">
-                                <mat-error *ngIf="userInfoForm.get('email').hasError('email') && !userInfoForm.get('email').hasError('required')">
+                                <mat-error *ngIf="userInfoForm.get('email')?.hasError('email') && !userInfoForm.get('email')?.hasError('required')">
                                     Please enter a valid email address
                                 </mat-error>
-                                <mat-error *ngIf="userInfoForm.get('email').hasError('required')">
+                                <mat-error *ngIf="userInfoForm.get('email')?.hasError('required')">
                                     Email is <strong>required</strong>
                                 </mat-error>
                             </mat-form-field>
@@ -106,10 +103,10 @@
                         } @else {
                             <mat-form-field>
                                 <input type="text" matInput formControlName="armaID">
-                                <mat-error *ngIf="userInfoForm.get('armaID').hasError('pattern') && !userInfoForm.get('armaID').hasError('required')">
+                                <mat-error *ngIf="userInfoForm.get('armaID')?.hasError('pattern') && !userInfoForm.get('armaID')?.hasError('required')">
                                     Please enter a valid ARMA GUID
                                 </mat-error>
-                                <mat-error *ngIf="userInfoForm.get('armaID').hasError('required')">
+                                <mat-error *ngIf="userInfoForm.get('armaID')?.hasError('required')">
                                     ARMA GUID is <strong>required</strong>
                                 </mat-error>
                             </mat-form-field>
@@ -127,7 +124,7 @@
                         } @else {
                             <mat-form-field>
                                 <input type="text" matInput formControlName="steamID">
-                                <mat-error *ngIf="userInfoForm.get('steamID').hasError('pattern')">
+                                <mat-error *ngIf="userInfoForm.get('steamID')?.hasError('pattern')">
                                     Please enter a valid SteamID64
                                 </mat-error>
                             </mat-form-field>

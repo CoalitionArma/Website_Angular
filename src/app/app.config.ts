@@ -12,6 +12,8 @@ import { statsReducer } from './store/stats.reducer';
 import { StatsEffects } from './store/stats.effects';
 import { missionsReducer } from './store/missions.reducer';
 import { MissionsEffects } from './store/missions.effects';
+import { replaysReducer } from './store/replays.reducer';
+import { ReplaysEffects } from './store/replays.effects';
 import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
@@ -23,9 +25,10 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideStore({
       stats: statsReducer,
-      missions: missionsReducer
+      missions: missionsReducer,
+      replays: replaysReducer
     }),
-    provideEffects(StatsEffects, MissionsEffects),
+    provideEffects(StatsEffects, MissionsEffects, ReplaysEffects),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: environment.production

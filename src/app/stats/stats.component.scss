@@ -1,8 +1,14 @@
 .missions-container {
   min-height: 100vh;
-  background-attachment: fixed;
+  background-attachment: scroll; // Changed from fixed to scroll for better mobile compatibility
   background-size: cover;
   background-position: center;
+  position: relative;
+  overflow-y: auto; // Ensure container can scroll
+  
+  @media (min-width: 1024px) {
+    background-attachment: fixed; // Only use fixed on larger screens
+  }
 }
 
 // Material theme overrides for dark background
@@ -13,32 +19,107 @@
   }
 
   .mat-mdc-form-field {
-    .mat-mdc-text-field-wrapper {
-      background-color: rgba(64, 64, 64, 0.8) !important;
+    width: 100% !important; // Ensure form fields take full width
+    min-width: 200px !important; // Set minimum width for better appearance
+    margin-bottom: 8px !important; // Add bottom margin to prevent overlap
+    
+    // Completely hide the outlined borders to prevent vertical lines
+    .mdc-text-field--outlined {
+      .mdc-notched-outline {
+        display: none !important; // Hide the entire outline structure
+      }
     }
     
-    .mdc-text-field--outlined .mdc-notched-outline__leading,
-    .mdc-text-field--outlined .mdc-notched-outline__notch,
-    .mdc-text-field--outlined .mdc-notched-outline__trailing {
-      border-color: rgba(255, 255, 255, 0.3) !important;
-    }
-    
-    .mdc-text-field--focused .mdc-notched-outline__leading,
-    .mdc-text-field--focused .mdc-notched-outline__notch,
-    .mdc-text-field--focused .mdc-notched-outline__trailing {
-      border-color: #3f51b5 !important;
+    // Style the focused state
+    &.mat-focused {
+      .mat-mdc-text-field-wrapper {
+        border-color: #3f51b5 !important;
+        border-width: 2px !important;
+        box-shadow: 0 0 0 1px rgba(63, 81, 181, 0.2) !important;
+      }
     }
     
     .mat-mdc-input-element {
       color: white !important;
+      padding: 12px 16px !important; // Add padding for better spacing
+      display: flex !important;
+      align-items: center !important; // Vertically center the input text
+      height: 48px !important; // Set consistent height for vertical centering
     }
     
     .mat-mdc-floating-label {
       color: rgba(255, 255, 255, 0.7) !important;
+      left: 16px !important; // Adjust label position since we removed outline
+      top: 50% !important; // Vertically center the label
+      transform: translateY(-50%) !important; // Center the label vertically
     }
     
     .mat-mdc-floating-label.mdc-floating-label--float-above {
       color: rgba(255, 255, 255, 0.9) !important;
+      transform: translateY(-100%) scale(0.75) !important; // Move up when floating
+      top: 0 !important; // Position at top when floating
+    }
+    
+    // Ensure select dropdowns have proper styling
+    .mat-mdc-select {
+      color: white !important;
+      display: flex !important;
+      align-items: center !important; // Vertically center the select content
+      height: 48px !important; // Set consistent height for vertical centering
+      
+      .mat-mdc-select-value {
+        color: white !important;
+        line-height: 48px !important; // Match the height for vertical centering
+      }
+      
+      .mat-mdc-select-placeholder {
+        color: rgba(255, 255, 255, 0.7) !important;
+        line-height: 48px !important; // Match the height for vertical centering
+      }
+      
+      .mat-mdc-select-arrow {
+        color: rgba(255, 255, 255, 0.7) !important;
+        position: absolute !important;
+        right: 16px !important;
+        top: 50% !important; // Vertically center the arrow
+        transform: translateY(-50%) !important;
+      }
+    }
+    
+    // Ensure the text field wrapper has proper height for centering
+    .mat-mdc-text-field-wrapper {
+      background-color: rgba(64, 64, 64, 0.8) !important;
+      border-radius: 4px !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      height: 48px !important; // Consistent height for all form fields
+      display: flex !important;
+      align-items: center !important; // Vertically center content
+    }
+  }
+
+  // Improve grid spacing for filter fields
+  .grid.gap-4 {
+    gap: 1.5rem !important; // Increase gap between grid items
+    
+    @media (min-width: 768px) {
+      gap: 2rem !important; // Even larger gap on medium screens and up
+    }
+  }
+  
+  // Additional styling for better form field appearance
+  .mat-mdc-form-field-error-wrapper {
+    padding: 0 !important;
+  }
+  
+  // Improve card content padding
+  .mat-mdc-card-content {
+    padding: 24px !important; // Increase padding for better spacing
+  }
+  
+  // Ensure proper spacing between form fields on smaller screens
+  @media (max-width: 767px) {
+    .mat-mdc-form-field {
+      margin-bottom: 16px !important; // Extra bottom margin on mobile
     }
   }
 
@@ -51,9 +132,35 @@
     
     .mat-mdc-row {
       border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+      transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
       
       &:hover {
-        background-color: rgba(255, 255, 255, 0.05) !important;
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+      }
+      
+      &.mission-row {
+        position: relative !important;
+        
+        &:after {
+          content: "View Stats" !important;
+          position: absolute !important;
+          right: 16px !important;
+          top: 50% !important;
+          transform: translateY(-50%) !important;
+          background-color: rgba(229, 57, 53, 0.8) !important; /* Red accent color */
+          color: white !important;
+          padding: 4px 12px !important;
+          border-radius: 4px !important;
+          font-size: 0.8rem !important;
+          opacity: 0 !important;
+          transition: opacity 0.2s ease !important;
+        }
+        
+        &:hover:after {
+          opacity: 1 !important;
+        }
       }
     }
     
@@ -91,5 +198,111 @@
 
   .mat-mdc-option {
     color: white !important;
+  }
+
+  // Tabs styling with stronger selectors
+  .mat-mdc-tab-group {
+    .mat-mdc-tab-header {
+      background-color: rgba(38, 38, 38, 0.9) !important;
+      
+      .mat-mdc-tab {
+        color: white !important; // Target the tab itself
+        
+        .mat-mdc-tab-label {
+          color: white !important; // Make all tab labels white
+          
+          .mat-mdc-tab-label-content {
+            color: white !important; // Ensure the text content is white
+            font-weight: 600 !important;
+          }
+        }
+        
+        &.mdc-tab--active {
+          color: white !important; // Keep active tabs white
+          
+          .mat-mdc-tab-label {
+            color: white !important;
+            
+            .mat-mdc-tab-label-content {
+              color: white !important;
+            }
+          }
+        }
+      }
+      
+      // Additional selector to target any missed elements
+      .mdc-tab {
+        color: white !important;
+        
+        .mdc-tab__text-label {
+          color: white !important;
+        }
+        
+        .mdc-tab__content {
+          color: white !important;
+        }
+      }
+    }
+    
+    .mat-mdc-tab-body-wrapper {
+      background-color: transparent !important;
+    }
+  }
+  
+  // Additional global override for tab text
+  .mat-mdc-tab-group .mat-mdc-tab .mat-mdc-tab-label .mat-mdc-tab-label-content,
+  .mat-mdc-tab-group .mdc-tab .mdc-tab__text-label,
+  .mat-mdc-tab-group .mdc-tab__content {
+    color: white !important;
+  }
+  
+  // Specific styling for white-tabs class
+  .white-tabs {
+    .mat-mdc-tab-header .mat-mdc-tab .mat-mdc-tab-label .mat-mdc-tab-label-content {
+      color: white !important;
+    }
+    
+    .mat-mdc-tab-header .mdc-tab .mdc-tab__text-label {
+      color: white !important;
+    }
+    
+    // Force white color on all nested text elements
+    * {
+      color: white !important;
+    }
+  }
+
+  // Icon styling
+  .mat-icon {
+    vertical-align: middle;
+    margin-right: 8px;
+    
+    &:last-child {
+      margin-right: 0;
+      margin-left: 8px;
+    }
+  }
+
+  // Material table sort header styling for dark theme
+  .mat-sort-header-button {
+    color: white !important;
+  }
+
+  .mat-sort-header-arrow {
+    color: white !important;
+  }
+
+  .mat-sort-header-stem {
+    background: white !important;
+  }
+
+  .mat-sort-header-indicator {
+    color: white !important;
+  }
+
+  .mat-sort-header-pointer-left,
+  .mat-sort-header-pointer-right,
+  .mat-sort-header-pointer-middle {
+    background: white !important;
   }
 }

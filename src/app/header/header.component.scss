@@ -3,6 +3,8 @@
     color: white;
     display: flex;
     align-items: center; // Align logo, links, and login button on same line
+    position: relative;
+    z-index: 9999; // Ensure header appears above scrollbars and other elements
 
     #logo {
         display: flex;
@@ -26,8 +28,31 @@
             cursor: pointer;
             display: flex;
             align-items: center; // Align icon and text within each link
+            position: relative;
+            transition: color 0.2s ease;
+            
             &:hover {
                 color: rgb(182, 65, 65);
+            }
+            
+            &.active {
+                color: rgb(182, 65, 65);
+                font-weight: 600;
+                
+                &::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -2px;
+                    left: 0;
+                    right: 0;
+                    height: 2px;
+                    background: linear-gradient(45deg, rgb(182, 65, 65), rgb(200, 85, 85));
+                    border-radius: 1px;
+                }
+                
+                .menu-icon {
+                    color: rgb(182, 65, 65);
+                }
             }
         }
     }
@@ -86,6 +111,21 @@
 
 #mobileMenu {
     display: none !important; // Hidden by default, important to override any conflicting styles
+    
+    a {
+        transition: color 0.2s ease;
+        
+        &.active {
+            color: rgb(182, 65, 65) !important;
+            font-weight: 600;
+            background: linear-gradient(45deg, rgba(182, 65, 65, 0.1), rgba(200, 85, 85, 0.1)) !important;
+            border-left: 4px solid rgb(182, 65, 65);
+        }
+        
+        &:hover {
+            color: rgb(182, 65, 65) !important;
+        }
+    }
 }
 
 #mobileMenu.drop-mobile-menu {

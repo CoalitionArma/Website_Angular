@@ -1,1 +1,122 @@
-<p>events works!</p>
+<div class="events-container">
+  <div class="content-wrapper">
+    <div class="header">
+      <h1>Events</h1>
+      <button 
+        mat-raised-button 
+        color="primary" 
+        (click)="openCreateEventDialog()"
+        [disabled]="!isLoggedIn">
+        <mat-icon>add</mat-icon>
+        Create Event
+      </button>
+    </div>
+
+    <div *ngIf="!isLoggedIn" class="login-notice">
+      <mat-icon>info_outline</mat-icon>
+      <span>Log in to create events and slot into roles</span>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+      <p>Loading events...</p>
+    </div>
+
+    <div *ngIf="!isLoading && events.length === 0" class="no-events">
+      <mat-icon>event_note</mat-icon>
+      <h2>No Events Yet</h2>
+      <p>Be the first to create an event for the community!</p>
+    </div>
+
+    <div class="events-list" *ngIf="!isLoading && events.length > 0">
+      <mat-card *ngFor="let event of events" class="event-card" [class.past-event]="isEventInPast(event.dateTime)">
+        <!-- Event Header -->
+        <mat-card-header>
+          <mat-card-title class="event-title">
+            {{ event.title }}
+            <span class="event-actions" *ngIf="canDeleteEvent(event)">
+              <button mat-icon-button color="warn" (click)="deleteEvent(event.id)" title="Delete Event">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </span>
+          </mat-card-title>
+          <mat-card-subtitle>
+            <div class="event-meta">
+              <span class="event-date">
+                <mat-icon>schedule</mat-icon>
+                {{ formatDateTime(event.dateTime) }}
+              </span>
+              <span class="event-creator">
+                <mat-icon>person_outline</mat-icon>
+                Created by {{ event.createdByUsername }}
+              </span>
+            </div>
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <!-- Event Banner -->
+        <div *ngIf="event.bannerUrl" class="event-banner">
+          <img [src]="event.bannerUrl" [alt]="event.title + ' banner'" />
+        </div>
+
+        <!-- Event Description -->
+        <mat-card-content>
+          <p *ngIf="event.description" class="event-description">{{ event.description }}</p>
+
+          <!-- Groups and Roles -->
+          <div class="roster-section">
+            <h3>Event Roster</h3>
+            
+            <div *ngFor="let group of event.groups" class="group-section">
+              <h4 class="group-name">{{ group.name }}</h4>
+              
+              <div class="roles-grid">
+                <div *ngFor="let role of group.roles" class="role-item">
+                  <div class="role-info">
+                    <span class="role-name">{{ role.name }}</span>
+                    <span class="role-status" [class.slotted]="role.slottedUser">
+                      {{ role.slottedUser || 'OPEN' }}
+                    </span>
+                  </div>
+                  
+                  <div class="role-actions" *ngIf="isLoggedIn && !isEventInPast(event.dateTime)">
+                    <button 
+                      *ngIf="!isUserSlottedInRole(event, group.id, role.id)" 
+                      mat-raised-button 
+                      color="primary" 
+                      (click)="slotRole(event.id, group.id, role.id)"
+                      [disabled]="!canSlotRole(event, group.id, role.id)"
+                      class="slot-button"
+                      matTooltip="Click to slot into this role">
+                      Slot
+                    </button>
+                    
+                    <button 
+                      *ngIf="isUserSlottedInRole(event, group.id, role.id)" 
+                      mat-raised-button 
+                      color="warn" 
+                      (click)="unslotRole(event.id, group.id, role.id)"
+                      class="unslot-button"
+                      matTooltip="Click to unslot from this role">
+                      Unslot
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+
+        <!-- Event Footer -->
+        <mat-card-actions *ngIf="isEventInPast(event.dateTime)">
+          <mat-chip-set>
+            <mat-chip color="accent">
+              <mat-icon>check_circle</mat-icon>
+              Event Completed
+            </mat-chip>
+          </mat-chip-set>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

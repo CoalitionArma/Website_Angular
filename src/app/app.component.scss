@@ -1,0 +1,49 @@
+// App-level styles for proper scrolling behavior
+:host {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+}
+
+// Header positioning
+#header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  height: 90px; // Fixed header height
+}
+
+// Create a scrollable container that starts below the header
+main {
+  position: absolute;
+  top: 90px; // Start below the header
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto; // This container will have the scrollbar
+  overflow-x: hidden;
+}
+
+#content {
+  display: block;
+  width: 100%;
+  min-height: calc(100vh - 90px);
+}
+
+// Override any problematic fixed positioning
+.bg-fixed {
+  background-attachment: scroll !important; // Override bg-fixed on small screens
+  
+  @media (min-width: 1024px) {
+    background-attachment: fixed !important; // Restore bg-fixed on larger screens
+  }
+}
+
+// Ensure proper stacking context for overlays
+.missions-container,
+#main {
+  position: relative;
+  z-index: 1;
+}

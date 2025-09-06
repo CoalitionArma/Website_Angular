@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { UserStats, UserRanking } from '../interfaces/user-stats.interface';
 import { UserStatsComponent } from '../user-stats/user-stats.component';
+import { CommonModule } from '@angular/common';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -25,7 +26,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   selector: 'app-profile',
   standalone: true,
   imports: [
-    FormsModule, MatCardModule, MatInputModule, ReactiveFormsModule, MatSnackBarModule, MatButtonModule, UserStatsComponent
+    CommonModule, FormsModule, MatCardModule, MatInputModule, ReactiveFormsModule, MatSnackBarModule, MatButtonModule, UserStatsComponent
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'

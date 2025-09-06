@@ -3,7 +3,10 @@ import axios from 'axios';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
 import SQLUsers from './models/userModel.interface';
+import Event from './models/eventModel';
 import sequelize from './db';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { DiscordUserResponse } from './interfaces/userresponse.interface';
@@ -28,13 +31,49 @@ interface UpdateUserRequest {
     armaguid?: string;
 }
 
+// Event interfaces
+interface EventGroup {
+    id: string;
+    name: string;
+    roles: EventRole[];
+}
+
+interface EventRole {
+    id: string;
+    name: string;
+    slottedUser?: string;
+    slottedUserId?: string;
+}
+
+interface CreateEventRequest {
+    title: string;
+    description?: string;
+    bannerUrl?: string;
+    dateTime: string;
+    groups: Array<{
+        name: string;
+        roles: Array<{ name: string }>;
+    }>;
+}
+
+interface SlotRoleRequest {
+    eventId: string;
+    groupId: string;
+    roleId: string;
+}
+
 interface AuthenticatedRequest extends Request {
     body: any & { id?: string };
 }
 
 // Load the appropriate .env file based on NODE_ENV
-const envFile: string = process.env.NODE_ENV === 'development' ? '.env.development' : '.env';
+// Set default to development if NODE_ENV is not set
+const nodeEnv = process.env.NODE_ENV || 'development';
+const envFile: string = nodeEnv === 'development' ? '.env.development' : '.env';
 dotenv.config({ path: envFile });
+
+console.log(`🌍 Loading environment: ${nodeEnv}`);
+console.log(`📁 Using env file: ${envFile}`);
 
 const app: Application = express();
 const port: number = 3157;
@@ -370,7 +409,9 @@ app.get('/api/missions', async (req: Request, res: Response): Promise<void> => {
             description: mission.details, // Map "details" from DB to "description" for frontend
             gametype: mission.gametype,
             players: mission.players,
-            sidecounts: mission.sidecounts
+            sidecounts: mission.sidecounts,
+            jsonlink: mission.jsonlink || '',
+            jsondata: mission.jsondata || null
         }));
 
         const response = {
@@ -395,11 +436,551 @@ app.get('/api/missions', async (req: Request, res: Response): Promise<void> => {
     }
 });
 
+// Events Management Endpoints
+
+// Get all events
+app.get('/api/events', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const events = await Event.findAll({
+            order: [['dateTime', 'ASC']],
+        });
+
+        // Transform the response to match the frontend interface
+        const transformedEvents = events.map(event => {
+            const eventData = event.toJSON();
+            return {
+                ...eventData,
+                groups: typeof eventData.groups === 'string' 
+                    ? JSON.parse(eventData.groups) 
+                    : eventData.groups
+            };
+        });
+
+        res.status(200).json(transformedEvents);
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        res.status(500).json({
+            error: 'Failed to fetch events',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
+// Create a new event
+app.post('/api/events', authenticateToken, async (req: Request<{}, {}, CreateEventRequest>, res: Response): Promise<void> => {
+    try {
+        const { title, description, bannerUrl, dateTime, groups } = req.body;
+        const userId = (req.body as any).id; // From JWT token
+
+        // Get user info for the createdByUsername
+        const user = await SQLUsers.findOne({ where: { discordid: userId } });
+        if (!user) {
+            res.status(401).json({ error: 'User not found' });
+            return;
+        }
+
+        // Generate IDs for groups and roles and transform the data
+        const processedGroups: EventGroup[] = groups.map(group => ({
+            id: require('crypto').randomUUID(),
+            name: group.name,
+            roles: group.roles.map(role => ({
+                id: require('crypto').randomUUID(),
+                name: role.name,
+                slottedUser: undefined,
+                slottedUserId: undefined
+            }))
+        }));
+
+        // Create the event
+        const event = await Event.create({
+            title,
+            description: description || '',
+            bannerUrl: bannerUrl || '',
+            dateTime: new Date(dateTime),
+            createdBy: userId,
+            createdByUsername: user.username,
+            groups: JSON.stringify(processedGroups)
+        });
+
+        // Return the created event with parsed groups
+        const eventData = event.toJSON();
+        const responseEvent = {
+            ...eventData,
+            groups: JSON.parse(eventData.groups as string)
+        };
+
+        res.status(201).json({
+            success: true,
+            event: responseEvent,
+            message: 'Event created successfully'
+        });
+    } catch (error) {
+        console.error('Error creating event:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to create event',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
+// Slot a user into a role
+app.post('/api/events/slot', authenticateToken, async (req: Request<{}, {}, SlotRoleRequest>, res: Response): Promise<void> => {
+    try {
+        const { eventId, groupId, roleId } = req.body;
+        const userId = (req.body as any).id; // From JWT token
+
+        // Get user info
+        const user = await SQLUsers.findOne({ where: { discordid: userId } });
+        if (!user) {
+            res.status(401).json({ error: 'User not found' });
+            return;
+        }
+
+        // Find the event
+        const event = await Event.findByPk(eventId);
+        if (!event) {
+            res.status(404).json({
+                success: false,
+                message: 'Event not found'
+            });
+            return;
+        }
+
+        // Parse the groups
+        const groups: EventGroup[] = JSON.parse(event.groups as string);
+        
+        // Find the group and role
+        const group = groups.find(g => g.id === groupId);
+        if (!group) {
+            res.status(404).json({
+                success: false,
+                message: 'Group not found'
+            });
+            return;
+        }
+
+        const role = group.roles.find(r => r.id === roleId);
+        if (!role) {
+            res.status(404).json({
+                success: false,
+                message: 'Role not found'
+            });
+            return;
+        }
+
+        // Check if role is already slotted by someone else
+        if (role.slottedUserId && role.slottedUserId !== userId) {
+            res.status(400).json({
+                success: false,
+                message: 'Role is already taken by another user'
+            });
+            return;
+        }
+
+        // Check if user is already slotted in another role in this event
+        let userAlreadySlotted = false;
+        for (const g of groups) {
+            for (const r of g.roles) {
+                if (r.slottedUserId === userId && r.id !== roleId) {
+                    // Unslot user from the previous role
+                    r.slottedUser = undefined;
+                    r.slottedUserId = undefined;
+                    userAlreadySlotted = true;
+                    break;
+                }
+            }
+            if (userAlreadySlotted) break;
+        }
+
+        // Slot the user into the role
+        role.slottedUser = user.username;
+        role.slottedUserId = userId;
+
+        // Update the event
+        await event.update({ groups: JSON.stringify(groups) });
+
+        // Return the updated event
+        const eventData = event.toJSON();
+        const responseEvent = {
+            ...eventData,
+            groups: JSON.parse(eventData.groups as string)
+        };
+
+        res.status(200).json({
+            success: true,
+            event: responseEvent,
+            message: 'Successfully slotted into role'
+        });
+    } catch (error) {
+        console.error('Error slotting role:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to slot into role',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
+// Unslot a user from a role
+app.post('/api/events/unslot', authenticateToken, async (req: Request<{}, {}, SlotRoleRequest>, res: Response): Promise<void> => {
+    try {
+        const { eventId, groupId, roleId } = req.body;
+        const userId = (req.body as any).id; // From JWT token
+
+        // Find the event
+        const event = await Event.findByPk(eventId);
+        if (!event) {
+            res.status(404).json({
+                success: false,
+                message: 'Event not found'
+            });
+            return;
+        }
+
+        // Parse the groups
+        const groups: EventGroup[] = JSON.parse(event.groups as string);
+        
+        // Find the group and role
+        const group = groups.find(g => g.id === groupId);
+        if (!group) {
+            res.status(404).json({
+                success: false,
+                message: 'Group not found'
+            });
+            return;
+        }
+
+        const role = group.roles.find(r => r.id === roleId);
+        if (!role) {
+            res.status(404).json({
+                success: false,
+                message: 'Role not found'
+            });
+            return;
+        }
+
+        // Check if the user is actually slotted in this role
+        if (role.slottedUserId !== userId) {
+            res.status(400).json({
+                success: false,
+                message: 'You are not slotted in this role'
+            });
+            return;
+        }
+
+        // Unslot the user
+        role.slottedUser = undefined;
+        role.slottedUserId = undefined;
+
+        // Update the event
+        await event.update({ groups: JSON.stringify(groups) });
+
+        // Return the updated event
+        const eventData = event.toJSON();
+        const responseEvent = {
+            ...eventData,
+            groups: JSON.parse(eventData.groups as string)
+        };
+
+        res.status(200).json({
+            success: true,
+            event: responseEvent,
+            message: 'Successfully unslotted from role'
+        });
+    } catch (error) {
+        console.error('Error unslotting role:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to unslot from role',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
+// Delete an event (only by creator)
+app.delete('/api/events/:eventId', authenticateToken, async (req: Request<{ eventId: string }>, res: Response): Promise<void> => {
+    try {
+        const { eventId } = req.params;
+        const userId = (req.body as any).id; // From JWT token
+
+        // Find the event
+        const event = await Event.findByPk(eventId);
+        if (!event) {
+            res.status(404).json({
+                success: false,
+                message: 'Event not found'
+            });
+            return;
+        }
+
+        // Check if the user is the creator
+        if (event.createdBy !== userId) {
+            res.status(403).json({
+                success: false,
+                message: 'Only the event creator can delete this event'
+            });
+            return;
+        }
+
+        // Delete the event
+        await event.destroy();
+
+        res.status(200).json({
+            success: true,
+            message: 'Event deleted successfully'
+        });
+    } catch (error) {
+        console.error('Error deleting event:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to delete event',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
+// Mission Statistics Proxy Endpoint
+app.get('/api/mission-stats/:missionId', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { missionId } = req.params;
+        
+        // First, get the mission's jsonlink from the database
+        const mission = await sequelize.query('SELECT jsonlink FROM coalition.a4missions WHERE id = ?', {
+            replacements: [missionId],
+            type: QueryTypes.SELECT
+        });
+        
+        if (!mission || mission.length === 0) {
+            res.status(404).json({
+                error: 'Mission not found'
+            });
+            return;
+        }
+        
+        const missionData = mission[0] as any;
+        const jsonlink = missionData.jsonlink;
+        
+        if (!jsonlink) {
+            res.status(404).json({
+                error: 'No statistics data available for this mission'
+            });
+            return;
+        }
+        
+        console.log(`Fetching mission stats for mission ${missionId} from: ${jsonlink}`);
+        
+        // Use Node.js native https module to fetch the JSON data
+        const https = require('https');
+        const url = require('url');
+        
+        const fetchUrl = new URL(jsonlink);
+        console.log(`Parsed URL - hostname: ${fetchUrl.hostname}, path: ${fetchUrl.pathname}${fetchUrl.search}`);
+        
+        const options = {
+            hostname: fetchUrl.hostname,
+            port: fetchUrl.port || 443,
+            path: fetchUrl.pathname + fetchUrl.search,
+            method: 'GET',
+            headers: {
+                'User-Agent': 'Coalition-Website/1.0',
+                'Accept': 'application/json, text/plain, */*'
+            }
+        };
+        
+        console.log('Request options:', options);
+        
+        const statsData = await new Promise((resolve, reject) => {
+            const req = https.request(options, (res: any) => {
+                let data = '';
+                
+                res.on('data', (chunk: any) => {
+                    data += chunk;
+                });
+                
+                res.on('end', () => {
+                    try {
+                        console.log(`Response status: ${res.statusCode}`);
+                        console.log(`Response headers:`, res.headers);
+                        console.log(`Response data length: ${data.length}`);
+                        console.log(`Response data preview: ${data.substring(0, 200)}...`);
+                        
+                        if (res.statusCode !== 200) {
+                            reject(new Error(`HTTP ${res.statusCode}: ${res.statusMessage}`));
+                            return;
+                        }
+                        
+                        // Check if the response looks like HTML (but allow JSON with incorrect content-type)
+                        if (data.trim().toLowerCase().startsWith('<!doctype') || 
+                            data.trim().toLowerCase().startsWith('<html')) {
+                            reject(new Error(`External URL returned HTML instead of JSON. This usually means the file doesn't exist or there's an error page. URL: ${jsonlink}`));
+                            return;
+                        }
+                        
+                        // Try to parse as JSON regardless of Content-Type header
+                        // Some servers serve JSON files with incorrect content-type headers
+                        let parsed;
+                        try {
+                            parsed = JSON.parse(data);
+                        } catch (jsonError) {
+                            const contentType = res.headers['content-type'] || '';
+                            reject(new Error(`Failed to parse response as JSON. Content-Type: ${contentType}. JSON Parse Error: ${jsonError}. URL: ${jsonlink}`));
+                            return;
+                        }
+                        
+                        console.log('Successfully parsed JSON data from external URL');
+                        resolve(parsed);
+                    } catch (parseError) {
+                        reject(new Error(`Failed to parse JSON: ${parseError}. Response was: ${data.substring(0, 200)}...`));
+                    }
+                });
+            });
+            
+            req.on('error', (error: any) => {
+                reject(error);
+            });
+            
+            req.end();
+        });
+        
+        res.status(200).json({
+            success: true,
+            data: statsData,
+            source: jsonlink,
+            debug: {
+                contentType: 'application/json',
+                dataType: Array.isArray(statsData) ? 'array' : typeof statsData
+            }
+        });
+        
+    } catch (error) {
+        console.error('Error fetching mission statistics:', error);
+        res.status(500).json({
+            error: 'Failed to fetch mission statistics',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
+// Replay Files Endpoint
+app.get('/api/replays', async (req: Request, res: Response): Promise<void> => {
+    try {
+        // Configure the path to your Apache htdocs replays directory
+        // You may need to adjust this path based on your server setup
+        const replaysPath = process.env.REPLAYS_DIRECTORY || 'C:/xampp/htdocs/replays';
+        const baseUrl = process.env.REPLAYS_BASE_URL || 'http://localhost/replays';
+        
+        console.log('Checking replays directory:', replaysPath);
+
+        // Check if directory exists
+        if (!fs.existsSync(replaysPath)) {
+            res.status(404).json({
+                error: 'Replays directory not found',
+                details: `Directory ${replaysPath} does not exist`
+            });
+            return;
+        }
+
+        // Read directory contents
+        const files = fs.readdirSync(replaysPath);
+        
+        // Filter for replay files (you can adjust extensions as needed)
+        const replayExtensions = ['.rp', '.replay', '.rec', '.demo', '.zip', '.7z'];
+        const replayFiles = files.filter(file => {
+            const ext = path.extname(file).toLowerCase();
+            return replayExtensions.includes(ext);
+        });
+
+        // Get file details
+        const replaysWithDetails = replayFiles.map(filename => {
+            const filePath = path.join(replaysPath, filename);
+            const stats = fs.statSync(filePath);
+            const ext = path.extname(filename);
+            const nameWithoutExt = path.basename(filename, ext);
+            
+            return {
+                filename: filename,
+                name: nameWithoutExt,
+                extension: ext.substring(1), // Remove the dot
+                size: stats.size,
+                sizeFormatted: formatFileSize(stats.size),
+                dateModified: stats.mtime.toISOString(),
+                downloadUrl: `${baseUrl}/${encodeURIComponent(filename)}`
+            };
+        });
+
+        // Sort by date modified (newest first)
+        replaysWithDetails.sort((a, b) => 
+            new Date(b.dateModified).getTime() - new Date(a.dateModified).getTime()
+        );
+
+        res.status(200).json({
+            success: true,
+            replays: replaysWithDetails,
+            total_count: replaysWithDetails.length,
+            directory: replaysPath,
+            base_url: baseUrl
+        });
+
+    } catch (error) {
+        console.error('Error fetching replay files:', error);
+        res.status(500).json({
+            error: 'Failed to fetch replay files',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
+// Helper function to format file sizes
+function formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 Bytes';
+    
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
 // Server Initialization
 const startServer = async (): Promise<void> => {
     try {
         await sequelize.sync();
         console.log('✅ Database synced successfully');
+        
+        // Create coalition_events table
+        try {
+            await Event.sync({ force: true });
+            console.log('✅ Coalition events table created successfully');
+        } catch (eventSyncError) {
+            console.warn('⚠️ Events table creation failed:', eventSyncError);
+            throw eventSyncError;
+        }
+    
+    // Test database connection and stored procedure
+    try {
+        console.log('🔍 Testing database connection and stored procedure...');
+        const testResult = await sequelize.query('SELECT COUNT(*) as count FROM coalition.a4missions', {
+            type: QueryTypes.SELECT
+        });
+        console.log('📊 Total missions in database:', testResult[0]);
+        
+        // Test if stored procedure exists
+        const procTest = await sequelize.query('SHOW PROCEDURE STATUS WHERE Name = "GetMissionsList"', {
+            type: QueryTypes.SELECT
+        });
+        console.log('🔧 Stored procedure status:', procTest.length > 0 ? 'EXISTS' : 'NOT FOUND');
+        
+        // Test a simple call to the stored procedure
+        const simpleTest = await sequelize.query('CALL GetMissionsList(1, 0, NULL, NULL, NULL, NULL)', {
+            type: QueryTypes.RAW
+        });
+        console.log('🧪 Simple stored procedure test result type:', typeof simpleTest);
+        console.log('🧪 Simple stored procedure test result length:', Array.isArray(simpleTest) ? simpleTest.length : 'not array');
+        
+    } catch (dbTestError) {
+        console.error('❌ Database test failed:', dbTestError);
+    }
         
         app.listen(port, (): void => {
             console.log(`🚀 Server running at http://localhost:${port}`);

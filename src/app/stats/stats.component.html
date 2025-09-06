@@ -1,23 +1,29 @@
-<div class="missions-container p-6 bg-cover bg-center min-h-screen" style="background-image: url('./assets/images/profile_bg.jpg');">
+<div class="missions-container p-6 bg-cover bg-center min-h-screen bg-fixed" style="background-image: url('./assets/images/profile_bg.jpg');">
   <div class="max-w-7xl mx-auto">
     
     <!-- Header -->
     <div class="mb-8">
-      <h1 class="text-4xl font-bold text-white mb-2 bg-neutral-800 bg-opacity-60 px-4 py-2">MISSION DATABASE</h1>
-      <p class="text-neutral-300 bg-neutral-800 bg-opacity-60 px-4 py-2">Browse and search through our collection of ARMA 4 missions</p>
+      <h1 class="text-4xl font-bold text-white mb-2 bg-neutral-800 bg-opacity-60 px-4 py-2">STATISTICS & REPLAYS</h1>
+      <p class="text-neutral-300 bg-neutral-800 bg-opacity-60 px-4 py-2">Browse missions database and download replay files</p>
     </div>
 
-    <!-- Filters Section -->
-    <mat-card class="mb-6 bg-neutral-800 bg-opacity-90">
-      <mat-card-content>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+    <!-- Tabs for Missions and Replays -->
+    <mat-tab-group class="mb-6 white-tabs" backgroundColor="primary">
+      
+      <!-- Missions Tab -->
+      <mat-tab label="MISSIONS">
+        <!-- Filters Section -->
+        <mat-card class="mb-6 bg-neutral-800 bg-opacity-90 mt-4">
+      <mat-card-content class="p-6">
+        <!-- Filter Fields -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-4">
           
           <!-- Search -->
           <mat-form-field appearance="outline" class="w-full">
             <mat-label>Search missions</mat-label>
             <input matInput 
                    [(ngModel)]="searchTerm" 
-                   (input)="onSearchInput($event.target?.value || '')"
+                   (input)="onSearchInput($event)"
                    (keyup.enter)="onFilterChange()"
                    placeholder="Mission name or description...">
           </mat-form-field>
@@ -48,18 +54,17 @@
               <mat-option *ngFor="let author of authors" [value]="author">{{author}}</mat-option>
             </mat-select>
           </mat-form-field>
-
         </div>
 
         <!-- Filter Actions -->
         <div class="flex gap-2">
-          <button mat-raised-button color="primary" (click)="onFilterChange()">
+          <button mat-raised-button color="primary" (click)="onFilterChange()" class="!text-white">
             Search
           </button>
-          <button mat-raised-button (click)="clearFilters()">
+          <button mat-raised-button (click)="clearFilters()" class="!text-white">
             Clear Filters
           </button>
-          <button mat-raised-button color="accent" (click)="refreshMissions()">
+          <button mat-raised-button color="accent" (click)="refreshMissions()" class="!text-white">
             Refresh
           </button>
         </div>
@@ -76,27 +81,34 @@
     <div *ngIf="error$ | async as errorMessage" class="bg-red-600 bg-opacity-90 text-white p-4 rounded mb-6">
       <h3 class="font-bold mb-2">Error</h3>
       <p>{{errorMessage}}</p>
-      <button mat-raised-button color="accent" (click)="refreshMissions()" class="mt-2">
+      <button mat-raised-button color="accent" (click)="refreshMissions()" class="mt-2 !text-white">
         Retry
       </button>
     </div>
 
     <!-- Missions Table -->
-    <mat-card *ngIf="!(loading$ | async) && !(error$ | async)" class="bg-neutral-800 bg-opacity-90">
+    <mat-card *ngIf="!(loading$ | async) && !(error$ | async) && sortedMissions.length > 0" class="bg-neutral-800 bg-opacity-90">
       <mat-card-content>
         
         <!-- Results Info -->
         <div class="mb-4 text-white">
-          <p>Showing {{(missions$ | async)?.length}} of {{totalMissions$ | async}} missions</p>
+          <p>Showing {{sortedMissions.length}} of {{totalMissions$ | async}} missions</p>
         </div>
 
         <!-- Table -->
         <div class="overflow-x-auto">
-          <table mat-table [dataSource]="missions$ | async" class="w-full">
+          <table mat-table [dataSource]="sortedMissions" matSort (matSortChange)="onSortChange($event)" 
+                 matSortActive="id" matSortDirection="asc" class="w-full">
+            
+            <!-- ID Column -->
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-white font-bold">ID</th>
+              <td mat-cell *matCellDef="let mission" class="text-white">{{mission.id}}</td>
+            </ng-container>
             
             <!-- Mission Name Column -->
             <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef class="text-white font-bold">Mission Name</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-white font-bold">Mission Name</th>
               <td mat-cell *matCellDef="let mission" class="text-white">
                 <div class="font-medium">{{mission.name}}</div>
               </td>
@@ -104,13 +116,13 @@
 
             <!-- Author Column -->
             <ng-container matColumnDef="author">
-              <th mat-header-cell *matHeaderCellDef class="text-white font-bold">Author</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-white font-bold">Author</th>
               <td mat-cell *matCellDef="let mission" class="text-white">{{mission.author}}</td>
             </ng-container>
 
             <!-- Terrain Column -->
             <ng-container matColumnDef="terrain">
-              <th mat-header-cell *matHeaderCellDef class="text-white font-bold">Terrain</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-white font-bold">Terrain</th>
               <td mat-cell *matCellDef="let mission" class="text-white">
                 <span class="bg-blue-600 bg-opacity-70 px-2 py-1 rounded text-sm">{{mission.terrain}}</span>
               </td>
@@ -118,7 +130,7 @@
 
             <!-- Game Type Column -->
             <ng-container matColumnDef="gametype">
-              <th mat-header-cell *matHeaderCellDef class="text-white font-bold">Type</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-white font-bold">Type</th>
               <td mat-cell *matCellDef="let mission" class="text-white">
                 <span class="bg-green-600 bg-opacity-70 px-2 py-1 rounded text-sm">{{mission.gametype}}</span>
               </td>
@@ -126,23 +138,48 @@
 
             <!-- Players Column -->
             <ng-container matColumnDef="players">
-              <th mat-header-cell *matHeaderCellDef class="text-white font-bold">Players</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-white font-bold">Players</th>
               <td mat-cell *matCellDef="let mission" class="text-white">{{mission.players}}</td>
+            </ng-container>
+
+            <!-- Side Counts Column -->
+            <ng-container matColumnDef="sidecounts">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-white font-bold">Side Counts</th>
+              <td mat-cell *matCellDef="let mission" class="text-white">
+                <div class="flex gap-1 text-sm">
+                  <span class="bg-blue-600 bg-opacity-70 px-2 py-1 rounded text-xs" title="BLUFOR">
+                    B: {{parseSideCounts(mission.sidecounts).blufor}}
+                  </span>
+                  <span class="bg-red-600 bg-opacity-70 px-2 py-1 rounded text-xs" title="OPFOR">
+                    O: {{parseSideCounts(mission.sidecounts).opfor}}
+                  </span>
+                  <span class="bg-green-600 bg-opacity-70 px-2 py-1 rounded text-xs" title="INDFOR">
+                    I: {{parseSideCounts(mission.sidecounts).independent}}
+                  </span>
+                  <span class="bg-purple-400 bg-opacity-70 px-2 py-1 rounded text-xs" title="CIVILIAN">
+                    C: {{parseSideCounts(mission.sidecounts).civilian}}
+                  </span>
+                </div>
+              </td>
             </ng-container>
 
             <!-- Description Column -->
             <ng-container matColumnDef="description">
-              <th mat-header-cell *matHeaderCellDef class="text-white font-bold">Description</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-white font-bold">Description</th>
               <td mat-cell *matCellDef="let mission" class="text-white">
                 <div class="max-w-xs truncate" [title]="mission.description">
                   {{mission.description}}
                 </div>
               </td>
             </ng-container>
-
+            
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
-                class="hover:bg-neutral-700 hover:bg-opacity-50 cursor-pointer transition-colors"></tr>
+                [class.processing]="processingMission"
+                [style.pointer-events]="processingMission ? 'none' : 'auto'"
+                [style.opacity]="processingMission ? '0.6' : '1'"
+                (click)="openMissionStatsDialog(row)"
+                class="hover:bg-neutral-700 hover:bg-opacity-70 cursor-pointer transition-colors mission-row"></tr>
           </table>
         </div>
 
@@ -160,15 +197,140 @@
     </mat-card>
 
     <!-- Empty State -->
-    <div *ngIf="!(loading$ | async) && !(error$ | async) && (missions$ | async)?.length === 0" class="text-center py-12">
+    <div *ngIf="!(loading$ | async) && !(error$ | async) && sortedMissions.length === 0" class="text-center py-12">
       <div class="bg-neutral-800 bg-opacity-90 p-8 rounded-lg max-w-md mx-auto">
         <h3 class="text-white text-xl font-bold mb-4">No missions found</h3>
         <p class="text-neutral-300 mb-4">Try adjusting your search criteria or clearing the filters.</p>
-        <button mat-raised-button color="primary" (click)="clearFilters()">
+        <button mat-raised-button color="primary" (click)="clearFilters()" class="!text-white">
           Clear Filters
         </button>
       </div>
     </div>
+
+      </mat-tab>
+
+      <!-- Replays Tab -->
+      <mat-tab label="MISSION REPLAYS">
+        <div class="mt-4">
+          
+          <!-- Replays Header Actions -->
+          <div class="mb-6 flex justify-between items-center">
+            <div class="text-white">
+              <h2 class="text-2xl font-bold mb-2">Available Replay Files</h2>
+              <p class="text-neutral-300">Reforger/Arma4</p>
+            </div>
+            <button mat-raised-button color="accent" (click)="refreshReplays()" class="!bg-blue-600 hover:!bg-blue-700 !text-white">
+              <mat-icon>refresh</mat-icon>
+              Refresh Files
+            </button>
+          </div>
+
+          <!-- Replays Loading Spinner -->
+          <div *ngIf="replaysLoading$ | async" class="flex justify-center items-center py-12">
+            <mat-spinner diameter="50"></mat-spinner>
+            <span class="ml-4 text-white text-lg">Loading replay files...</span>
+          </div>
+
+          <!-- Replays Error Message -->
+          <div *ngIf="replaysError$ | async as errorMessage" class="bg-red-600 bg-opacity-90 text-white p-4 rounded mb-6">
+            <h3 class="font-bold mb-2">Error</h3>
+            <p>{{errorMessage}}</p>
+            <button mat-raised-button color="accent" (click)="refreshReplays()" class="mt-2 !text-white">
+              Retry
+            </button>
+          </div>
+
+          <!-- Replays Table -->
+          <mat-card *ngIf="!(replaysLoading$ | async) && !(replaysError$ | async)" class="bg-neutral-800 bg-opacity-90">
+            <mat-card-content>
+              
+              <!-- Results Info -->
+              <div class="mb-4 text-white">
+                <p>{{totalReplays$ | async}} replay files available</p>
+              </div>
+
+              <!-- Replays Table -->
+              <div class="overflow-x-auto" *ngIf="(replays$ | async)?.length; else noReplays">
+                <table mat-table [dataSource]="(replays$ | async) || []" class="w-full">
+                  
+                  <!-- File Name Column -->
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef class="text-white font-bold">File Name</th>
+                    <td mat-cell *matCellDef="let replay" class="text-white">
+                      <div class="font-medium">{{replay.name}}</div>
+                    </td>
+                  </ng-container>
+
+                  <!-- Extension Column -->
+                  <ng-container matColumnDef="extension">
+                    <th mat-header-cell *matHeaderCellDef class="text-white font-bold">Type</th>
+                    <td mat-cell *matCellDef="let replay" class="text-white">
+                      <span class="bg-purple-600 bg-opacity-70 px-2 py-1 rounded text-sm uppercase">{{replay.extension}}</span>
+                    </td>
+                  </ng-container>
+
+                  <!-- File Size Column -->
+                  <ng-container matColumnDef="size">
+                    <th mat-header-cell *matHeaderCellDef class="text-white font-bold">Size</th>
+                    <td mat-cell *matCellDef="let replay" class="text-white">{{replay.sizeFormatted}}</td>
+                  </ng-container>
+
+                  <!-- Date Modified Column -->
+                  <ng-container matColumnDef="dateModified">
+                    <th mat-header-cell *matHeaderCellDef class="text-white font-bold">Modified</th>
+                    <td mat-cell *matCellDef="let replay" class="text-white">
+                      {{replay.dateModified | date:'short'}}
+                    </td>
+                  </ng-container>
+
+                  <!-- Actions Column -->
+                  <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef class="text-white font-bold">Actions</th>
+                    <td mat-cell *matCellDef="let replay" class="text-white">
+                      <div class="flex gap-2">
+                        <button mat-raised-button color="primary" 
+                                (click)="downloadReplay(replay)"
+                                class="!bg-green-600 hover:!bg-green-700 !text-white !min-w-0 !px-3">
+                          <mat-icon>download</mat-icon>
+                          Download
+                        </button>
+                        <button mat-raised-button 
+                                (click)="openReplayInNewTab(replay)"
+                                class="!bg-blue-600 hover:!bg-blue-700 !text-white !min-w-0 !px-3">
+                          <mat-icon>open_in_new</mat-icon>
+                          Open
+                        </button>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="replayColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: replayColumns;" 
+                      class="hover:bg-neutral-700 hover:bg-opacity-50 transition-colors"></tr>
+                </table>
+              </div>
+
+              <!-- No Replays Template -->
+              <ng-template #noReplays>
+                <div class="text-center py-12">
+                  <div class="text-white">
+                    <mat-icon class="text-6xl mb-4 text-neutral-400">folder_open</mat-icon>
+                    <h3 class="text-xl font-bold mb-4">No replay files found</h3>
+                    <p class="text-neutral-300 mb-4">There are no replay files available for download.</p>
+                    <button mat-raised-button color="primary" (click)="refreshReplays()" class="!text-white">
+                      Check Again
+                    </button>
+                  </div>
+                </div>
+              </ng-template>
+
+            </mat-card-content>
+          </mat-card>
+
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
 
   </div>
 </div>

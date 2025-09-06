@@ -7,6 +7,32 @@ export interface Mission {
   gametype: string;
   players: string;
   sidecounts: string;
+  jsonlink: string;
+  jsondata?: string | null;
+}
+
+export interface MissionStatistics {
+  events: MissionEvent[];
+  sessions?: any[];
+  summary: {
+    totalEvents: number;
+    playerCount: number;
+    totalKills?: number;
+    eventTypes?: { [key: string]: number };
+    mostActivePlayer?: string;
+    playerWithMostKills?: string;
+    duration?: string;
+    outcome?: string;
+  };
+}
+
+export interface MissionEvent {
+  timestamp: string;
+  type: string;
+  description: string;
+  player?: string;
+  location?: string;
+  details?: any;
 }
 
 export interface MissionsResponse {

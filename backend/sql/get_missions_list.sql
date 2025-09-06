@@ -30,6 +30,8 @@ BEGIN
         m.gametype,
         m.players,
         m.sidecounts,
+        m.jsonlink,
+        m.jsondata,
         -- Count total missions for pagination
         (SELECT COUNT(*) 
          FROM coalition.a4missions m2 

@@ -163,14 +163,12 @@ export class UserService {
                 // Store the JWT token returned from the backend
                 if (response.token) {
                     localStorage.setItem('jwt_token', response.token);
-                    console.log('JWT token stored:', response.token.substring(0, 20) + '...');
                 }
                 
                 this.storeUserData(); // Store updated user data
                 
                 // Load user stats after successful login/update
                 if (this.dbUser?.discordid) {
-                    console.log('Loading user stats for:', this.dbUser.discordid);
                     this.statsService.loadUserStats(this.dbUser.discordid);
                 }
             }),
@@ -216,9 +214,6 @@ export class UserService {
             return throwError(() => new Error('Session expired. Please log in again.'));
         }
         
-        console.log('Using JWT token for update:', jwtToken.substring(0, 20) + '...');
-        console.log('Sending user data:', this.dbUser);
-        
         return this.http.post(this.UPDATEURL, this.dbUser, {
             headers: {
                 'access_token': `${jwtToken}`,
@@ -228,7 +223,6 @@ export class UserService {
             tap((response: any) => {
                 // Store updated user data after successful update
                 this.storeUserData();
-                console.log('User info updated successfully:', response);
             }),
             catchError((error) => {
                 console.error('HTTP request failed:', error);

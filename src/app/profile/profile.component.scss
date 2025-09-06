@@ -1,5 +1,15 @@
 @use '@angular/material' as mat;
 
+// Profile container styling
+#main {
+  position: relative;
+  overflow-y: auto; // Ensure the main container can scroll
+  background-attachment: scroll; // Better mobile compatibility
+  
+  @media (min-width: 1024px) {
+    background-attachment: fixed; // Fixed background on larger screens
+  }
+}
 
 :root {
     @include mat.card-overrides((

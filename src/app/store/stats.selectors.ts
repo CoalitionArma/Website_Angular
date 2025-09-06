@@ -33,6 +33,47 @@ export const selectHasStats = createSelector(
   (state: StatsState) => state.stats !== null
 );
 
+// Mission stats selectors
+export const selectMissionStats = createSelector(
+  selectStatsState,
+  (state: StatsState) => state.missionStats
+);
+
+export const selectCurrentMissionStatsLoading = createSelector(
+  selectStatsState,
+  (state: StatsState) => state.currentMissionStatsLoading
+);
+
+export const selectMissionStatsById = (missionId: number) => createSelector(
+  selectMissionStats,
+  (missionStats) => missionStats[missionId] || null
+);
+
+export const selectMissionStatsLoading = (missionId: number) => createSelector(
+  selectMissionStatsById(missionId),
+  (missionStatsEntry) => missionStatsEntry?.loading || false
+);
+
+export const selectMissionStatsData = (missionId: number) => createSelector(
+  selectMissionStatsById(missionId),
+  (missionStatsEntry) => missionStatsEntry?.stats || null
+);
+
+export const selectMissionRawData = (missionId: number) => createSelector(
+  selectMissionStatsById(missionId),
+  (missionStatsEntry) => missionStatsEntry?.rawData || null
+);
+
+export const selectMissionStatsError = (missionId: number) => createSelector(
+  selectMissionStatsById(missionId),
+  (missionStatsEntry) => missionStatsEntry?.error || null
+);
+
+export const selectHasMissionStats = (missionId: number) => createSelector(
+  selectMissionStatsById(missionId),
+  (missionStatsEntry) => missionStatsEntry !== null && missionStatsEntry.stats !== null
+);
+
 // Calculate total combat effectiveness score
 export const selectCombatScore = createSelector(
   selectUserStats,
