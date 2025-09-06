@@ -1,6 +1,9 @@
+@import '../shared/styles/variables';
+@import '../shared/styles/shared-components';
+
 .events-container {
   width: 100%;
-  background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 50%, #1a1a1a 100%);
+  background: linear-gradient(135deg, $background-dark 0%, $background-lighter 50%, #1a1a1a 100%);
   min-height: 100vh;
 
   .content-wrapper {

@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -6,11 +6,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { CreateEventRequest, EventGroup, EventRole } from '../../interfaces/event.interface';
+import { NativeDateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-create-event-dialog',
@@ -29,10 +30,25 @@ import { CreateEventRequest, EventGroup, EventRole } from '../../interfaces/even
     MatCardModule,
     MatDividerModule
   ],
+  providers: [
+    { provide: DateAdapter, useClass: NativeDateAdapter },
+    { provide: MAT_DATE_LOCALE, useValue: 'en-US' },
+    { provide: MAT_DATE_FORMATS, useValue: {
+      parse: {
+        dateInput: 'MM/DD/YYYY',
+      },
+      display: {
+        dateInput: 'MM/DD/YYYY',
+        monthYearLabel: 'MMM YYYY',
+        dateA11yLabel: 'LL',
+        monthYearA11yLabel: 'MMMM YYYY',
+      }
+    }}
+  ],
   templateUrl: './create-event-dialog.component.html',
   styleUrls: ['./create-event-dialog.component.scss']
 })
-export class CreateEventDialogComponent {
+export class CreateEventDialogComponent implements OnInit {
   eventForm: FormGroup;
   isSubmitting = false;
 
@@ -41,6 +57,13 @@ export class CreateEventDialogComponent {
     private dialogRef: MatDialogRef<CreateEventDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
+    // Configure dialog behavior
+    this.dialogRef.disableClose = false;
+    
+    // Handle backdrop click to close the dialog
+    this.dialogRef.backdropClick().subscribe(() => {
+      this.dialogRef.close(false);
+    });
     this.eventForm = this.fb.group({
       title: ['', Validators.required],
       description: [''],
@@ -51,6 +74,11 @@ export class CreateEventDialogComponent {
 
     // Add initial group
     this.addGroup();
+  }
+  
+  ngOnInit(): void {
+    // This runs after the component is initialized
+    // We could add any initialization logic here if needed
   }
 
   get groups(): FormArray {

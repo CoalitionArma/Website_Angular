@@ -1,0 +1,49 @@
+// Shared SCSS variables for the application
+
+// Colors
+$primary-color: rgb(182, 65, 65);
+$primary-color-dark: rgb(150, 45, 45);
+$primary-gradient: linear-gradient(45deg, $primary-color, $primary-color-dark);
+$background-dark: #1f1f1f;
+$background-darker: #121212;
+$background-lighter: #2a2a2a;
+$background-gradient: linear-gradient(135deg, $background-lighter 0%, $background-dark 100%);
+$text-color: #ffffff;
+$text-color-secondary: #d0d0d0;
+$border-color: rgba(128, 128, 128, 0.2);
+$overlay-background: rgba(64, 64, 64, 0.3);
+
+// Typography
+$font-size-small: 14px;
+$font-size-normal: 16px;
+$font-size-medium: 18px;
+$font-size-large: 20px;
+$font-size-xlarge: 24px;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 600;
+
+// Spacing
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+// Border radius
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+$border-radius-xl: 16px;
+
+// Shadows
+$shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
+$shadow-md: 0 6px 15px rgba(0, 0, 0, 0.2);
+$shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.3);
+$shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.4);
+
+// Z-index
+$z-index-dropdown: 1000;
+$z-index-datepicker: 1100;
+$z-index-dialog: 1050;
+$z-index-backdrop: 999;

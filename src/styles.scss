@@ -46,6 +46,9 @@ $CoalitionWebsite-theme: m3-theme.$dark-theme;
 @import "../node_modules/@coreui/coreui/scss/root";
 @import "../node_modules/@coreui/coreui/scss/carousel";
 
+// Import dialog fix
+@import './app/dialog-fix.scss';
+
 // Custom styles
 
 html {

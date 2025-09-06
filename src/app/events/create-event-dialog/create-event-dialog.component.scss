@@ -1,117 +1,84 @@
-// Global form field styling for white text
-::ng-deep .create-event-dialog .mat-mdc-form-field input {
-  color: #ffffff !important;
-}
+@import '../../shared/styles/variables';
+@import '../../shared/styles/shared-components';
 
-::ng-deep .create-event-dialog .mat-mdc-form-field textarea {
-  color: #ffffff !important;
-}
-
-::ng-deep .create-event-dialog .mat-mdc-input-element {
-  color: #ffffff !important;
-}
-
-::ng-deep .create-event-dialog .mdc-text-field input {
-  color: #ffffff !important;
-}
-
-::ng-deep .create-event-dialog .mdc-text-field textarea {
-  color: #ffffff !important;
-}
-
-// Additional white text styling
-::ng-deep .create-event-dialog {
-  color: #ffffff !important;
-}
-
-::ng-deep .create-event-dialog * {
-  color: #ffffff !important;
-}
-
-::ng-deep .create-event-dialog .mat-mdc-form-field-label {
-  color: #ffffff !important;
-}
-
-::ng-deep .create-event-dialog .mat-mdc-floating-label {
-  color: #ffffff !important;
-}
-
-::ng-deep .create-event-dialog .mdc-floating-label {
-  color: #ffffff !important;
-}
-
-::ng-deep .create-event-dialog label {
-  color: #ffffff !important;
-}
-
-::ng-deep .create-event-dialog p {
-  color: #ffffff !important;
-}
-
-::ng-deep .create-event-dialog span {
-  color: #ffffff !important;
-}
-
-::ng-deep .create-event-dialog .mat-mdc-form-field-hint {
-  color: #ffffff !important;
-}
-
-::ng-deep .create-event-dialog .mat-mdc-form-field-error {
-  color: #ff6b6b !important;
-}
-
+// Dialog container styles
 .create-event-dialog {
   min-width: 700px;
   max-width: 900px;
-  max-height: 90vh; // Prevent dialog from being too tall
-  background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
-  border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  overflow: visible; // Prevent clipping
-  position: relative; // Ensure proper stacking context
+  max-height: 90vh;
+  @extend %dialog-container;
+  pointer-events: auto !important;
+  z-index: $z-index-dialog;
+  
+  ::ng-deep {
+    // Form fields text color
+    .mat-mdc-form-field {
+      input, textarea, .mat-mdc-input-element, .mdc-text-field input, 
+      .mdc-text-field textarea, .mat-mdc-form-field-label, .mdc-floating-label,
+      .mat-mdc-floating-label, label, p, span {
+        color: $text-color !important;
+      }
+      
+      .mat-mdc-form-field-hint {
+        color: $text-color !important;
+      }
+      
+      .mat-mdc-form-field-error {
+        color: #ff6b6b !important;
+      }
+    }
+    
+    // Dialog container
+    .mat-mdc-dialog-container {
+      background: transparent;
+      box-shadow: none;
+      overflow: hidden;
+      max-height: 90vh;
+      position: relative;
+    }
+  }
 }
 
-.create-event-dialog ::ng-deep .mat-mdc-dialog-container {
-  background: transparent;
-  box-shadow: none;
-  overflow: visible; // Prevent clipping
-  max-height: 90vh; // Limit overall height
-  position: relative; // Ensure proper stacking context
+// Overlay fixes
+::ng-deep {
+  .cdk-global-overlay-wrapper,
+  .cdk-overlay-container,
+  .cdk-overlay-pane,
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    pointer-events: auto !important;
+  }
+  
+  .cdk-global-overlay-wrapper,
+  .cdk-overlay-container {
+    z-index: $z-index-dropdown !important;
+  }
+  
+  .mat-datepicker-popup {
+    z-index: $z-index-datepicker !important;
+  }
+  
+  .cdk-overlay-backdrop {
+    z-index: $z-index-backdrop !important;
+  }
 }
 
-// Ensure date picker overlay appears above dialog
-::ng-deep .cdk-overlay-container {
-  z-index: 10000 !important;
-}
-
-::ng-deep .mat-datepicker-popup {
-  z-index: 10001 !important;
-}
-
-::ng-deep .cdk-overlay-backdrop {
-  z-index: 9999 !important;
-}
-
+// Dialog title
 .create-event-dialog h2 {
-  color: #ffffff;
-  font-size: 24px;
-  font-weight: 600;
-  margin: 0;
-  padding: 24px 24px 0;
-  text-align: center;
-  background: linear-gradient(45deg, rgb(182, 65, 65), rgb(200, 85, 85));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  @extend %dialog-title;
 }
 
+// Dialog content
 .dialog-content {
-  max-height: 60vh; // Reduce height to prevent clipping
-  overflow-y: auto;
-  overflow-x: visible; // Prevent horizontal clipping
-  padding: 24px;
-  scrollbar-width: thin;
-  scrollbar-color: #777 #2a2a2a;
+  @extend %dialog-content;
+  @extend %custom-scrollbar;
+  pointer-events: auto !important;
+  
+  // Force form elements to be interactive
+  input, button, textarea, select, mat-form-field, .mat-mdc-form-field {
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 2;
+  }
 }
 
 .dialog-content::-webkit-scrollbar {
@@ -128,380 +95,255 @@
   border-radius: 4px;
 }
 
+/* Global class for scrollable dialogs */
+::ng-deep .scrollable-dialog {
+  .mat-mdc-dialog-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .mdc-dialog__surface {
+    overflow: hidden !important;
+  }
+}
+
 .section {
-  margin-bottom: 32px;
-}
-
-.section h3 {
-  margin-top: 0;
-  margin-bottom: 20px;
-  color: #ffffff;
-  font-size: 20px;
-  font-weight: 500;
-  position: relative;
-  padding-bottom: 8px;
-}
-
-.section h3::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 50px;
-  height: 3px;
-  background: linear-gradient(45deg, rgb(182, 65, 65), rgb(150, 45, 45));
-  border-radius: 2px;
+  margin-bottom: $spacing-xl;
+  
+  h3 {
+    @extend %section-header;
+  }
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: $spacing-lg;
+  
+  button {
+    @extend %button-primary;
+    
+    &:hover {
+      @extend %button-primary-hover;
+    }
+  }
 }
 
-.section-header button {
-  background: linear-gradient(45deg, rgb(182, 65, 65), rgb(150, 45, 45));
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(182, 65, 65, 0.3);
-}
-
-.section-header button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(182, 65, 65, 0.4);
-}
-
+// Form field styles
 .full-width {
   width: 100%;
-  margin-bottom: 32px;
-  overflow: visible; // Prevent clipping of form field elements
+  margin-bottom: $spacing-xl;
+  overflow: visible;
+  
+  ::ng-deep {
+    .mat-mdc-form-field {
+      background: $overlay-background;
+      border-radius: $border-radius-md;
+      backdrop-filter: blur(10px);
+      width: 100%;
+      overflow: visible;
+    }
+    
+    .mat-mdc-form-field-label {
+      color: $text-color-secondary !important;
+    }
+    
+    // Date picker toggle
+    .mat-datepicker-toggle, .mat-datepicker-toggle-default-icon {
+      color: $text-color !important;
+    }
+  }
 }
 
-.full-width ::ng-deep .mat-mdc-form-field {
-  background: rgba(64, 64, 64, 0.3);
-  border-radius: 8px;
-  backdrop-filter: blur(10px);
-  width: 100%; // Ensure full width
-  overflow: visible; // Prevent clipping
+// Datepicker styles
+::ng-deep {
+  .mat-datepicker-content {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+  }
+  
+  .mat-calendar {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+  }
+  
+  .mat-calendar-body-cell-content {
+    color: #ffffff !important;
+  }
+  
+  .mat-calendar-body-selected {
+    background-color: $primary-color !important;
+    color: #ffffff !important;
+  }
 }
 
-.full-width ::ng-deep .mat-mdc-text-field-wrapper {
-  border-radius: 8px;
-  overflow: visible; // Prevent clipping
-}
-
-.full-width ::ng-deep .mat-mdc-form-field-label {
-  color: #d0d0d0 !important;
-}
-
-.full-width ::ng-deep .mat-mdc-input-element {
-  color: #ffffff !important;
-}
-
-.full-width ::ng-deep .mat-mdc-form-field-input-control input {
-  color: #ffffff !important;
-}
-
-.full-width ::ng-deep .mat-mdc-form-field-input-control textarea {
-  color: #ffffff !important;
-}
-
-.full-width ::ng-deep .mat-mdc-text-field-wrapper input {
-  color: #ffffff !important;
-}
-
-.full-width ::ng-deep .mat-mdc-text-field-wrapper textarea {
-  color: #ffffff !important;
-}
-
-.full-width ::ng-deep .mdc-text-field input {
-  color: #ffffff !important;
-}
-
-.full-width ::ng-deep .mdc-text-field textarea {
-  color: #ffffff !important;
-}
-
-.full-width ::ng-deep .mat-mdc-form-field-infix input {
-  color: #ffffff !important;
-}
-
-.full-width ::ng-deep .mat-mdc-form-field-infix textarea {
-  color: #ffffff !important;
-}
-
-.full-width ::ng-deep .mat-mdc-form-field-focus-overlay {
-  background: linear-gradient(45deg, rgba(182, 65, 65, 0.1), rgba(150, 45, 45, 0.1));
-}
-
-// Date picker specific styling
-.full-width ::ng-deep .mat-datepicker-toggle {
-  color: #ffffff !important;
-}
-
-.full-width ::ng-deep .mat-datepicker-toggle-default-icon {
-  color: #ffffff !important;
-}
-
-::ng-deep .mat-datepicker-content {
-  background-color: #2a2a2a !important;
-  color: #ffffff !important;
-}
-
-::ng-deep .mat-calendar {
-  background-color: #2a2a2a !important;
-  color: #ffffff !important;
-}
-
-::ng-deep .mat-calendar-header {
-  background-color: #1f1f1f !important;
-  color: #ffffff !important;
-}
-
-::ng-deep .mat-calendar-table-header th {
-  color: #ffffff !important;
-}
-
-::ng-deep .mat-calendar-body-cell-content {
-  color: #ffffff !important;
-}
-
-::ng-deep .mat-calendar-body-selected {
-  background-color: rgb(182, 65, 65) !important;
-  color: #ffffff !important;
-}
-
-::ng-deep .mat-calendar-body-today:not(.mat-calendar-body-selected) {
-  border-color: rgb(182, 65, 65) !important;
-}
-
+// Groups container
 .groups-container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: $spacing-lg;
 }
 
+// Group card
 .group-card {
-  background: rgba(64, 64, 64, 0.3);
-  border: 1px solid rgba(128, 128, 128, 0.2);
-  border-radius: 12px;
-  margin-bottom: 32px;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
-  overflow: visible; // Prevent clipping
+  @extend %card-style;
+  
+  &:hover {
+    border-color: rgba($primary-color, 0.3);
+    box-shadow: $shadow-lg;
+  }
+  
+  ::ng-deep {
+    .mat-mdc-card-header {
+      padding: $spacing-md $spacing-md $spacing-sm;
+      overflow: visible;
+    }
+    
+    .mat-mdc-card-content {
+      padding: $spacing-sm $spacing-md $spacing-md;
+      overflow: visible;
+    }
+  }
 }
 
-.group-card:hover {
-  border-color: rgba(182, 65, 65, 0.3);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-}
-
-.group-card ::ng-deep .mat-mdc-card-header {
-  padding: 16px 16px 8px;
-  overflow: visible; // Prevent clipping
-}
-
-.group-card ::ng-deep .mat-mdc-card-content {
-  padding: 8px 16px 16px;
-  overflow: visible; // Prevent clipping
-}
-
+// Group title
 .group-title {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: $spacing-md;
+  width: 100%;
+}
+
+// Group name container and field
+.group-name-container {
+  flex: 1;
   width: 100%;
 }
 
 .group-name-field {
   flex: 1;
-  overflow: visible; // Prevent clipping
+  overflow: visible;
 }
 
-.group-name-field ::ng-deep .mat-mdc-form-field {
-  background: rgba(64, 64, 64, 0.3);
-  border-radius: 8px;
-  overflow: visible; // Prevent clipping
-}
-
-.group-name-field ::ng-deep .mat-mdc-form-field-label {
-  color: #d0d0d0 !important;
-}
-
-.group-name-field ::ng-deep .mat-mdc-input-element {
-  color: #ffffff !important;
-}
-
-.group-name-field ::ng-deep .mat-mdc-form-field-input-control input {
-  color: #ffffff !important;
-}
-
-.group-name-field ::ng-deep .mat-mdc-text-field-wrapper input {
-  color: #ffffff !important;
-}
-
-.group-name-field ::ng-deep .mdc-text-field input {
-  color: #ffffff !important;
-}
-
-.group-name-field ::ng-deep .mat-mdc-form-field-infix input {
-  color: #ffffff !important;
-}
-
+// Roles section
 .roles-section {
-  margin-top: 16px;
+  margin-top: $spacing-md;
 }
 
 .roles-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
-}
-
-.roles-header h4 {
-  margin: 0;
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 500;
+  margin-bottom: $spacing-md;
+  
+  h4 {
+    margin: 0;
+    color: $text-color;
+    font-size: $font-size-normal;
+    font-weight: $font-weight-medium;
+  }
 }
 
 .roles-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: $spacing-md;
 }
 
 .role-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background: rgba(64, 64, 64, 0.3);
-  border-radius: 8px;
-  border: 1px solid rgba(128, 128, 128, 0.2);
+  gap: $spacing-sm;
+  padding: $spacing-sm;
+  background: $overlay-background;
+  border-radius: $border-radius-md;
+  border: 1px solid $border-color;
   transition: all 0.3s ease;
-  margin-bottom: 8px;
-}
-
-.role-item:hover {
-  background: rgba(80, 80, 80, 0.4);
-  border-color: rgba(128, 128, 128, 0.3);
+  margin-bottom: $spacing-sm;
+  
+  &:hover {
+    background: rgba(80, 80, 80, 0.4);
+    border-color: rgba(128, 128, 128, 0.3);
+  }
 }
 
 .role-name-field {
   flex: 1;
-  overflow: visible; // Prevent clipping
+  overflow: visible;
 }
 
-.role-name-field ::ng-deep .mat-mdc-form-field {
-  background: rgba(64, 64, 64, 0.3);
-  overflow: visible; // Prevent clipping
-}
-
-.role-name-field ::ng-deep .mat-mdc-form-field-label {
-  color: #d0d0d0 !important;
-}
-
-.role-name-field ::ng-deep .mat-mdc-input-element {
-  color: #ffffff !important;
-}
-
-.role-name-field ::ng-deep .mat-mdc-form-field-input-control input {
-  color: #ffffff !important;
-}
-
-.role-name-field ::ng-deep .mat-mdc-text-field-wrapper input {
-  color: #ffffff !important;
-}
-
-.role-name-field ::ng-deep .mdc-text-field input {
-  color: #ffffff !important;
-}
-
-.role-name-field ::ng-deep .mat-mdc-form-field-infix input {
-  color: #ffffff !important;
-}
-
+// Warning button
 button[color="warn"] {
-  background: linear-gradient(45deg, rgb(182, 65, 65), rgb(150, 45, 45));
-  color: white;
-  border: none;
-  border-radius: 6px;
-  transition: all 0.3s ease;
+  @extend %button-primary;
+  border-radius: $border-radius-sm;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+  }
 }
 
-button[color="warn"]:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(182, 65, 65, 0.3);
-}
-
+// Dialog actions
 ::ng-deep .mat-mdc-dialog-actions {
-  padding: 16px 24px 24px;
-  border-top: 1px solid rgba(128, 128, 128, 0.2);
+  padding: $spacing-md $spacing-lg $spacing-lg;
+  border-top: 1px solid $border-color;
   background: rgba(64, 64, 64, 0.2);
   justify-content: flex-end;
-  gap: 12px;
+  gap: $spacing-sm;
+  
+  button {
+    border-radius: $border-radius-md;
+    padding: 10px $spacing-lg;
+    font-weight: $font-weight-medium;
+    transition: all 0.3s ease;
+    
+    &[mat-button] {
+      background: rgba(255, 255, 255, 0.1);
+      color: $text-color;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+    }
+    
+    &[mat-raised-button] {
+      @extend %button-primary;
+      
+      &:hover:not(:disabled) {
+        @extend %button-primary-hover;
+      }
+      
+      &:disabled {
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.5);
+        box-shadow: none;
+      }
+    }
+  }
 }
 
-::ng-deep .mat-mdc-dialog-actions button {
-  border-radius: 8px;
-  padding: 10px 24px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-::ng-deep .mat-mdc-dialog-actions button[mat-button] {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-::ng-deep .mat-mdc-dialog-actions button[mat-button]:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-::ng-deep .mat-mdc-dialog-actions button[mat-raised-button] {
-  background: linear-gradient(45deg, rgb(182, 65, 65), rgb(150, 45, 45));
-  color: white;
-  box-shadow: 0 4px 15px rgba(182, 65, 65, 0.3);
-}
-
-::ng-deep .mat-mdc-dialog-actions button[mat-raised-button]:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(182, 65, 65, 0.4);
-}
-
-::ng-deep .mat-mdc-dialog-actions button[mat-raised-button]:disabled {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.5);
-  box-shadow: none;
-}
-
-@media (max-width: 768px) {
+// Mobile styles
+@include mobile-styles {
   .create-event-dialog {
     min-width: 95vw;
     max-width: 95vw;
   }
 
   .dialog-content {
-    padding: 16px;
+    padding: $spacing-md;
   }
 
   .group-title {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    gap: $spacing-sm;
   }
 
   .role-item {
     flex-direction: column;
     align-items: stretch;
-    gap: 8px;
+    gap: $spacing-sm;
   }
 }

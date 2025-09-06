@@ -8,6 +8,9 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { DateAdapter, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { NativeDateAdapter } from '@angular/material/core';
 import { Subscription } from 'rxjs';
 
 import { Event, SlotRoleRequest } from '../interfaces/event.interface';
@@ -27,7 +30,13 @@ import { CreateEventDialogComponent } from './create-event-dialog/create-event-d
     MatDialogModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatDatepickerModule,
+    MatNativeDateModule
+  ],
+  providers: [
+    { provide: DateAdapter, useClass: NativeDateAdapter },
+    { provide: MAT_DATE_LOCALE, useValue: 'en-US' }
   ],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss'
@@ -80,7 +89,12 @@ export class EventsComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(CreateEventDialogComponent, {
       width: '800px',
       maxWidth: '90vw',
-      disableClose: true
+      maxHeight: '90vh',
+      disableClose: false,
+      autoFocus: false,
+      panelClass: ['scrollable-dialog', 'events-dialog-container'],
+      hasBackdrop: true,
+      backdropClass: 'events-dialog-backdrop'
     });
 
     dialogRef.afterClosed().subscribe(result => {

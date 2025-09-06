@@ -1,0 +1,36 @@
+/* Dialog interaction fixes */
+.events-dialog-backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+}
+
+.events-dialog-container {
+  .mat-mdc-dialog-container {
+    .mdc-dialog__container {
+      height: auto;
+      pointer-events: auto;
+    }
+
+    .mdc-dialog__surface {
+      pointer-events: auto !important;
+      overflow: hidden;
+    }
+  }
+}
+
+/* General overlay fixes for the entire application */
+.cdk-overlay-container {
+  pointer-events: auto !important;
+}
+
+.cdk-global-overlay-wrapper {
+  pointer-events: auto !important;
+}
+
+.cdk-overlay-pane {
+  pointer-events: auto !important;
+}
+
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
+  pointer-events: auto !important;
+}
