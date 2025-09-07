@@ -249,6 +249,7 @@ export class UserService {
             section: this.dbUser?.section || null,
             veterancy: this.dbUser?.veterancy || null,
             armaguid: form.value.armaID,
+            isAdmin: this.dbUser?.isAdmin || false,
         };
     }
 

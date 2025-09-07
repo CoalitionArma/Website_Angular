@@ -7,6 +7,7 @@ export interface DBUser {
     section: string | null;
     veterancy: string | null;
     armaguid: string | null;
+    isAdmin: boolean;
 }
 
 export interface DBUserResponse extends DBUser {

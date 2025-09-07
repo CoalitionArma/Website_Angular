@@ -6,7 +6,7 @@
         mat-raised-button 
         color="primary" 
         (click)="openCreateEventDialog()"
-        [disabled]="!isLoggedIn">
+        [disabled]="!isLoggedIn || !isAdmin">
         <mat-icon>add</mat-icon>
         Create Event
       </button>
@@ -15,6 +15,11 @@
     <div *ngIf="!isLoggedIn" class="login-notice">
       <mat-icon>info_outline</mat-icon>
       <span>Log in to create events and slot into roles</span>
+    </div>
+
+    <div *ngIf="isLoggedIn && !isAdmin" class="login-notice">
+      <mat-icon>admin_panel_settings</mat-icon>
+      <span>Only administrators can create events</span>
     </div>
 
     <div *ngIf="isLoading" class="loading-container">

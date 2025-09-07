@@ -29,6 +29,7 @@ interface UpdateUserRequest {
     section?: string;
     veterancy?: string;
     armaguid?: string;
+    isAdmin?: boolean;
 }
 
 // Event interfaces
@@ -189,7 +190,8 @@ app.post('/api/users', async (req: Request<{}, {}, CreateUserRequest>, res: Resp
                 username: global_name,
                 section: 'N/A',
                 veterancy: 'N/A',
-                armaguid: null 
+                armaguid: null,
+                isAdmin: false // Default to false for new users
             });
             const token = generateToken(newUser.discordid);
             res.status(200).json({ newUser, token });

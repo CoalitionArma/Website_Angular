@@ -85,6 +85,11 @@ export class EventsComponent implements OnInit, OnDestroy {
       this.snackBar.open('You must be logged in to create events', 'Close', { duration: 3000 });
       return;
     }
+    
+    if (!this.isAdmin) {
+      this.snackBar.open('Only administrators can create events', 'Close', { duration: 3000 });
+      return;
+    }
 
     const dialogRef = this.dialog.open(CreateEventDialogComponent, {
       width: '800px',
@@ -229,6 +234,10 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   get isLoggedIn(): boolean {
     return this.userService.loggedIn;
+  }
+
+  get isAdmin(): boolean {
+    return this.userService.loggedIn && this.userService.dbUser?.isAdmin === true;
   }
 
   formatDateTime(date: Date): string {

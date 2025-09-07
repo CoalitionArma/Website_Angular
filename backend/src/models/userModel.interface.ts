@@ -10,6 +10,7 @@ class SQLUsers extends Model {
     public section!: string;
     public veterancy!: string;
     public armaguid!: string | null;
+    public isAdmin!: boolean;
 }
 
 SQLUsers.init({
@@ -44,6 +45,11 @@ SQLUsers.init({
     armaguid: {
         type: DataTypes.STRING,
         allowNull: true
+    },
+    isAdmin: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     }
 }, {
     sequelize,
