@@ -408,6 +408,79 @@ export class MissionStatsDialogComponent implements OnInit, OnDestroy, AfterView
   }
   
   /**
+   * Determine the side of a player or AI
+   * @param name Player or AI name
+   * @param sideInfo Optional explicit side information if available
+   * @returns Object with side and CSS class
+   */
+  determineSide(name: string, sideInfo?: string): { side: string, cssClass: string } {
+    // Default values
+    let side = 'unknown';
+    let cssClass = 'side-unknown';
+    
+    // If explicit side information is provided
+    if (sideInfo) {
+      console.log('Side info provided:', sideInfo);
+      const lowerSideInfo = sideInfo.toLowerCase();
+      
+      // Direct match for exact faction names
+      if (lowerSideInfo === 'blufor' || lowerSideInfo === 'west') {
+        side = 'BLUFOR';
+        cssClass = 'side-blufor';
+      } else if (lowerSideInfo === 'opfor' || lowerSideInfo === 'east') {
+        side = 'OPFOR';
+        cssClass = 'side-opfor';
+      } else if (lowerSideInfo === 'indfor' || lowerSideInfo === 'independent' || lowerSideInfo === 'guer' || lowerSideInfo === 'resistance') {
+        side = 'INDFOR';
+        cssClass = 'side-indfor';
+      } else if (lowerSideInfo === 'civ' || lowerSideInfo === 'civilian') {
+        side = 'CIV';
+        cssClass = 'side-civilian';
+      }
+      // Partial match for strings that contain faction names
+      else if (lowerSideInfo.includes('blufor') || lowerSideInfo.includes('west')) {
+        side = 'BLUFOR';
+        cssClass = 'side-blufor';
+      } else if (lowerSideInfo.includes('opfor') || lowerSideInfo.includes('east')) {
+        side = 'OPFOR';
+        cssClass = 'side-opfor';
+      } else if (lowerSideInfo.includes('indep') || lowerSideInfo.includes('guer') || lowerSideInfo.includes('resist')) {
+        side = 'INDFOR';
+        cssClass = 'side-indfor';
+      } else if (lowerSideInfo.includes('civ')) {
+        side = 'CIV';
+        cssClass = 'side-civilian';
+      }
+      
+      if (side !== 'unknown') {
+        console.log(`Determined side from sideInfo: ${side}`);
+        return { side, cssClass };
+      }
+    }
+    
+    // If we didn't get a valid side from sideInfo, try to determine from name prefixes or suffixes
+    const lowerName = name.toLowerCase();
+    
+    // Check for common faction indicators in the name
+    if (lowerName.includes('blu') || lowerName.includes('west') || lowerName.includes('nato')) {
+      side = 'BLUFOR';
+      cssClass = 'side-blufor';
+    } else if (lowerName.includes('op') || lowerName.includes('east') || lowerName.includes('csat')) {
+      side = 'OPFOR';
+      cssClass = 'side-opfor';
+    } else if (lowerName.includes('ind') || lowerName.includes('guer') || lowerName.includes('aaf')) {
+      side = 'INDFOR';
+      cssClass = 'side-indfor';
+    } else if (lowerName.includes('civ')) {
+      side = 'CIV';
+      cssClass = 'side-civilian';
+    }
+    
+    console.log(`Determined side for ${name}: ${side}`);
+    return { side, cssClass };
+  }
+
+  /**
    * Extracts all kills from the mission statistics
    */
   private extractAllKills(stats: MissionStatistics): void {
@@ -426,10 +499,28 @@ export class MissionStatsDialogComponent implements OnInit, OnDestroy, AfterView
         
         // Process kill data with distance information
         const processedKills = session.kills.map((kill: any) => {
-          // Process the kill to ensure we have distance data
+          // Debug: Log each kill to see what we're dealing with
+          console.log('Processing kill:', kill);
+          
+          // Process the kill to ensure we have distance data and side information
+          // Check for different property names that might contain faction/side info
+          const killerSideInfo = kill.killerFaction || kill.killerSide || '';
+          const victimSideInfo = kill.victimFaction || kill.victimSide || '';
+          
+          console.log(`Kill: ${kill.killer} (${killerSideInfo}) -> ${kill.victim} (${victimSideInfo})`);
+          
+          const killerSide = this.determineSide(kill.killer || '', killerSideInfo);
+          const victimSide = this.determineSide(kill.victim || '', victimSideInfo);
+          
+          console.log(`Processed: ${killerSide.side} (${killerSide.cssClass}) -> ${victimSide.side} (${victimSide.cssClass})`);
+          
           const processedKill = {
             ...kill,
-            distance: this.formatDistance(kill)
+            distance: this.formatDistance(kill),
+            killerSide: killerSide.side,
+            killerSideClass: killerSide.cssClass,
+            victimSide: victimSide.side,
+            victimSideClass: victimSide.cssClass
           };
           return processedKill;
         });
@@ -442,10 +533,24 @@ export class MissionStatsDialogComponent implements OnInit, OnDestroy, AfterView
         for (let i = 1; i < stats.sessions.length; i++) {
           const additionalSession = stats.sessions[i];
           if (additionalSession.kills && Array.isArray(additionalSession.kills)) {
-            const processedKills = additionalSession.kills.map((kill: any) => ({
-              ...kill,
-              distance: this.formatDistance(kill)
-            }));
+            const processedKills = additionalSession.kills.map((kill: any) => {
+              // Process the kill to ensure we have distance data and side information
+              // Check for different property names that might contain faction/side info
+              const killerSideInfo = kill.killerFaction || kill.killerSide || '';
+              const victimSideInfo = kill.victimFaction || kill.victimSide || '';
+              
+              const killerSide = this.determineSide(kill.killer || '', killerSideInfo);
+              const victimSide = this.determineSide(kill.victim || '', victimSideInfo);
+              
+              return {
+                ...kill,
+                distance: this.formatDistance(kill),
+                killerSide: killerSide.side,
+                killerSideClass: killerSide.cssClass,
+                victimSide: victimSide.side,
+                victimSideClass: victimSide.cssClass
+              };
+            });
             this.allKills.push(...processedKills);
           }
         }

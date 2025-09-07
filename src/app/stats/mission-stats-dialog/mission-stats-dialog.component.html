@@ -140,9 +140,12 @@
                 <ng-container matColumnDef="killer">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Killer</th>
                   <td mat-cell *matCellDef="let kill">
-                    <span [ngClass]="{'player-name': kill.killer !== 'AI', 'ai-name': kill.killer === 'AI'}">
-                      {{ kill.killer || 'Unknown' }}
-                    </span>
+                    <div class="player-with-side">
+                      <span class="side-indicator" [ngClass]="kill.killerSideClass"></span>
+                      <span [ngClass]="{'player-name': kill.killer !== 'AI', 'ai-name': kill.killer === 'AI'}">
+                        {{ kill.killer || 'Unknown' }}
+                      </span>
+                    </div>
                   </td>
                 </ng-container>
   
@@ -150,9 +153,12 @@
                 <ng-container matColumnDef="victim">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Victim</th>
                   <td mat-cell *matCellDef="let kill">
-                    <span [ngClass]="{'player-name': kill.victim !== 'AI', 'ai-name': kill.victim === 'AI'}">
-                      {{ kill.victim || 'Unknown' }}
-                    </span>
+                    <div class="player-with-side">
+                      <span class="side-indicator" [ngClass]="kill.victimSideClass"></span>
+                      <span [ngClass]="{'player-name': kill.victim !== 'AI', 'ai-name': kill.victim === 'AI'}">
+                        {{ kill.victim || 'Unknown' }}
+                      </span>
+                    </div>
                   </td>
                 </ng-container>
   
