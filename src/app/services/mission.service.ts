@@ -33,6 +33,9 @@ export class MissionService {
     if (filters.search) {
       params = params.set('search', filters.search);
     }
+    if (filters.sort) {
+      params = params.set('sort', filters.sort);
+    }
 
     return this.http.get<MissionsResponse>(`${this.apiUrl}/missions`, { params });
   }

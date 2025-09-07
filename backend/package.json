@@ -6,7 +6,9 @@
     "start": "cross-env NODE_ENV=production ts-node src/app.ts",
     "dev": "cross-env NODE_ENV=development ts-node src/app.ts",
     "build": "tsc",
-    "watch": "cross-env NODE_ENV=development ts-node --watch src/app.ts"
+    "watch": "cross-env NODE_ENV=development ts-node --watch src/app.ts",
+    "verify:dev": "cross-env NODE_ENV=development ts-node src/verify-env.ts",
+    "verify:prod": "cross-env NODE_ENV=production ts-node src/verify-env.ts"
   },
   "keywords": [],
   "author": "",

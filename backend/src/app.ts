@@ -347,20 +347,22 @@ app.get('/api/missions', async (req: Request, res: Response): Promise<void> => {
             gametype,
             terrain,
             author,
-            search
+            search,
+            sort = 'desc' // Default to desc (newest first)
         } = req.query;
 
-        console.log('Missions request params:', { limit, offset, gametype, terrain, author, search });
+        console.log('Missions request params:', { limit, offset, gametype, terrain, author, search, sort });
 
         // Call the stored procedure to get missions list
-        const results = await sequelize.query('CALL GetMissionsList(?, ?, ?, ?, ?, ?)', {
+        const results = await sequelize.query('CALL GetMissionsList(?, ?, ?, ?, ?, ?, ?)', {
             replacements: [
                 parseInt(limit as string),
                 parseInt(offset as string),
                 gametype || null,
                 terrain || null,
                 author || null,
-                search || null
+                search || null,
+                sort || 'desc'
             ],
             type: QueryTypes.RAW
         });
@@ -867,9 +869,10 @@ app.get('/api/replays', async (req: Request, res: Response): Promise<void> => {
     try {
         // Configure the path to your Apache htdocs replays directory
         // You may need to adjust this path based on your server setup
-        const replaysPath = process.env.REPLAYS_DIRECTORY || 'C:/xampp/htdocs/replays';
-        const baseUrl = process.env.REPLAYS_BASE_URL || 'http://localhost/replays';
+        const replaysPath = process.env.REPLAYS_DIRECTORY || 'C:/Apache24/htdocs/replays';
+        const baseUrl = process.env.REPLAYS_BASE_URL || 'https://coalitiongroup.net/replays';
         
+        console.log('Environment:', process.env.NODE_ENV);
         console.log('Checking replays directory:', replaysPath);
 
         // Check if directory exists
@@ -885,7 +888,7 @@ app.get('/api/replays', async (req: Request, res: Response): Promise<void> => {
         const files = fs.readdirSync(replaysPath);
         
         // Filter for replay files (you can adjust extensions as needed)
-        const replayExtensions = ['.rp', '.replay', '.rec', '.demo', '.zip', '.7z'];
+        const replayExtensions = ['.rp', '.replay', '.rec', '.demo', '.zip', '.7z', '.bin'];
         const replayFiles = files.filter(file => {
             const ext = path.extname(file).toLowerCase();
             return replayExtensions.includes(ext);

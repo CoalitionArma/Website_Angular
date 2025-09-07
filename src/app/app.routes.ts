@@ -14,13 +14,17 @@ export const routes: Routes = [
         },
     },
     {
-        path: 'stats', component: StatsComponent,
+        path: 'stats', 
+        component: StatsComponent,
+        canActivate: [AuthGuard],
         data: {
             title: 'Stats'
         },
     },
     {
-        path: 'events', component: EventsComponent,
+        path: 'events', 
+        component: EventsComponent,
+        canActivate: [AuthGuard],
         data: {
             title: 'Events'
         },

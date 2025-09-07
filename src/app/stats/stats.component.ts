@@ -80,7 +80,7 @@ export class StatsComponent implements OnInit, OnDestroy {
   selectedAuthor = '';
 
   // Sorting
-  currentSort: Sort = { active: '', direction: '' };
+  currentSort: Sort = { active: 'id', direction: 'desc' };
 
   // Filter options
   gametypes: string[] = [];
@@ -89,7 +89,7 @@ export class StatsComponent implements OnInit, OnDestroy {
 
   // Table columns
   displayedColumns: string[] = ['name', 'author', 'terrain', 'gametype', 'players', 'sidecounts', 'description'];
-  replayColumns: string[] = ['name', 'date', 'size', 'actions'];
+  replayColumns: string[] = ['name', 'extension', 'size', 'dateModified', 'actions'];
 
   // Processing state
   processingMission = false;
@@ -153,7 +153,9 @@ export class StatsComponent implements OnInit, OnDestroy {
       search: this.searchTerm || undefined,
       gametype: this.selectedGametype || undefined,
       terrain: this.selectedTerrain || undefined,
-      author: this.selectedAuthor || undefined
+      author: this.selectedAuthor || undefined,
+      // Add sort order to get latest missions first
+      sort: 'desc'
     };
 
     this.store.dispatch(MissionsActions.loadMissions({ filters, forceRefresh }));

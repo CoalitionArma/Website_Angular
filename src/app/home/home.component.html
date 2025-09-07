@@ -3,6 +3,14 @@
 </head>
 
 <div class="home text-white justify-center content-center text-center">
+  <!-- Login required message - positioned below header (header is 80px tall in most cases) -->
+  <div *ngIf="showLoginMessage" class="fixed top-20 left-0 right-0 bg-red-800 text-white py-3 px-4 z-40 flex items-center shadow-md">
+    <div class="flex-grow flex justify-center items-center">
+      <p class="font-semibold m-0">Please log in to access the {{ requiredPage }} page.</p>
+    </div>
+    <button class="text-sm bg-red-700 hover:bg-red-600 px-2 py-1 rounded" (click)="showLoginMessage = false">Close</button>
+  </div>
+
   <div class="relative h-dvh">
     <div class="absolute inset-0 bg-cover bg-center justify-center content-center bg-fixed" style="background-image: url('./assets/multi-piece/Coalition_Reforger_Spiral_Blur_USSR_Tunnel.png'); background-repeat: no-repeat;"></div>
     <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center flex-col">

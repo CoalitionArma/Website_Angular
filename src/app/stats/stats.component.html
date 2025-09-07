@@ -98,7 +98,7 @@
         <!-- Table -->
         <div class="overflow-x-auto">
           <table mat-table [dataSource]="sortedMissions" matSort (matSortChange)="onSortChange($event)" 
-                 matSortActive="id" matSortDirection="asc" class="w-full">
+                 matSortActive="id" matSortDirection="desc" class="w-full">
             
             <!-- ID Column -->
             <ng-container matColumnDef="id">
@@ -293,12 +293,6 @@
                                 class="!bg-green-600 hover:!bg-green-700 !text-white !min-w-0 !px-3">
                           <mat-icon>download</mat-icon>
                           Download
-                        </button>
-                        <button mat-raised-button 
-                                (click)="openReplayInNewTab(replay)"
-                                class="!bg-blue-600 hover:!bg-blue-700 !text-white !min-w-0 !px-3">
-                          <mat-icon>open_in_new</mat-icon>
-                          Open
                         </button>
                       </div>
                     </td>

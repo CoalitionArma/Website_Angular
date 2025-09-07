@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CoalitionCarouselComponent } from '../carousel/carousel.component';
 import { DateTime } from 'luxon';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { CarouselComponent, CarouselInnerComponent, CarouselItemComponent, CarouselControlComponent, CarouselIndicatorsComponent } from '@coreui/angular';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { cilChevronBottom } from '@coreui/icons';
 import { IconDirective } from '@coreui/icons-angular';
@@ -17,7 +17,7 @@ import 'aos/dist/aos.css';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CoalitionCarouselComponent, CarouselComponent, CarouselInnerComponent, NgFor, CarouselItemComponent, CarouselControlComponent, RouterLink, CarouselIndicatorsComponent, IconDirective, OverlayscrollbarsModule],
+  imports: [CoalitionCarouselComponent, CarouselComponent, CarouselInnerComponent, NgFor, NgIf, CarouselItemComponent, CarouselControlComponent, RouterLink, CarouselIndicatorsComponent, IconDirective, OverlayscrollbarsModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -28,6 +28,9 @@ export class HomeComponent implements OnInit {
     },
   };
   icons = { cilChevronBottom }
+  
+  showLoginMessage = false;
+  requiredPage: string | null = null;
 
   localTimezoneStr = DateTime.now().toFormat('ZZZZ')
   coalTimezone = 'America/Chicago'
@@ -101,7 +104,17 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  constructor(private route: ActivatedRoute) {}
+  
   ngOnInit(): void {
+    // Check if we were redirected due to authentication
+    this.route.queryParams.subscribe(params => {
+      if (params['requiresLogin'] && params['from']) {
+        this.showLoginMessage = true;
+        this.requiredPage = params['from'];
+      }
+    });
+    
     this.events[0] = {
       id: 0,
       src: "./assets/images/bmp.png",

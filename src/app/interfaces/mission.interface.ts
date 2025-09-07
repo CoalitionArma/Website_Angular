@@ -52,4 +52,5 @@ export interface MissionFilters {
   terrain?: string;
   author?: string;
   search?: string;
+  sort?: 'asc' | 'desc';
 }
