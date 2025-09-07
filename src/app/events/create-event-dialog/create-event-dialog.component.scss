@@ -1,0 +1,349 @@
+@import '../../shared/styles/variables';
+@import '../../shared/styles/shared-components';
+
+// Dialog container styles
+.create-event-dialog {
+  min-width: 700px;
+  max-width: 900px;
+  max-height: 90vh;
+  @extend %dialog-container;
+  pointer-events: auto !important;
+  z-index: $z-index-dialog;
+  
+  ::ng-deep {
+    // Form fields text color
+    .mat-mdc-form-field {
+      input, textarea, .mat-mdc-input-element, .mdc-text-field input, 
+      .mdc-text-field textarea, .mat-mdc-form-field-label, .mdc-floating-label,
+      .mat-mdc-floating-label, label, p, span {
+        color: $text-color !important;
+      }
+      
+      .mat-mdc-form-field-hint {
+        color: $text-color !important;
+      }
+      
+      .mat-mdc-form-field-error {
+        color: #ff6b6b !important;
+      }
+    }
+    
+    // Dialog container
+    .mat-mdc-dialog-container {
+      background: transparent;
+      box-shadow: none;
+      overflow: hidden;
+      max-height: 90vh;
+      position: relative;
+    }
+  }
+}
+
+// Overlay fixes
+::ng-deep {
+  .cdk-global-overlay-wrapper,
+  .cdk-overlay-container,
+  .cdk-overlay-pane,
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    pointer-events: auto !important;
+  }
+  
+  .cdk-global-overlay-wrapper,
+  .cdk-overlay-container {
+    z-index: $z-index-dropdown !important;
+  }
+  
+  .mat-datepicker-popup {
+    z-index: $z-index-datepicker !important;
+  }
+  
+  .cdk-overlay-backdrop {
+    z-index: $z-index-backdrop !important;
+  }
+}
+
+// Dialog title
+.create-event-dialog h2 {
+  @extend %dialog-title;
+}
+
+// Dialog content
+.dialog-content {
+  @extend %dialog-content;
+  @extend %custom-scrollbar;
+  pointer-events: auto !important;
+  
+  // Force form elements to be interactive
+  input, button, textarea, select, mat-form-field, .mat-mdc-form-field {
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 2;
+  }
+}
+
+.dialog-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dialog-content::-webkit-scrollbar-track {
+  background: #2a2a2a;
+  border-radius: 4px;
+}
+
+.dialog-content::-webkit-scrollbar-thumb {
+  background: #777;
+  border-radius: 4px;
+}
+
+/* Global class for scrollable dialogs */
+::ng-deep .scrollable-dialog {
+  .mat-mdc-dialog-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .mdc-dialog__surface {
+    overflow: hidden !important;
+  }
+}
+
+.section {
+  margin-bottom: $spacing-xl;
+  
+  h3 {
+    @extend %section-header;
+  }
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+  
+  button {
+    @extend %button-primary;
+    
+    &:hover {
+      @extend %button-primary-hover;
+    }
+  }
+}
+
+// Form field styles
+.full-width {
+  width: 100%;
+  margin-bottom: $spacing-xl;
+  overflow: visible;
+  
+  ::ng-deep {
+    .mat-mdc-form-field {
+      background: $overlay-background;
+      border-radius: $border-radius-md;
+      backdrop-filter: blur(10px);
+      width: 100%;
+      overflow: visible;
+    }
+    
+    .mat-mdc-form-field-label {
+      color: $text-color-secondary !important;
+    }
+    
+    // Date picker toggle
+    .mat-datepicker-toggle, .mat-datepicker-toggle-default-icon {
+      color: $text-color !important;
+    }
+  }
+}
+
+// Datepicker styles
+::ng-deep {
+  .mat-datepicker-content {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+  }
+  
+  .mat-calendar {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+  }
+  
+  .mat-calendar-body-cell-content {
+    color: #ffffff !important;
+  }
+  
+  .mat-calendar-body-selected {
+    background-color: $primary-color !important;
+    color: #ffffff !important;
+  }
+}
+
+// Groups container
+.groups-container {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+// Group card
+.group-card {
+  @extend %card-style;
+  
+  &:hover {
+    border-color: rgba($primary-color, 0.3);
+    box-shadow: $shadow-lg;
+  }
+  
+  ::ng-deep {
+    .mat-mdc-card-header {
+      padding: $spacing-md $spacing-md $spacing-sm;
+      overflow: visible;
+    }
+    
+    .mat-mdc-card-content {
+      padding: $spacing-sm $spacing-md $spacing-md;
+      overflow: visible;
+    }
+  }
+}
+
+// Group title
+.group-title {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  width: 100%;
+}
+
+// Group name container and field
+.group-name-container {
+  flex: 1;
+  width: 100%;
+}
+
+.group-name-field {
+  flex: 1;
+  overflow: visible;
+}
+
+// Roles section
+.roles-section {
+  margin-top: $spacing-md;
+}
+
+.roles-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+  
+  h4 {
+    margin: 0;
+    color: $text-color;
+    font-size: $font-size-normal;
+    font-weight: $font-weight-medium;
+  }
+}
+
+.roles-container {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.role-item {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm;
+  background: $overlay-background;
+  border-radius: $border-radius-md;
+  border: 1px solid $border-color;
+  transition: all 0.3s ease;
+  margin-bottom: $spacing-sm;
+  
+  &:hover {
+    background: rgba(80, 80, 80, 0.4);
+    border-color: rgba(128, 128, 128, 0.3);
+  }
+}
+
+.role-name-field {
+  flex: 1;
+  overflow: visible;
+}
+
+// Warning button
+button[color="warn"] {
+  @extend %button-primary;
+  border-radius: $border-radius-sm;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+  }
+}
+
+// Dialog actions
+::ng-deep .mat-mdc-dialog-actions {
+  padding: $spacing-md $spacing-lg $spacing-lg;
+  border-top: 1px solid $border-color;
+  background: rgba(64, 64, 64, 0.2);
+  justify-content: flex-end;
+  gap: $spacing-sm;
+  
+  button {
+    border-radius: $border-radius-md;
+    padding: 10px $spacing-lg;
+    font-weight: $font-weight-medium;
+    transition: all 0.3s ease;
+    
+    &[mat-button] {
+      background: rgba(255, 255, 255, 0.1);
+      color: $text-color;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+    }
+    
+    &[mat-raised-button] {
+      @extend %button-primary;
+      
+      &:hover:not(:disabled) {
+        @extend %button-primary-hover;
+      }
+      
+      &:disabled {
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.5);
+        box-shadow: none;
+      }
+    }
+  }
+}
+
+// Mobile styles
+@include mobile-styles {
+  .create-event-dialog {
+    min-width: 95vw;
+    max-width: 95vw;
+  }
+
+  .dialog-content {
+    padding: $spacing-md;
+  }
+
+  .group-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-sm;
+  }
+
+  .role-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: $spacing-sm;
+  }
+}

@@ -38,35 +38,42 @@ $CoalitionWebsite-theme: m3-theme.$dark-theme;
 
 @import "overlayscrollbars/overlayscrollbars.css";
 
-
-// https://coreui.io/angular/docs/customize/sass/
-
-// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
+// CoreUI - complete import to ensure compatibility
 @import "../node_modules/@coreui/coreui/scss/functions";
-
-// 2. Include any default variable overrides here
-
-// 3. Include remainder of required CoreUI stylesheets
 @import "../node_modules/@coreui/coreui/scss/variables";
-
-// 4. Include any default map overrides here
-
-// 5. Include remainder of required parts
 @import "../node_modules/@coreui/coreui/scss/maps";
 @import "../node_modules/@coreui/coreui/scss/mixins";
 @import "../node_modules/@coreui/coreui/scss/root";
-
-// 6. Optionally include any other parts as needed
 @import "../node_modules/@coreui/coreui/scss/carousel";
 
+// Import dialog fix
+@import './app/dialog-fix.scss';
 
-// 7. Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`
-
-// 8. Add additional custom code here
+// Custom styles
 
 html {
     font-family: 'Roboto', sans-serif;
     background-color: rgb(45, 45, 45);
+    overflow-x: hidden; // Prevent horizontal scroll
+    overflow-y: hidden; // Disable body scrolling - we'll handle it in the main content
+}
+
+body {
+    overflow-x: hidden; // Prevent horizontal scroll
+    overflow-y: hidden; // Disable body scrolling - we'll handle it in the main content
+    position: relative;
+    height: 100vh; // Full viewport height
+    margin: 0;
+    padding: 0;
+}
+
+// Fix scrolling issues with background images
+.bg-fixed {
+    background-attachment: scroll !important; // Override bg-fixed on small screens
+    
+    @media (min-width: 1024px) {
+        background-attachment: fixed !important; // Restore bg-fixed on larger screens where it works better
+    }
 }
 
 
@@ -83,3 +90,64 @@ html {
 // }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Mission Stats Dialog Styles */
+.mission-stats-dialog-panel .mat-mdc-dialog-container {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  width: 960px !important;
+  max-width: 90vw !important;
+}
+
+.mission-stats-dialog-panel .mat-mdc-dialog-content {
+  padding: 0 !important;
+  margin: 0 !important;
+  max-height: calc(80vh - 130px) !important; /* Adjust based on title and buttons height */
+  overflow-y: auto !important;
+}
+
+.mission-stats-dialog-panel .mat-mdc-dialog-title {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.mission-stats-dialog-panel .mat-mdc-dialog-actions {
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: auto !important;
+}
+
+/* Dialog backdrop */
+.mission-stats-backdrop {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+}
+
+/* Dialog animations */
+.mat-mdc-dialog-container.mdc-dialog__container {
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+/* Tab animation */
+.mat-mdc-tab-body {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Button styles for dialogs */
+.mission-stats-dialog-panel .mat-mdc-dialog-actions .mdc-button {
+  border-radius: 4px;
+  font-weight: 500;
+  min-width: 90px;
+}
+
+.mission-stats-dialog-panel .mat-mdc-dialog-actions .mdc-button.mat-primary {
+  background-color: #e53935; /* Red accent color */
+  color: white;
+}
+
+.mission-stats-dialog-panel .mat-mdc-dialog-actions .mdc-button.mat-primary:hover {
+  background-color: #c62828; /* Darker red for hover */
+}

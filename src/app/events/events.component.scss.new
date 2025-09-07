@@ -1,0 +1,273 @@
+@import '../shared/styles/variables';
+@import '../shared/styles/shared-components';
+
+.events-container {
+  width: 100%;
+  background: linear-gradient(135deg, $background-dark 0%, $background-lighter 50%, #1a1a1a 100%);
+  min-height: 100vh;
+
+  .content-wrapper {
+    width: 80%;
+    margin: 0 auto;
+    padding: $spacing-xl;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    padding: $spacing-lg 0;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100px;
+      height: 2px;
+      background: $primary-gradient;
+      border-radius: 1px;
+    }
+
+    h1 {
+      margin: 0;
+      color: $text-color;
+      font-size: $font-size-xlarge * 1.5;
+      font-weight: $font-weight-bold;
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      background: linear-gradient(45deg, $primary-color, rgb(200, 85, 85));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    button {
+      @extend %button-primary;
+      border-radius: $border-radius-lg;
+      padding: $spacing-sm $spacing-lg;
+      font-weight: $font-weight-bold;
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: $shadow-lg;
+      }
+
+      &:disabled {
+        background: rgba(128, 128, 128, 0.3);
+        color: rgba(255, 255, 255, 0.5);
+        box-shadow: none;
+      }
+    }
+  }
+
+  // Login notice
+  .login-notice {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-lg $spacing-lg;
+    background: linear-gradient(135deg, rgba(128, 128, 128, 0.15), rgba(96, 96, 96, 0.2));
+    border-radius: $border-radius-lg;
+    margin-bottom: $spacing-xl;
+    border: 1px solid rgba(160, 160, 160, 0.3);
+    backdrop-filter: blur(10px);
+  }
+
+  // Loading and empty states
+  .loading-container, .no-events {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-xl * 2;
+    
+    mat-icon {
+      font-size: 48px;
+      height: 48px;
+      width: 48px;
+      margin-bottom: $spacing-lg;
+      color: $text-color-secondary;
+    }
+    
+    h2 {
+      color: $text-color;
+      margin: $spacing-md 0;
+    }
+    
+    p {
+      color: $text-color-secondary;
+    }
+  }
+
+  // Events grid
+  .events-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: $spacing-xl;
+    margin-top: $spacing-xl * 1.5;
+
+    .event-card {
+      background: $overlay-background;
+      border-radius: $border-radius-xl;
+      border: 1px solid $border-color;
+      box-shadow: $shadow-lg;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: $shadow-xl;
+        border-color: rgba($primary-color, 0.3);
+      }
+      
+      &.past-event {
+        opacity: 0.7;
+      }
+      
+      // Card components
+      .event-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: $font-size-large;
+        color: $text-color;
+      }
+      
+      .event-meta {
+        display: flex;
+        gap: $spacing-md;
+        color: $text-color-secondary;
+        align-items: center;
+        flex-wrap: wrap;
+        
+        span {
+          display: flex;
+          align-items: center;
+          gap: $spacing-xs;
+        }
+      }
+      
+      .event-banner {
+        height: 200px;
+        overflow: hidden;
+        
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+      
+      .event-description {
+        color: $text-color;
+        margin-bottom: $spacing-lg;
+      }
+      
+      // Roster section
+      .roster-section {
+        margin-top: $spacing-lg;
+        
+        h3 {
+          color: $text-color;
+          font-size: $font-size-large;
+          margin-bottom: $spacing-md;
+          position: relative;
+          padding-bottom: $spacing-xs;
+          
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: $primary-gradient;
+          }
+        }
+      }
+      
+      .group-section {
+        margin-bottom: $spacing-lg;
+        
+        h4 {
+          color: $text-color;
+          font-size: $font-size-medium;
+          margin-bottom: $spacing-md;
+        }
+      }
+      
+      .roles-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: $spacing-md;
+      }
+      
+      .role-item {
+        background: rgba(64, 64, 64, 0.4);
+        padding: $spacing-md;
+        border-radius: $border-radius-md;
+        border: 1px solid rgba(128, 128, 128, 0.2);
+        
+        .role-info {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: $spacing-sm;
+        }
+        
+        .role-name {
+          font-weight: $font-weight-medium;
+          color: $text-color;
+        }
+        
+        .role-status {
+          color: $text-color-secondary;
+          
+          &.slotted {
+            color: $primary-color;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Media queries for responsiveness
+@media (max-width: 1200px) {
+  .events-container .content-wrapper {
+    width: 90%;
+  }
+}
+
+@media (max-width: 768px) {
+  .events-container {
+    .content-wrapper {
+      width: 95%;
+      padding: $spacing-md;
+    }
+    
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-md;
+      
+      button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+    
+    .events-list {
+      grid-template-columns: 1fr;
+    }
+    
+    .event-card .roles-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

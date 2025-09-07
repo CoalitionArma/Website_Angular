@@ -3,13 +3,13 @@ import sequelize from '../db';
 
 class SQLUsers extends Model {
     public discordid!: string;
-    public steamid!: string;
+    public steamid!: string | null;
     public email!: string;
-    public teamspeakid!: string;
+    public teamspeakid!: string | null;
     public username!: string;
     public section!: string;
     public veterancy!: string;
-    public armaguid!: string;
+    public armaguid!: string | null;
 }
 
 SQLUsers.init({
@@ -47,7 +47,8 @@ SQLUsers.init({
     }
 }, {
     sequelize,
-    tableName: 'users'
+    tableName: 'users',
+    timestamps: false
 });
 
 export default SQLUsers;
