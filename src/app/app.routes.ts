@@ -19,6 +19,7 @@ export const routes: Routes = [
         },
     },
     { path: 'oauth', component: OauthComponent },
+    { path: 'oauth/', component: OauthComponent }, // Add explicit route with trailing slash
     { path: 'profile', 
         component: ProfileComponent,
         canActivate: [AuthGuard],
