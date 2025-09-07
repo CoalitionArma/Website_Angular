@@ -948,40 +948,6 @@ const startServer = async (): Promise<void> => {
         await sequelize.sync();
         console.log('✅ Database synced successfully');
         
-        // Create coalition_events table
-        try {
-            await Event.sync({ force: true });
-            console.log('✅ Coalition events table created successfully');
-        } catch (eventSyncError) {
-            console.warn('⚠️ Events table creation failed:', eventSyncError);
-            throw eventSyncError;
-        }
-    
-    // Test database connection and stored procedure
-    try {
-        console.log('🔍 Testing database connection and stored procedure...');
-        const testResult = await sequelize.query('SELECT COUNT(*) as count FROM coalition.a4missions', {
-            type: QueryTypes.SELECT
-        });
-        console.log('📊 Total missions in database:', testResult[0]);
-        
-        // Test if stored procedure exists
-        const procTest = await sequelize.query('SHOW PROCEDURE STATUS WHERE Name = "GetMissionsList"', {
-            type: QueryTypes.SELECT
-        });
-        console.log('🔧 Stored procedure status:', procTest.length > 0 ? 'EXISTS' : 'NOT FOUND');
-        
-        // Test a simple call to the stored procedure
-        const simpleTest = await sequelize.query('CALL GetMissionsList(1, 0, NULL, NULL, NULL, NULL)', {
-            type: QueryTypes.RAW
-        });
-        console.log('🧪 Simple stored procedure test result type:', typeof simpleTest);
-        console.log('🧪 Simple stored procedure test result length:', Array.isArray(simpleTest) ? simpleTest.length : 'not array');
-        
-    } catch (dbTestError) {
-        console.error('❌ Database test failed:', dbTestError);
-    }
-        
         app.listen(port, (): void => {
             console.log(`🚀 Server running at http://localhost:${port}`);
             console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
