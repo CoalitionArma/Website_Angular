@@ -69,7 +69,7 @@ interface AuthenticatedRequest extends Request {
 // Load the appropriate .env file based on NODE_ENV
 // Set default to development if NODE_ENV is not set
 const nodeEnv = process.env.NODE_ENV || 'development';
-const envFile: string = nodeEnv === 'development' ? '.env.development' : '.env';
+const envFile: string = nodeEnv === 'development' ? '.env.development' : '.env.production';
 dotenv.config({ path: envFile });
 
 console.log(`🌍 Loading environment: ${nodeEnv}`);
