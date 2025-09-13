@@ -33,7 +33,7 @@ export interface MissionSession {
   OPFOR?: number;
   INDFOR?: number;
   CIV?: number;
-  ORBAT?: any[];
+  ORBAT?: any[]; //TODO define ORBAT structure
   kills?: KillEvent[];
 }
 
