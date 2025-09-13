@@ -13,7 +13,7 @@ export interface Mission {
 
 export interface MissionStatistics {
   events: MissionEvent[];
-  sessions?: any[];
+  sessions?: MissionSession[];
   summary: {
     totalEvents: number;
     playerCount: number;
@@ -24,6 +24,30 @@ export interface MissionStatistics {
     duration?: string;
     outcome?: string;
   };
+}
+
+export interface MissionSession {
+  mission?: string;
+  date?: string;
+  BLUFOR?: number;
+  OPFOR?: number;
+  INDFOR?: number;
+  CIV?: number;
+  ORBAT?: any[];
+  kills?: KillEvent[];
+}
+
+export interface KillEvent {
+  victim: string;
+  victimFaction: string;
+  victimGUID: string;
+  killer: string;
+  killerFaction: string;
+  killerGUID: string;
+  weapon: string;
+  damageType: string;
+  distance: string;
+  time: string;
 }
 
 export interface MissionEvent {

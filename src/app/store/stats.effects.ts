@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 import { map, mergeMap, catchError, delay } from 'rxjs/operators';
 import * as StatsActions from './stats.actions';
 import { UserStatsResponse } from '../interfaces/user-stats.interface';
-import { MissionStatistics } from '../interfaces/mission.interface';
+import { MissionStatistics, MissionSession } from '../interfaces/mission.interface';
 import { environment } from '../../environments/environment';
 
 @Injectable()
@@ -189,8 +189,35 @@ export class StatsEffects {
     let duration: string | undefined;
 
     try {
-      if (Array.isArray(data) && data.length > 0) {
-        console.log('Processing array with', data.length, 'sessions');
+      // Check for new single-session format with mission, date, faction counts, and kills array
+      if (data && typeof data === 'object' && data.kills && Array.isArray(data.kills)) {
+        console.log('Processing new single-session format');
+        
+        totalKills = data.kills.length;
+        
+        // Calculate player count from faction counts
+        const factionCounts = {
+          blufor: data.BLUFOR || 0,
+          opfor: data.OPFOR || 0, 
+          indfor: data.INDFOR || 0,
+          civ: data.CIV || 0
+        };
+        playerCount = factionCounts.blufor + factionCounts.opfor + factionCounts.indfor + factionCounts.civ;
+        
+        // Calculate duration from first to last kill
+        if (data.kills.length > 0) {
+          const firstKill = data.kills[0]?.time;
+          const lastKill = data.kills[data.kills.length - 1]?.time;
+          
+          if (firstKill && lastKill && firstKill !== lastKill) {
+            duration = `${firstKill} - ${lastKill}`;
+          }
+        }
+        
+        outcome = `${totalKills} kills | ${playerCount} players | Mission: ${data.mission || 'Unknown'}`;
+        
+      } else if (Array.isArray(data) && data.length > 0) {
+        console.log('Processing legacy array format with', data.length, 'sessions');
         
         // Count kills efficiently
         data.forEach(session => {
@@ -252,7 +279,7 @@ export class StatsEffects {
 
     return {
       events: [], // Empty for performance, dialog will process detailed events
-      sessions: Array.isArray(data) ? data : undefined, // Include sessions data if available
+      sessions: Array.isArray(data) ? data : [data], // Wrap single session in array for consistency
       summary
     };
   }
