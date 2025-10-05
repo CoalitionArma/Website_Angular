@@ -4,8 +4,12 @@
             <img [src]=userService.avatarUrl class="h-full">
             <div class="pl-10">
                 <div class="bg-neutral-800 px-2 py-1 bg-opacity-60 text-4xl">{{userService.discordUser?.global_name?.toUpperCase()}}</div>
+                @if (userService.dbUser?.callsign) {
+                    <div class="bg-blue-800 px-2 py-1 bg-opacity-60 text-lg font-bold">CALLSIGN: "{{userService.dbUser?.callsign?.toUpperCase()}}"</div>
+                }
                 <div class="bg-neutral-800 px-2 py-1 bg-opacity-60 text-sm">RANK: {{userService.dbUser?.veterancy?.toUpperCase()}}</div>
                 <div class="bg-neutral-800 px-2 py-1 bg-opacity-60 text-sm">SECTION: {{userService.dbUser?.section?.toUpperCase()}}</div>
+
             </div>
         </div>
     </section>
@@ -131,6 +135,25 @@
                         }
                     </div>
                 </div>
+
+                <!-- Admin Callsign Management Section -->
+                @if (userService.dbUser?.isAdmin) {
+                    <div id="callsign-admin" class="flex flex-row items-end items-center gap-x-4 px-4 py-1">
+                        <img src="./assets/icons/arma.png" class="w-[40px]" alt="Admin Icon" loading="lazy">
+                        <div class="flex flex-col">
+                            <span class="text-orange-400 text-s font-bold">CALLSIGN (ADMIN)</span>
+                            @if (formLoading) {
+                                <!-- Skeleton loading for callsign field -->
+                                <div class="animate-pulse bg-neutral-600 h-[56px] w-[250px] rounded"></div>
+                            } @else {
+                                <mat-form-field>
+                                    <input type="text" matInput formControlName="callsign" placeholder="Enter callsign...">
+                                    <mat-hint>As an admin, you can assign a callsign to this user</mat-hint>
+                                </mat-form-field>
+                            }
+                        </div>
+                    </div>
+                }
             </form>
             
             <div class="flex justify-end gap-x-2 px-4 py-2">

@@ -10,6 +10,7 @@ class SQLUsers extends Model {
     public section!: string;
     public veterancy!: string;
     public armaguid!: string | null;
+    public callsign!: string | null;
     public isAdmin!: boolean;
 }
 
@@ -44,6 +45,10 @@ SQLUsers.init({
     },
     armaguid: {
         type: DataTypes.STRING,
+        allowNull: true
+    },
+    callsign: {
+        type: DataTypes.STRING(100),
         allowNull: true
     },
     isAdmin: {

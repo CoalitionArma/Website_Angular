@@ -16,6 +16,7 @@ export class UserService {
     private TOKENURL = `${environment.apiUrl}/oauth/token`;
     private USERURL = `${environment.discordApiUrl}/users/@me`;
     private UPDATEURL = `${environment.apiUrl}/update/user`;
+    private UPDATECALLSIGNURL = `${environment.apiUrl}/update/callsign`;
     
     // Use BehaviorSubject for reactive login state
     private loggedInSubject = new BehaviorSubject<boolean>(this.isTokenValid());
@@ -231,6 +232,38 @@ export class UserService {
         );
     }
 
+    updateCallsign(targetUserId: string, callsign: string): Observable<any> {
+        const jwtToken = localStorage.getItem('jwt_token');
+        if (!jwtToken) {
+            console.warn('No JWT token found, user needs to log in again');
+            return throwError(() => new Error('No JWT token found. Please log out and log back in.'));
+        }
+        
+        if (!this.isTokenValid()) {
+            console.warn('Discord token expired');
+            return throwError(() => new Error('Session expired. Please log in again.'));
+        }
+        
+        return this.http.post(this.UPDATECALLSIGNURL, { 
+            targetUserId, 
+            callsign 
+        }, {
+            headers: {
+                'access_token': `${jwtToken}`,
+                'Content-Type': 'application/json'
+            }
+        }).pipe(
+            tap((response: any) => {
+                // Store updated user data after successful update
+                this.storeUserData();
+            }),
+            catchError((error) => {
+                console.error('Callsign update request failed:', error);
+                return this.handleError(error);
+            })
+        );
+    }
+
     setAvatarUrl(): void {
         this.avatarUrl = `${environment.discordCdnUrl}/avatars/${this.discordUser?.id}/${this.discordUser?.avatar}.png`;
     }
@@ -249,6 +282,7 @@ export class UserService {
             section: this.dbUser?.section || null,
             veterancy: this.dbUser?.veterancy || null,
             armaguid: form.value.armaID,
+            callsign: form.value.callsign !== undefined ? form.value.callsign : this.dbUser?.callsign, // Include callsign from form
             isAdmin: this.dbUser?.isAdmin || false,
         };
     }

@@ -29,7 +29,13 @@ interface UpdateUserRequest {
     section?: string;
     veterancy?: string;
     armaguid?: string;
+    callsign?: string;
     isAdmin?: boolean;
+}
+
+interface UpdateCallsignRequest {
+    targetUserId: string;
+    callsign: string;
 }
 
 // Event interfaces
@@ -191,6 +197,7 @@ app.post('/api/users', async (req: Request<{}, {}, CreateUserRequest>, res: Resp
                 section: 'N/A',
                 veterancy: 'N/A',
                 armaguid: null,
+                callsign: null,
                 isAdmin: false // Default to false for new users
             });
             const token = generateToken(newUser.discordid);
@@ -212,7 +219,8 @@ app.post('/api/update/user', authenticateToken, async (req: Request<{}, {}, Upda
         username, 
         section, 
         veterancy, 
-        armaguid 
+        armaguid,
+        callsign 
     } = req.body;
     
     try {
@@ -226,6 +234,13 @@ app.post('/api/update/user', authenticateToken, async (req: Request<{}, {}, Upda
             user.section = section || 'N/A';
             user.veterancy = veterancy || 'N/A';
             user.armaguid = armaguid || null;
+            
+            // Allow admin users to update their own callsign
+            if (user.isAdmin && callsign !== undefined) {
+                user.callsign = callsign || null;
+            } else {
+                user.callsign = user.callsign || null; // Preserve existing callsign unless specifically updated
+            }
 
             await user.save();
             res.status(200).json({ message: 'User updated successfully' });
@@ -235,6 +250,52 @@ app.post('/api/update/user', authenticateToken, async (req: Request<{}, {}, Upda
     } catch (error) {
         console.error('Error updating user:', error);
         res.status(500).json({ error: 'Error updating user' });
+    }
+});
+
+// Update User Callsign Endpoint (Admin only) - For updating OTHER users' callsigns
+app.post('/api/update/callsign', authenticateToken, async (req: Request<{}, {}, UpdateCallsignRequest>, res: Response): Promise<void> => {
+    const { targetUserId, callsign } = req.body;
+    const adminUserId = (req.body as any).id; // From JWT token
+    
+    console.log(`Callsign update request - Admin: ${adminUserId}, Target: ${targetUserId}, Callsign: ${callsign}`);
+    
+    try {
+        // Check if the requesting user is an admin
+        const adminUser = await SQLUsers.findOne({ where: { discordid: adminUserId } });
+        
+        if (!adminUser || !adminUser.isAdmin) {
+            res.status(403).json({ 
+                error: 'Access denied', 
+                message: 'Only administrators can update callsigns' 
+            });
+            return;
+        }
+
+        // Find the target user
+        const targetUser = await SQLUsers.findOne({ where: { discordid: targetUserId } });
+        console.log(`Target user found: ${targetUser ? targetUser.username : 'NOT FOUND'}`);
+        
+        if (!targetUser) {
+            res.status(404).json({ error: 'Target user not found' });
+            return;
+        }
+
+        // Update the callsign
+        targetUser.callsign = callsign || null;
+        await targetUser.save();
+
+        res.status(200).json({ 
+            message: 'Callsign updated successfully',
+            user: {
+                discordid: targetUser.discordid,
+                username: targetUser.username,
+                callsign: targetUser.callsign
+            }
+        });
+    } catch (error) {
+        console.error('Error updating callsign:', error);
+        res.status(500).json({ error: 'Error updating callsign' });
     }
 });
 

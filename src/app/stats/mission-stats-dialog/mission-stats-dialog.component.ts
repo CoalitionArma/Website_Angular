@@ -12,7 +12,7 @@ import { MatSortModule, MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
-import { Mission, MissionStatistics, KillEvent } from '../../interfaces/mission.interface';
+import { Mission, MissionStatistics } from '../../interfaces/mission.interface';
 import * as StatsActions from '../../store/stats.actions';
 import { MissionStatsEntry } from '../../store/stats.reducer';
 import { selectMissionStatsById } from '../../store/stats.selectors';
@@ -49,7 +49,7 @@ export class MissionStatsDialogComponent implements OnInit, OnDestroy, AfterView
   chartOptions: any = {};
   
   // Mission kills data
-  allKills: (KillEvent & { killerSide?: string; victimSide?: string; killerSideClass?: string; victimSideClass?: string; distance?: string })[] = [];
+  allKills: any[] = [];
   killsDataSource = new MatTableDataSource<any>([]);
   
   @ViewChild(MatSort) sort!: MatSort;
@@ -140,50 +140,8 @@ export class MissionStatsDialogComponent implements OnInit, OnDestroy, AfterView
   private setupChartData(stats: MissionStatistics): void {
     // Set up chart data based on available stats
     // This would depend on what kind of charts you want to show
-    
-    // Check for the new format with sessions containing kills data
-    if (stats.sessions && stats.sessions.length > 0) {
-      const allKills: KillEvent[] = [];
-      
-      // Collect all kills from all sessions
-      stats.sessions.forEach(session => {
-        if (session.kills && Array.isArray(session.kills)) {
-          allKills.push(...session.kills);
-        }
-      });
-      
-      if (allKills.length > 0) {
-        // Create weapon type distribution chart
-        const weaponTypes = new Map<string, number>();
-        
-        allKills.forEach(kill => {
-          const weapon = kill.weapon || 'Unknown';
-          const count = weaponTypes.get(weapon) || 0;
-          weaponTypes.set(weapon, count + 1);
-        });
-        
-        // Create faction vs faction chart data
-        const factionKills = new Map<string, number>();
-        
-        allKills.forEach(kill => {
-          const killerFaction = kill.killerFaction || 'Unknown';
-          const victimFaction = kill.victimFaction || 'Unknown';
-          const key = `${killerFaction} vs ${victimFaction}`;
-          const count = factionKills.get(key) || 0;
-          factionKills.set(key, count + 1);
-        });
-        
-        this.chartOptions = {
-          series: [{
-            name: 'Weapon Usage',
-            data: Array.from(weaponTypes.values())
-          }],
-          labels: Array.from(weaponTypes.keys()),
-          // Add more chart options as needed
-        };
-      }
-    } else if (stats.events && stats.events.length > 0) {
-      // Fallback for legacy format with events array
+    if (stats.events && stats.events.length > 0) {
+      // Example: Event type distribution chart
       const eventTypes = new Map<string, number>();
       
       stats.events.forEach(event => {

@@ -57,6 +57,7 @@ export class ProfileComponent implements OnInit {
       Validators.pattern(this.armaGUIDRegex)
     ]],
     steamID: ['', Validators.pattern(this.steamid64Regex)],
+    callsign: [''], // Admin-only field for callsign management
   });
 
   saveFailed = false
@@ -116,6 +117,7 @@ export class ProfileComponent implements OnInit {
       email: this.userService.dbUser?.email || '',
       armaID: this.userService.dbUser?.armaguid || '',
       steamID: this.userService.dbUser?.steamid || '',
+      callsign: this.userService.dbUser?.callsign || '',
     });
     
     // Mark form as pristine after setting initial values
@@ -133,6 +135,64 @@ export class ProfileComponent implements OnInit {
     this.saving = true
     
     if (this.userInfoForm.valid && this.userInfoForm.dirty) { 
+      // For admin users updating their own callsign, use the regular update endpoint
+      // The backend now handles callsign updates for admin users through the regular endpoint
+      this.updateRegularUserInfo();
+    } else if (!this.userInfoForm.valid) {
+      this.saving = false;
+      this.saveFailed = true
+      this.saveFailedReason = "📝 Please fix the validation errors above before saving."
+      
+      // Hide error message after 4 seconds
+      setTimeout(() => {
+        this.saveFailed = false;
+        this.saveFailedReason = "";
+      }, 4000);
+    }
+  }
+
+  private updateCallsign() {
+    const callsignValue = this.userInfoForm.get('callsign')?.value;
+    
+    this.userService.updateCallsign(this.userService.dbUser!.discordid, callsignValue || '').subscribe({
+      next: (response: any) => {
+        console.log('Callsign update successful:', response);
+        
+        // Update local user data
+        if (this.userService.dbUser) {
+          this.userService.dbUser.callsign = callsignValue || null;
+        }
+        
+        this.saving = false;
+        this.saved = true;
+        this.userInfoForm.markAsPristine();
+        
+        setTimeout(() => {
+          this.saved = false;
+        }, 4000);
+      },
+      error: (error: any) => {
+        console.error('Callsign update failed:', error);
+        this.saving = false;
+        this.saveFailed = true;
+        
+        if (error.status === 403) {
+          this.saveFailedReason = "🔒 Access denied - Only administrators can update callsigns.";
+        } else if (error.status === 404) {
+          this.saveFailedReason = "👤 User not found.";
+        } else {
+          this.saveFailedReason = `❌ ${error.error?.message || error.error?.error || error.message || "Failed to update callsign."}`;
+        }
+        
+        setTimeout(() => {
+          this.saveFailed = false;
+          this.saveFailedReason = "";
+        }, 5000);
+      }
+    });
+  }
+
+  private updateRegularUserInfo() { 
       // Update the user object with the new values
       this.userService.updateLocalUser(this.userInfoForm);
       
@@ -230,18 +290,7 @@ export class ProfileComponent implements OnInit {
           this.saveFailedReason = "";
         }, 5000);
       }
-    } else if (!this.userInfoForm.valid) {
-      this.saving = false;
-      this.saveFailed = true
-      this.saveFailedReason = "📝 Please fix the validation errors above before saving."
-      
-      // Hide error message after 4 seconds
-      setTimeout(() => {
-        this.saveFailed = false;
-        this.saveFailedReason = "";
-      }, 4000);
     }
-  }
 
   discardChanges() {
     // Reset form to original values and mark as pristine
@@ -249,6 +298,7 @@ export class ProfileComponent implements OnInit {
       email: this.userService.dbUser?.email || '',
       armaID: this.userService.dbUser?.armaguid || '',
       steamID: this.userService.dbUser?.steamid || '',
+      callsign: this.userService.dbUser?.callsign || '',
     });
     this.userInfoForm.markAsPristine();
     this.saved = false;
