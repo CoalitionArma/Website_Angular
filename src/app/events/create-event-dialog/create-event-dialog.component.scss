@@ -43,19 +43,19 @@
         display: none !important;
       }
       
-      // Move labels closer to inputs
+      // Move labels with more padding from inputs
       .mdc-floating-label,
       .mat-mdc-floating-label {
         transform: translateY(-50%) !important;
-        top: 16px !important;
+        top: 20px !important;
         transition: none !important;
         animation: none !important;
       }
       
       .mdc-floating-label--float-above,
       .mat-mdc-floating-label.mdc-floating-label--float-above {
-        transform: translateY(-100%) scale(0.75) !important;
-        top: 8px !important;
+        transform: translateY(-120%) scale(0.75) !important;
+        top: 6px !important;
         transition: none !important;
         animation: none !important;
       }
@@ -217,19 +217,19 @@
       padding: 8px 12px !important;
     }
     
-    // Move labels closer to inputs
+    // Move labels with more padding from inputs
     .mdc-floating-label,
     .mat-mdc-floating-label {
       transform: translateY(-50%) !important;
-      top: 16px !important;
+      top: 20px !important;
       transition: none !important;
       animation: none !important;
     }
     
     .mdc-floating-label--float-above,
     .mat-mdc-floating-label.mdc-floating-label--float-above {
-      transform: translateY(-100%) scale(0.75) !important;
-      top: 8px !important;
+      transform: translateY(-120%) scale(0.75) !important;
+      top: 6px !important;
       transition: none !important;
       animation: none !important;
     }
@@ -287,19 +287,19 @@
       color: $text-color !important;
     }
     
-    // Move labels closer to inputs for compact fields
+    // Move labels with more padding from inputs for compact fields
     .mdc-floating-label,
     .mat-mdc-floating-label {
       transform: translateY(-50%) !important;
-      top: 16px !important;
+      top: 20px !important;
       transition: none !important;
       animation: none !important;
     }
     
     .mdc-floating-label--float-above,
     .mat-mdc-floating-label.mdc-floating-label--float-above {
-      transform: translateY(-100%) scale(0.75) !important;
-      top: 8px !important;
+      transform: translateY(-120%) scale(0.75) !important;
+      top: 6px !important;
       transition: none !important;
       animation: none !important;
     }
@@ -436,19 +436,19 @@
       box-shadow: 0 0 0 2px rgba(182, 65, 65, 0.2);
     }
     
-    // Move labels closer to inputs for group fields
+    // Move labels with more padding from inputs for group fields
     .mdc-floating-label,
     .mat-mdc-floating-label {
       transform: translateY(-50%) !important;
-      top: 16px !important;
+      top: 20px !important;
       transition: none !important;
       animation: none !important;
     }
     
     .mdc-floating-label--float-above,
     .mat-mdc-floating-label.mdc-floating-label--float-above {
-      transform: translateY(-100%) scale(0.75) !important;
-      top: 8px !important;
+      transform: translateY(-120%) scale(0.75) !important;
+      top: 6px !important;
       transition: none !important;
       animation: none !important;
     }
@@ -553,19 +553,19 @@
       box-shadow: 0 0 0 2px rgba(182, 65, 65, 0.15);
     }
     
-    // Move labels closer to inputs for role fields
+    // Move labels with more padding from inputs for role fields
     .mdc-floating-label,
     .mat-mdc-floating-label {
       transform: translateY(-50%) !important;
-      top: 16px !important;
+      top: 20px !important;
       transition: none !important;
       animation: none !important;
     }
     
     .mdc-floating-label--float-above,
     .mat-mdc-floating-label.mdc-floating-label--float-above {
-      transform: translateY(-100%) scale(0.75) !important;
-      top: 8px !important;
+      transform: translateY(-120%) scale(0.75) !important;
+      top: 6px !important;
       transition: none !important;
       animation: none !important;
     }
