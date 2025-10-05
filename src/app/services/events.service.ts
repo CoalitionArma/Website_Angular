@@ -29,7 +29,7 @@ export class EventsService {
   private getAuthHeaders(): HttpHeaders {
     const jwtToken = localStorage.getItem('jwt_token');
     return new HttpHeaders({
-      'Authorization': `Bearer ${jwtToken}`,
+      'access_token': jwtToken || '',
       'Content-Type': 'application/json'
     });
   }
@@ -65,8 +65,8 @@ export class EventsService {
   // Create a new event
   createEvent(eventData: CreateEventRequest): Observable<CreateEventResponse> {
     const headers = this.getAuthHeaders();
-    
-    return this.http.post<CreateEventResponse>(this.EVENTS_URL, eventData, { headers }).pipe(
+
+    return this.http.post<CreateEventResponse>(`${this.EVENTS_URL}/create`, eventData, { headers }).pipe(
       tap((response: CreateEventResponse) => {
         if (response.success) {
           // Convert date strings to Date objects
@@ -118,6 +118,33 @@ export class EventsService {
     const headers = this.getAuthHeaders();
     
     return this.http.post<SlotRoleResponse>(`${this.EVENTS_URL}/unslot`, slotData, { headers }).pipe(
+      tap((response: SlotRoleResponse) => {
+        if (response.success) {
+          // Convert date strings to Date objects
+          const processedEvent = {
+            ...response.event,
+            dateTime: new Date(response.event.dateTime),
+            createdAt: new Date(response.event.createdAt),
+            updatedAt: new Date(response.event.updatedAt)
+          };
+          
+          // Update the event in the local events list
+          const currentEvents = this.eventsSubject.value;
+          const updatedEvents = currentEvents.map(event => 
+            event.id === processedEvent.id ? processedEvent : event
+          );
+          this.eventsSubject.next(updatedEvents);
+        }
+      }),
+      catchError(this.handleError)
+    );
+  }
+
+  // Admin kick a user from a role
+  adminKickFromRole(slotData: SlotRoleRequest): Observable<SlotRoleResponse> {
+    const headers = this.getAuthHeaders();
+    
+    return this.http.post<SlotRoleResponse>(`${this.EVENTS_URL}/admin/kick`, slotData, { headers }).pipe(
       tap((response: SlotRoleResponse) => {
         if (response.success) {
           // Convert date strings to Date objects

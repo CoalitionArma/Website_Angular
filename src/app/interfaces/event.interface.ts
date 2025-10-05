@@ -17,6 +17,7 @@ export interface Event {
   description: string;
   bannerUrl?: string;
   dateTime: Date;
+  slotUnlockTime?: Date; // When slots become available for signup
   createdBy: string; // Discord ID of creator
   createdByUsername: string; // Discord username of creator
   groups: EventGroup[];
@@ -29,6 +30,7 @@ export interface CreateEventRequest {
   description: string;
   bannerUrl?: string;
   dateTime: Date;
+  slotUnlockTime?: Date;
   groups: Omit<EventGroup, 'id'>[];
 }
 

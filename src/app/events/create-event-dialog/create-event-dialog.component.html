@@ -4,36 +4,55 @@
   <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
     <mat-dialog-content class="dialog-content" cdkTrapFocus="false">
       <!-- Basic Event Information -->
-      <div class="section">
+      <div class="section event-details-section">
         <h3>Event Details</h3>
         
-        <mat-form-field appearance="fill" class="full-width">
-          <mat-label>Event Title</mat-label>
-          <input matInput formControlName="title" placeholder="Enter event title" required [autofocus]="false" cdkTrapFocus="false">
-          <mat-error *ngIf="eventForm.get('title')?.invalid && eventForm.get('title')?.touched">
-            Event title is required
-          </mat-error>
-        </mat-form-field>
+        <div class="event-details-grid">
+          <mat-form-field appearance="fill" class="compact-field">
+            <mat-label>Event Title</mat-label>
+            <input matInput formControlName="title" placeholder="Enter event title" required [autofocus]="false" cdkTrapFocus="false">
+            <mat-error *ngIf="eventForm.get('title')?.invalid && eventForm.get('title')?.touched">
+              Event title is required
+            </mat-error>
+          </mat-form-field>
 
-        <mat-form-field appearance="fill" class="full-width">
-          <mat-label>Description</mat-label>
-          <textarea matInput formControlName="description" rows="3" placeholder="Describe your event"></textarea>
-        </mat-form-field>
+          <mat-form-field appearance="fill" class="compact-field">
+            <mat-label>Event Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="dateTime" required>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="eventForm.get('dateTime')?.invalid && eventForm.get('dateTime')?.touched">
+              Event date is required
+            </mat-error>
+          </mat-form-field>
 
-        <mat-form-field appearance="fill" class="full-width">
-          <mat-label>Banner URL (optional)</mat-label>
-          <input matInput formControlName="bannerUrl" placeholder="https://example.com/banner.jpg">
-        </mat-form-field>
+          <mat-form-field appearance="fill" class="compact-field">
+            <mat-label>Slot Unlock Date (optional)</mat-label>
+            <input matInput [matDatepicker]="slotUnlockPicker" formControlName="slotUnlockDate" 
+                   placeholder="When can people sign up?">
+            <mat-datepicker-toggle matSuffix [for]="slotUnlockPicker"></mat-datepicker-toggle>
+            <mat-datepicker #slotUnlockPicker></mat-datepicker>
+            <mat-hint>Leave empty to allow immediate signup</mat-hint>
+          </mat-form-field>
 
-        <mat-form-field appearance="fill" class="full-width">
-          <mat-label>Event Date</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="dateTime" required>
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-          <mat-error *ngIf="eventForm.get('dateTime')?.invalid && eventForm.get('dateTime')?.touched">
-            Event date is required
-          </mat-error>
-        </mat-form-field>
+          <mat-form-field appearance="fill" class="compact-field">
+            <mat-label>Slot Unlock Time</mat-label>
+            <input matInput type="time" formControlName="slotUnlockTime" 
+                   placeholder="00:00"
+                   [disabled]="!eventForm.get('slotUnlockDate')?.value">
+            <mat-hint>Time when slots unlock (24-hour format)</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="compact-field full-width-field">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="2" placeholder="Describe your event"></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="compact-field full-width-field">
+            <mat-label>Banner URL (optional)</mat-label>
+            <input matInput formControlName="bannerUrl" placeholder="https://example.com/banner.jpg">
+          </mat-form-field>
+        </div>
       </div>
 
       <mat-divider></mat-divider>
@@ -42,10 +61,6 @@
       <div class="section">
         <div class="section-header">
           <h3>ORBAT</h3>
-          <button type="button" mat-raised-button color="primary" (click)="addGroup()">
-            <mat-icon>add</mat-icon>
-            Add Group
-          </button>
         </div>
 
         <div formArrayName="groups" class="groups-container">
@@ -89,6 +104,13 @@
               </div>
             </mat-card-content>
           </mat-card>
+        </div>
+        
+        <div class="add-group-container">
+          <button type="button" mat-raised-button color="primary" (click)="addGroup()">
+            <mat-icon>add</mat-icon>
+            Add Group
+          </button>
         </div>
       </div>
     </mat-dialog-content>

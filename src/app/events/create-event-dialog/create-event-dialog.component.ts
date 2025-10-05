@@ -69,6 +69,8 @@ export class CreateEventDialogComponent implements OnInit {
       description: [''],
       bannerUrl: [''],
       dateTime: ['', Validators.required],
+      slotUnlockDate: [''], // Optional date for when slots become available
+      slotUnlockTime: [''], // Optional time for when slots become available (HH:MM format)
       groups: this.fb.array([])
     });
 
@@ -121,12 +123,27 @@ export class CreateEventDialogComponent implements OnInit {
 
       const formValue = this.eventForm.value;
       
+      // Combine slotUnlockDate and slotUnlockTime into a single DateTime
+      let slotUnlockDateTime: Date | undefined = undefined;
+      if (formValue.slotUnlockDate) {
+        const date = new Date(formValue.slotUnlockDate);
+        if (formValue.slotUnlockTime) {
+          const [hours, minutes] = formValue.slotUnlockTime.split(':').map(Number);
+          date.setHours(hours, minutes, 0, 0);
+        } else {
+          // If no time specified, default to midnight
+          date.setHours(0, 0, 0, 0);
+        }
+        slotUnlockDateTime = date;
+      }
+      
       // Transform the form data to match the CreateEventRequest interface
       const eventData: CreateEventRequest = {
         title: formValue.title,
         description: formValue.description,
         bannerUrl: formValue.bannerUrl || undefined,
         dateTime: formValue.dateTime,
+        slotUnlockTime: slotUnlockDateTime,
         groups: formValue.groups.map((group: any) => ({
           name: group.name,
           roles: group.roles.map((roleName: string) => ({

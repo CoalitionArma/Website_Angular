@@ -34,13 +34,43 @@
     </div>
 
     <div class="events-list" *ngIf="!isLoading && events.length > 0">
-      <mat-card *ngFor="let event of events" class="event-card" [class.past-event]="isEventInPast(event.dateTime)">
+      <!-- Pagination Controls -->
+      <div class="pagination-controls" *ngIf="events.length > 1">
+        <button 
+          mat-icon-button 
+          [disabled]="!hasPreviousPage"
+          (click)="previousPage()"
+          class="pagination-button">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        
+        <span class="pagination-info">
+          Event {{ currentPage + 1 }} of {{ totalPages }}
+        </span>
+        
+        <button 
+          mat-icon-button 
+          [disabled]="!hasNextPage"
+          (click)="nextPage()"
+          class="pagination-button">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+
+      <!-- Current Event Display -->
+      <mat-card *ngIf="currentEvent" 
+                class="event-card" 
+                [class.selected]="isEventSelected(currentEvent)"
+                (click)="selectEvent(currentEvent)">
         <!-- Event Header -->
         <mat-card-header>
           <mat-card-title class="event-title">
-            {{ event.title }}
-            <span class="event-actions" *ngIf="canDeleteEvent(event)">
-              <button mat-icon-button color="warn" (click)="deleteEvent(event.id)" title="Delete Event">
+            {{ currentEvent.title }}
+            <span class="event-actions" *ngIf="canDeleteEvent(currentEvent)">
+              <button mat-icon-button 
+                      color="warn" 
+                      (click)="deleteEvent(currentEvent.id); $event.stopPropagation()" 
+                      title="Delete Event">
                 <mat-icon>delete</mat-icon>
               </button>
             </span>
@@ -49,60 +79,107 @@
             <div class="event-meta">
               <span class="event-date">
                 <mat-icon>schedule</mat-icon>
-                {{ formatDateTime(event.dateTime) }}
+                {{ formatDateTime(currentEvent.dateTime) }}
               </span>
               <span class="event-creator">
                 <mat-icon>person_outline</mat-icon>
-                Created by {{ event.createdByUsername }}
+                Created by {{ currentEvent.createdByUsername }}
               </span>
             </div>
           </mat-card-subtitle>
         </mat-card-header>
 
         <!-- Event Banner -->
-        <div *ngIf="event.bannerUrl" class="event-banner">
-          <img [src]="event.bannerUrl" [alt]="event.title + ' banner'" />
+        <div *ngIf="currentEvent.bannerUrl" class="event-banner">
+          <img [src]="currentEvent.bannerUrl" [alt]="currentEvent.title + ' banner'" />
         </div>
 
         <!-- Event Description -->
         <mat-card-content>
-          <p *ngIf="event.description" class="event-description">{{ event.description }}</p>
+          <p *ngIf="currentEvent.description" class="event-description" style="margin-top: 16px;">{{ currentEvent.description }}</p>
 
-          <!-- Groups and Roles -->
-          <div class="roster-section">
+          <!-- Click to expand hint -->
+          <div *ngIf="!isEventSelected(currentEvent)" class="expand-hint">
+            <mat-icon>expand_more</mat-icon>
+            <span>Click to view roster and slot into roles</span>
+          </div>
+
+          <!-- Groups and Roles - Only show when selected -->
+          <div *ngIf="isEventSelected(currentEvent)" class="roster-section">
             <h3>Event Roster</h3>
             
-            <div *ngFor="let group of event.groups" class="group-section">
-              <h4 class="group-name">{{ group.name }}</h4>
+            <!-- Slot Lock Warning -->
+            <div *ngIf="areSlotsLocked(currentEvent)" class="slot-lock-warning">
+              <mat-icon>lock</mat-icon>
+              <span>{{ getSlotLockMessage(currentEvent) }}</span>
+            </div>
+            
+            <div *ngFor="let group of currentEvent.groups" 
+                 class="group-section"
+                 [id]="'group-' + group.id"
+                 [class.highlighted]="highlightedGroupId === group.id">
+              <div class="group-name-container">
+                <h4 class="group-name">{{ group.name }}
+                  <button 
+                    mat-icon-button
+                    class="copy-group-link-button"
+                    (click)="copyGroupLink(group.id); $event.stopPropagation()">
+                    <mat-icon>link</mat-icon>
+                  </button>
+                </h4>
+              </div>
               
-              <div class="roles-grid">
-                <div *ngFor="let role of group.roles" class="role-item">
+              <div class="roles-list">
+                <div 
+                  *ngFor="let role of group.roles" 
+                  class="role-item"
+                  [id]="'role-' + role.id"
+                  [class.highlighted]="highlightedRoleId === role.id">
                   <div class="role-info">
-                    <span class="role-name">{{ role.name }}</span>
+                    <div class="role-name-container">
+                      <span class="role-name">{{ role.name }}
+                        <button 
+                          mat-icon-button
+                          class="copy-link-button"
+                          (click)="copyRoleLink(role.id); $event.stopPropagation()">
+                          <mat-icon>link</mat-icon>
+                        </button>
+                      </span>
+                    </div>
                     <span class="role-status" [class.slotted]="role.slottedUser">
                       {{ role.slottedUser || 'OPEN' }}
                     </span>
                   </div>
                   
-                  <div class="role-actions" *ngIf="isLoggedIn && !isEventInPast(event.dateTime)">
+                  <!-- Role actions only for future events -->
+                  <div class="role-actions" *ngIf="isLoggedIn">
+                    <!-- Admin kick button - only show for admins when role is slotted by someone else -->
                     <button 
-                      *ngIf="!isUserSlottedInRole(event, group.id, role.id)" 
+                      *ngIf="isAdmin && role.slottedUserId && !isUserSlottedInRole(currentEvent, group.id, role.id)" 
+                      mat-icon-button 
+                      color="warn" 
+                      (click)="kickUserFromRole(currentEvent.id, group.id, role.id); $event.stopPropagation()"
+                      class="kick-button"
+                      title="Kick {{ role.slottedUser }} from this role">
+                      <mat-icon>person_remove</mat-icon>
+                    </button>
+
+                    <button 
+                      *ngIf="!isUserSlottedInRole(currentEvent, group.id, role.id)" 
                       mat-raised-button 
                       color="primary" 
-                      (click)="slotRole(event.id, group.id, role.id)"
-                      [disabled]="!canSlotRole(event, group.id, role.id)"
-                      class="slot-button"
-                      matTooltip="Click to slot into this role">
+                      (click)="slotRole(currentEvent.id, group.id, role.id); $event.stopPropagation()"
+                      [disabled]="!canSlotRole(currentEvent, group.id, role.id)"
+                      class="slot-button">
                       Slot
                     </button>
                     
                     <button 
-                      *ngIf="isUserSlottedInRole(event, group.id, role.id)" 
+                      *ngIf="isUserSlottedInRole(currentEvent, group.id, role.id)" 
                       mat-raised-button 
                       color="warn" 
-                      (click)="unslotRole(event.id, group.id, role.id)"
-                      class="unslot-button"
-                      matTooltip="Click to unslot from this role">
+                      (click)="unslotRole(currentEvent.id, group.id, role.id); $event.stopPropagation()"
+                      class="unslot-button">
                       Unslot
                     </button>
                   </div>
@@ -111,16 +188,6 @@
             </div>
           </div>
         </mat-card-content>
-
-        <!-- Event Footer -->
-        <mat-card-actions *ngIf="isEventInPast(event.dateTime)">
-          <mat-chip-set>
-            <mat-chip color="accent">
-              <mat-icon>check_circle</mat-icon>
-              Event Completed
-            </mat-chip>
-          </mat-chip-set>
-        </mat-card-actions>
       </mat-card>
     </div>
   </div>

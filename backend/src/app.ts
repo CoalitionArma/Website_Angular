@@ -479,9 +479,9 @@ app.get('/api/events', async (req: Request, res: Response): Promise<void> => {
 });
 
 // Create a new event
-app.post('/api/events', authenticateToken, async (req: Request<{}, {}, CreateEventRequest>, res: Response): Promise<void> => {
+app.post('/api/events/create', authenticateToken, async (req: Request<{}, {}, CreateEventRequest>, res: Response): Promise<void> => {
     try {
-        const { title, description, bannerUrl, dateTime, groups } = req.body;
+        const { title, description, bannerUrl, dateTime, slotUnlockTime, groups } = req.body;
         const userId = (req.body as any).id; // From JWT token
 
         // Get user info for the createdByUsername
@@ -509,6 +509,7 @@ app.post('/api/events', authenticateToken, async (req: Request<{}, {}, CreateEve
             description: description || '',
             bannerUrl: bannerUrl || '',
             dateTime: new Date(dateTime),
+            slotUnlockTime: slotUnlockTime ? new Date(slotUnlockTime) : undefined,
             createdBy: userId,
             createdByUsername: user.username,
             groups: JSON.stringify(processedGroups)
@@ -555,6 +556,16 @@ app.post('/api/events/slot', authenticateToken, async (req: Request<{}, {}, Slot
             res.status(404).json({
                 success: false,
                 message: 'Event not found'
+            });
+            return;
+        }
+
+        // Check if slots are unlocked (if slotUnlockTime is set)
+        if (event.slotUnlockTime && new Date() < new Date(event.slotUnlockTime)) {
+            res.status(403).json({
+                success: false,
+                message: 'Slots are not yet available for signup',
+                slotUnlockTime: event.slotUnlockTime
             });
             return;
         }
@@ -705,6 +716,94 @@ app.post('/api/events/unslot', authenticateToken, async (req: Request<{}, {}, Sl
         res.status(500).json({
             success: false,
             error: 'Failed to unslot from role',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
+// Admin kick a user from a role
+app.post('/api/events/admin/kick', authenticateToken, async (req: Request<{}, {}, SlotRoleRequest>, res: Response): Promise<void> => {
+    try {
+        const { eventId, groupId, roleId } = req.body;
+        const userId = (req.body as any).id; // From JWT token
+
+        // Check if the user is an admin
+        const user = await SQLUsers.findOne({ where: { discordid: userId } });
+        if (!user || !user.isAdmin) {
+            res.status(403).json({
+                success: false,
+                message: 'Only administrators can kick users from roles'
+            });
+            return;
+        }
+
+        // Find the event
+        const event = await Event.findByPk(eventId);
+        if (!event) {
+            res.status(404).json({
+                success: false,
+                message: 'Event not found'
+            });
+            return;
+        }
+
+        // Parse the groups
+        const groups: EventGroup[] = JSON.parse(event.groups as string);
+        
+        // Find the group and role
+        const group = groups.find(g => g.id === groupId);
+        if (!group) {
+            res.status(404).json({
+                success: false,
+                message: 'Group not found'
+            });
+            return;
+        }
+
+        const role = group.roles.find(r => r.id === roleId);
+        if (!role) {
+            res.status(404).json({
+                success: false,
+                message: 'Role not found'
+            });
+            return;
+        }
+
+        // Check if the role is actually slotted
+        if (!role.slottedUserId) {
+            res.status(400).json({
+                success: false,
+                message: 'Role is not currently slotted'
+            });
+            return;
+        }
+
+        const kickedUser = role.slottedUser;
+
+        // Kick the user from the role
+        role.slottedUser = undefined;
+        role.slottedUserId = undefined;
+
+        // Update the event
+        await event.update({ groups: JSON.stringify(groups) });
+
+        // Return the updated event
+        const eventData = event.toJSON();
+        const responseEvent = {
+            ...eventData,
+            groups: JSON.parse(eventData.groups as string)
+        };
+
+        res.status(200).json({
+            success: true,
+            event: responseEvent,
+            message: `Successfully kicked ${kickedUser} from role`
+        });
+    } catch (error) {
+        console.error('Error kicking user from role:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to kick user from role',
             details: error instanceof Error ? error.message : 'Unknown error'
         });
     }

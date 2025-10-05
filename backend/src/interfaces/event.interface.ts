@@ -16,6 +16,7 @@ export interface CreateEventRequest {
     description?: string;
     bannerUrl?: string;
     dateTime: string;
+    slotUnlockTime?: string; // When slots become available for signup
     groups: Array<{
         name: string;
         roles: Array<{ name: string }>;
