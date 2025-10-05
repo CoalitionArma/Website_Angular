@@ -11,67 +11,18 @@ import sequelize from './db';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { DiscordUserResponse } from './interfaces/userresponse.interface';
 import { QueryTypes } from 'sequelize';
-
-// Type definitions
-interface CreateUserRequest {
-    id: string;
-    email: string;
-    global_name: string;
-}
-
-interface UpdateUserRequest {
-    id?: string;
-    discordid: string;
-    steamid?: string;
-    email: string;
-    teamspeakid?: string;
-    username: string;
-    section?: string;
-    veterancy?: string;
-    armaguid?: string;
-    callsign?: string;
-    isAdmin?: boolean;
-}
-
-interface UpdateCallsignRequest {
-    targetUserId: string;
-    callsign: string;
-}
-
-// Event interfaces
-interface EventGroup {
-    id: string;
-    name: string;
-    roles: EventRole[];
-}
-
-interface EventRole {
-    id: string;
-    name: string;
-    slottedUser?: string;
-    slottedUserId?: string;
-}
-
-interface CreateEventRequest {
-    title: string;
-    description?: string;
-    bannerUrl?: string;
-    dateTime: string;
-    groups: Array<{
-        name: string;
-        roles: Array<{ name: string }>;
-    }>;
-}
-
-interface SlotRoleRequest {
-    eventId: string;
-    groupId: string;
-    roleId: string;
-}
-
-interface AuthenticatedRequest extends Request {
-    body: any & { id?: string };
-}
+import { 
+    CreateUserRequest, 
+    UpdateUserRequest, 
+    UpdateCallsignRequest, 
+    AuthenticatedRequest 
+} from './interfaces/request.interface';
+import { 
+    EventGroup, 
+    EventRole, 
+    CreateEventRequest, 
+    SlotRoleRequest 
+} from './interfaces/event.interface';
 
 // Load the appropriate .env file based on NODE_ENV
 // Set default to development if NODE_ENV is not set
@@ -98,10 +49,6 @@ app.use((req: Request, res: Response, next: NextFunction): void => {
 
 // JWT Configuration
 const JWT_SECRET: string = process.env.JWT_SECRET as string;
-
-interface AuthenticatedRequest extends Request {
-    body: any & { id?: string };
-}
 
 const generateToken = (userId: string): string => {
     return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '1h' });
