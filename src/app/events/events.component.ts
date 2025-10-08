@@ -234,6 +234,47 @@ export class EventsComponent implements OnInit, OnDestroy {
     });
   }
 
+  editEvent(event: Event): void {
+    if (!this.isAdmin) {
+      this.snackBar.open('Only administrators can edit events', 'Close', { duration: 3000 });
+      return;
+    }
+
+    const dialogRef = this.dialog.open(CreateEventDialogComponent, {
+      width: '800px',
+      maxWidth: '90vw',
+      maxHeight: '90vh',
+      disableClose: false,
+      autoFocus: false,
+      panelClass: ['scrollable-dialog', 'events-dialog-container'],
+      hasBackdrop: true,
+      backdropClass: 'events-dialog-backdrop',
+      data: { editMode: true, event: event } // Pass event data for editing
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.updateEvent(event.id, result);
+      }
+    });
+  }
+
+  updateEvent(eventId: string, eventData: any): void {
+    this.eventsService.updateEvent(eventId, eventData).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.snackBar.open('Event updated successfully!', 'Close', { duration: 3000 });
+        } else {
+          this.snackBar.open(response.message || 'Failed to update event', 'Close', { duration: 3000 });
+        }
+      },
+      error: (error) => {
+        this.snackBar.open('Failed to update event', 'Close', { duration: 3000 });
+        console.error('Error updating event:', error);
+      }
+    });
+  }
+
   slotRole(eventId: string, sideId: string, groupId: string, roleId: string): void {
     if (!this.userService.loggedIn) {
       this.snackBar.open('You must be logged in to slot into roles', 'Close', { duration: 3000 });

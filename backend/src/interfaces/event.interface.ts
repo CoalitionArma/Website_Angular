@@ -34,6 +34,29 @@ export interface CreateEventRequest {
     }>;
 }
 
+export interface UpdateEventRequest {
+    title: string;
+    description?: string;
+    bannerUrl?: string;
+    dateTime: string;
+    slotUnlockTime?: string;
+    sides: Array<{
+        id?: string; // Optional for edit mode
+        name: string;
+        color: string;
+        groups: Array<{
+            id?: string; // Optional for edit mode
+            name: string;
+            roles: Array<{ 
+                id?: string; // Optional for edit mode
+                name: string;
+                slottedUser?: string; // Preserve existing slot data
+                slottedUserId?: string; // Preserve existing slot data
+            }>;
+        }>;
+    }>;
+}
+
 export interface SlotRoleRequest {
     eventId: string;
     sideId: string;

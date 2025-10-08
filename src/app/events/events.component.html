@@ -66,11 +66,21 @@
         <mat-card-header>
           <mat-card-title class="event-title">
             {{ currentEvent.title }}
-            <span class="event-actions" *ngIf="canDeleteEvent(currentEvent)">
-              <button mat-icon-button 
-                      color="warn" 
-                      (click)="deleteEvent(currentEvent.id); $event.stopPropagation()" 
-                      title="Delete Event">
+            <span class="event-actions" *ngIf="isAdmin || canDeleteEvent(currentEvent)">
+              <button 
+                *ngIf="isAdmin"
+                mat-icon-button 
+                color="primary" 
+                (click)="editEvent(currentEvent); $event.stopPropagation()" 
+                title="Edit Event">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button 
+                *ngIf="canDeleteEvent(currentEvent)"
+                mat-icon-button 
+                color="warn" 
+                (click)="deleteEvent(currentEvent.id); $event.stopPropagation()" 
+                title="Delete Event">
                 <mat-icon>delete</mat-icon>
               </button>
             </span>

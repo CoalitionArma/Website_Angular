@@ -41,6 +41,15 @@ export interface CreateEventRequest {
   sides: Omit<EventSide, 'id'>[];
 }
 
+export interface UpdateEventRequest {
+  title: string;
+  description: string;
+  bannerUrl?: string;
+  dateTime: Date;
+  slotUnlockTime?: Date;
+  sides: EventSide[]; // Full sides with IDs for edit mode
+}
+
 export interface CreateEventResponse {
   event: Event;
   success: boolean;

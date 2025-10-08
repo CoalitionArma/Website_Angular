@@ -22,6 +22,7 @@ import {
     EventGroup, 
     EventRole, 
     CreateEventRequest, 
+    UpdateEventRequest,
     SlotRoleRequest 
 } from './interfaces/event.interface';
 
@@ -852,6 +853,84 @@ app.post('/api/events/admin/kick', authenticateToken, async (req: Request<{}, {}
         res.status(500).json({
             success: false,
             error: 'Failed to kick user from role',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
+// Update an existing event (only by admins)
+app.put('/api/events/:eventId', authenticateToken, async (req: Request<{ eventId: string }, {}, UpdateEventRequest>, res: Response): Promise<void> => {
+    try {
+        const { eventId } = req.params;
+        const { title, description, bannerUrl, dateTime, slotUnlockTime, sides } = req.body;
+        const userId = (req.body as any).id; // From JWT token
+
+        // Check if the user is an admin
+        const user = await SQLUsers.findOne({ where: { discordid: userId } });
+        if (!user || !user.isAdmin) {
+            res.status(403).json({
+                success: false,
+                message: 'Only administrators can edit events'
+            });
+            return;
+        }
+
+        // Find the event
+        const event = await Event.findByPk(eventId);
+        if (!event) {
+            res.status(404).json({
+                success: false,
+                message: 'Event not found'
+            });
+            return;
+        }
+
+        // Generate IDs for new sides, groups and roles and transform the data
+        const processedSides: EventSide[] = sides.map(side => ({
+            id: side.id || require('crypto').randomUUID(), // Keep existing ID or generate new
+            name: side.name,
+            color: side.color,
+            groups: side.groups.map(group => ({
+                id: group.id || require('crypto').randomUUID(), // Keep existing ID or generate new
+                name: group.name,
+                roles: group.roles.map(role => ({
+                    id: role.id || require('crypto').randomUUID(), // Keep existing ID or generate new
+                    name: role.name,
+                    slottedUser: role.slottedUser || undefined,
+                    slottedUserId: role.slottedUserId || undefined
+                }))
+            }))
+        }));
+
+        // Update the event
+        await event.update({
+            title,
+            description: description || '',
+            bannerUrl: bannerUrl || '',
+            dateTime: new Date(dateTime),
+            slotUnlockTime: slotUnlockTime ? new Date(slotUnlockTime) : undefined,
+            groups: JSON.stringify(processedSides) // Store sides in the groups field
+        });
+
+        // Return the updated event with parsed sides
+        const eventData = event.toJSON();
+        const responseEvent = {
+            ...eventData,
+            sides: JSON.parse(eventData.groups as string),
+            groups: undefined
+        };
+        delete responseEvent.groups;
+
+        res.status(200).json({
+            success: true,
+            event: responseEvent,
+            message: 'Event updated successfully'
+        });
+    } catch (error) {
+        console.error('Error updating event:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to update event',
             details: error instanceof Error ? error.message : 'Unknown error'
         });
     }

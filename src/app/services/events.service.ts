@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 import { 
   Event, 
   CreateEventRequest, 
+  UpdateEventRequest,
   CreateEventResponse, 
   SlotRoleRequest, 
   SlotRoleResponse 
@@ -170,6 +171,33 @@ export class EventsService {
   // Get a single event by ID
   getEvent(eventId: string): Event | undefined {
     return this.eventsSubject.value.find(event => event.id === eventId);
+  }
+
+  // Update an existing event (only by admins)
+  updateEvent(eventId: string, eventData: UpdateEventRequest): Observable<CreateEventResponse> {
+    const headers = this.getAuthHeaders();
+
+    return this.http.put<CreateEventResponse>(`${this.EVENTS_URL}/${eventId}`, eventData, { headers }).pipe(
+      tap((response: CreateEventResponse) => {
+        if (response.success) {
+          // Convert date strings to Date objects
+          const processedEvent = {
+            ...response.event,
+            dateTime: new Date(response.event.dateTime),
+            createdAt: new Date(response.event.createdAt),
+            updatedAt: new Date(response.event.updatedAt)
+          };
+          
+          // Update the event in the local events list
+          const currentEvents = this.eventsSubject.value;
+          const updatedEvents = currentEvents.map(event => 
+            event.id === eventId ? processedEvent : event
+          );
+          this.eventsSubject.next(updatedEvents);
+        }
+      }),
+      catchError(this.handleError)
+    );
   }
 
   // Delete an event (only by creator)
