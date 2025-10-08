@@ -7,6 +7,8 @@ export interface EventAttributes {
   title: string;
   description?: string;
   bannerUrl?: string;
+  warno?: string; // Warning Order
+  discordEventThread?: string; // Discord Event Thread URL
   dateTime: Date;
   slotUnlockTime?: Date; // When slots become available for signup
   createdBy: string; // Discord ID
@@ -25,6 +27,8 @@ export class Event extends Model<EventAttributes, EventCreationAttributes> imple
   public title!: string;
   public description!: string;
   public bannerUrl!: string;
+  public warno!: string;
+  public discordEventThread!: string;
   public dateTime!: Date;
   public slotUnlockTime!: Date;
   public createdBy!: string;
@@ -53,6 +57,14 @@ Event.init(
       allowNull: true,
     },
     bannerUrl: {
+      type: DataTypes.STRING(500),
+      allowNull: true,
+    },
+    warno: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    discordEventThread: {
       type: DataTypes.STRING(500),
       allowNull: true,
     },

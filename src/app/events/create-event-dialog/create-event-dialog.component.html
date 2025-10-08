@@ -49,8 +49,18 @@
           </mat-form-field>
 
           <mat-form-field appearance="fill" class="compact-field full-width-field">
-            <mat-label>Banner URL (optional - 1200x300)</mat-label>
+            <mat-label>Banner URL (1200x300)</mat-label>
             <input matInput formControlName="bannerUrl" placeholder="https://example.com/banner.jpg">
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="compact-field full-width-field">
+            <mat-label>Warning Order (WARNO) Link</mat-label>
+            <textarea matInput formControlName="warno" placeholder="Enter the Warning Order URL"></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="compact-field full-width-field">
+            <mat-label>Discord Event Thread</mat-label>
+            <input matInput formControlName="discordEventThread" placeholder="https://discord.com/channels/...">
           </mat-form-field>
         </div>
       </div>

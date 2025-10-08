@@ -63,40 +63,44 @@
                 [class.selected]="isEventSelected(currentEvent)"
                 (click)="selectEvent(currentEvent)">
         <!-- Event Header -->
-        <mat-card-header>
+        <mat-card-header style="position: relative;">
+          <!-- Action buttons in top right -->
+          <span class="event-actions" *ngIf="isAdmin || canDeleteEvent(currentEvent) || currentEvent.discordEventThread" 
+                style="position: absolute; top: 0; right: 0; z-index: 10;">
+            <button 
+              *ngIf="isAdmin"
+              mat-icon-button 
+              color="primary" 
+              (click)="editEvent(currentEvent); $event.stopPropagation()" 
+              title="Edit Event">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button 
+              *ngIf="canDeleteEvent(currentEvent)"
+              mat-icon-button 
+              color="warn" 
+              (click)="deleteEvent(currentEvent.id); $event.stopPropagation()" 
+              title="Delete Event">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </span>
+          
           <mat-card-title class="event-title">
-            {{ currentEvent.title }}
-            <span class="event-actions" *ngIf="isAdmin || canDeleteEvent(currentEvent)">
-              <button 
-                *ngIf="isAdmin"
-                mat-icon-button 
-                color="primary" 
-                (click)="editEvent(currentEvent); $event.stopPropagation()" 
-                title="Edit Event">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button 
-                *ngIf="canDeleteEvent(currentEvent)"
-                mat-icon-button 
-                color="warn" 
-                (click)="deleteEvent(currentEvent.id); $event.stopPropagation()" 
-                title="Delete Event">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </span>
-          </mat-card-title>
-          <mat-card-subtitle>
-            <div class="event-meta">
-              <span class="event-date">
-                <mat-icon>schedule</mat-icon>
-                {{ formatDateTime(currentEvent.dateTime) }}
-              </span>
-              <span class="event-creator">
-                <mat-icon>person_outline</mat-icon>
-                Created by {{ currentEvent.createdByUsername }}
-              </span>
+            <div style="width: 100%;">
+              <div style="font-size: 32px; font-weight: 600; margin-bottom: 12px; padding-right: 80px;">{{ currentEvent.title }}</div>
+              <!-- Modern Event Meta Section -->
+              <div class="event-meta-modern" style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+                <div class="meta-item" style="display: flex; align-items: center; gap: 6px; color: #e0e0e0; font-size: 15px;">
+                  <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: rgba(182, 65, 65, 0.8);">schedule</mat-icon>
+                  <span>{{ formatDateTime(currentEvent.dateTime) }}</span>
+                </div>
+                <div class="meta-item" style="display: flex; align-items: center; gap: 6px; color: #e0e0e0; font-size: 15px;">
+                  <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: rgba(182, 65, 65, 0.8);">person_outline</mat-icon>
+                  <span>{{ currentEvent.createdByUsername }}</span>
+                </div>
+              </div>
             </div>
-          </mat-card-subtitle>
+          </mat-card-title>
         </mat-card-header>
 
         <!-- Event Banner -->
@@ -106,7 +110,26 @@
 
         <!-- Event Description -->
         <mat-card-content>
-          <p *ngIf="currentEvent.description" class="event-description" style="margin-top: 16px;">{{ currentEvent.description }}</p>
+          <div *ngIf="currentEvent.description" class="event-description" style="margin-top: 16px; white-space: pre-line;">{{ currentEvent.description }}</div>
+          
+          <!-- WARNO and Discord Event Thread - Inline Layout -->
+          <div *ngIf="currentEvent.warno || currentEvent.discordEventThread" style="margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+            <!-- WARNO Section -->
+            <div *ngIf="currentEvent.warno" class="event-warno">
+              <a [href]="currentEvent.warno" target="_blank" style="color: #ffffff; text-decoration: none; padding: 10px 16px; background: rgba(182, 65, 65, 0.4); border-radius: 8px; border: 2px solid rgb(182, 65, 65); display: inline-block; font-weight: 500; transition: all 0.3s ease;">
+                <mat-icon style="vertical-align: middle; margin-right: 8px; font-size: 16px; width: 16px; height: 16px;">description</mat-icon>
+                Warning Order (WARNO)
+              </a>
+            </div>
+            
+            <!-- Discord Event Thread -->
+            <div *ngIf="currentEvent.discordEventThread" class="event-discord-thread">
+              <a [href]="currentEvent.discordEventThread" target="_blank" style="color: #ffffff; text-decoration: none; padding: 10px 16px; background: rgba(182, 65, 65, 0.4); border-radius: 8px; border: 2px solid rgb(182, 65, 65); display: inline-block; font-weight: 500; transition: all 0.3s ease;">
+                <mat-icon style="vertical-align: middle; margin-right: 8px; font-size: 16px; width: 16px; height: 16px;">link</mat-icon>
+                Discussion Thread
+              </a>
+            </div>
+          </div>
 
           <!-- Click to expand hint -->
           <div *ngIf="!isEventSelected(currentEvent)" class="expand-hint">

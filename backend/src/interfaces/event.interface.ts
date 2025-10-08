@@ -22,6 +22,8 @@ export interface CreateEventRequest {
     title: string;
     description?: string;
     bannerUrl?: string;
+    warno?: string; // Warning Order
+    discordEventThread?: string; // Discord Event Thread URL
     dateTime: string;
     slotUnlockTime?: string; // When slots become available for signup
     sides: Array<{
@@ -38,6 +40,8 @@ export interface UpdateEventRequest {
     title: string;
     description?: string;
     bannerUrl?: string;
+    warno?: string; // Warning Order
+    discordEventThread?: string; // Discord Event Thread URL
     dateTime: string;
     slotUnlockTime?: string;
     sides: Array<{

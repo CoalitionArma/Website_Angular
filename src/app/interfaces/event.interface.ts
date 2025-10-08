@@ -23,6 +23,8 @@ export interface Event {
   title: string;
   description: string;
   bannerUrl?: string;
+  warno?: string; // Warning Order
+  discordEventThread?: string; // Discord Event Thread URL
   dateTime: Date;
   slotUnlockTime?: Date; // When slots become available for signup
   createdBy: string; // Discord ID of creator
@@ -36,6 +38,8 @@ export interface CreateEventRequest {
   title: string;
   description: string;
   bannerUrl?: string;
+  warno?: string; // Warning Order
+  discordEventThread?: string; // Discord Event Thread URL
   dateTime: Date;
   slotUnlockTime?: Date;
   sides: Omit<EventSide, 'id'>[];
@@ -45,6 +49,8 @@ export interface UpdateEventRequest {
   title: string;
   description: string;
   bannerUrl?: string;
+  warno?: string; // Warning Order
+  discordEventThread?: string; // Discord Event Thread URL
   dateTime: Date;
   slotUnlockTime?: Date;
   sides: EventSide[]; // Full sides with IDs for edit mode

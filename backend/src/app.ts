@@ -487,7 +487,7 @@ app.get('/api/events', async (req: Request, res: Response): Promise<void> => {
 // Create a new event
 app.post('/api/events/create', authenticateToken, async (req: Request<{}, {}, CreateEventRequest>, res: Response): Promise<void> => {
     try {
-        const { title, description, bannerUrl, dateTime, slotUnlockTime, sides } = req.body;
+        const { title, description, bannerUrl, warno, discordEventThread, dateTime, slotUnlockTime, sides } = req.body;
         const userId = (req.body as any).id; // From JWT token
 
         // Get user info for the createdByUsername
@@ -519,6 +519,8 @@ app.post('/api/events/create', authenticateToken, async (req: Request<{}, {}, Cr
             title,
             description: description || '',
             bannerUrl: bannerUrl || '',
+            warno: warno || '',
+            discordEventThread: discordEventThread || '',
             dateTime: new Date(dateTime),
             slotUnlockTime: slotUnlockTime ? new Date(slotUnlockTime) : undefined,
             createdBy: userId,
@@ -862,7 +864,7 @@ app.post('/api/events/admin/kick', authenticateToken, async (req: Request<{}, {}
 app.put('/api/events/:eventId', authenticateToken, async (req: Request<{ eventId: string }, {}, UpdateEventRequest>, res: Response): Promise<void> => {
     try {
         const { eventId } = req.params;
-        const { title, description, bannerUrl, dateTime, slotUnlockTime, sides } = req.body;
+        const { title, description, bannerUrl, warno, discordEventThread, dateTime, slotUnlockTime, sides } = req.body;
         const userId = (req.body as any).id; // From JWT token
 
         // Check if the user is an admin
@@ -907,6 +909,8 @@ app.put('/api/events/:eventId', authenticateToken, async (req: Request<{ eventId
             title,
             description: description || '',
             bannerUrl: bannerUrl || '',
+            warno: warno || '',
+            discordEventThread: discordEventThread || '',
             dateTime: new Date(dateTime),
             slotUnlockTime: slotUnlockTime ? new Date(slotUnlockTime) : undefined,
             groups: JSON.stringify(processedSides) // Store sides in the groups field

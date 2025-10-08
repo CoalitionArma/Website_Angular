@@ -259,6 +259,10 @@ export class EventsComponent implements OnInit, OnDestroy {
     });
   }
 
+  openDiscordThread(url: string): void {
+    window.open(url, '_blank');
+  }
+
   updateEvent(eventId: string, eventData: any): void {
     this.eventsService.updateEvent(eventId, eventData).subscribe({
       next: (response) => {

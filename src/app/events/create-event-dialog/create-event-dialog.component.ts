@@ -74,6 +74,8 @@ export class CreateEventDialogComponent implements OnInit {
       title: ['', Validators.required],
       description: [''],
       bannerUrl: [''],
+      warno: [''],
+      discordEventThread: [''],
       dateTime: ['', Validators.required],
       slotUnlockDate: [''], // Optional date for when slots become available
       slotUnlockTime: [''], // Optional time for when slots become available (HH:MM format)
@@ -101,6 +103,8 @@ export class CreateEventDialogComponent implements OnInit {
       title: this.eventToEdit.title,
       description: this.eventToEdit.description || '',
       bannerUrl: this.eventToEdit.bannerUrl || '',
+      warno: this.eventToEdit.warno || '',
+      discordEventThread: this.eventToEdit.discordEventThread || '',
       dateTime: new Date(this.eventToEdit.dateTime),
       slotUnlockTime: this.eventToEdit.slotUnlockTime ? new Date(this.eventToEdit.slotUnlockTime) : null
     });
@@ -238,6 +242,8 @@ export class CreateEventDialogComponent implements OnInit {
           title: formValue.title,
           description: formValue.description,
           bannerUrl: formValue.bannerUrl || undefined,
+          warno: formValue.warno || undefined,
+          discordEventThread: formValue.discordEventThread || undefined,
           dateTime: formValue.dateTime,
           slotUnlockTime: slotUnlockDateTime,
           sides: formValue.sides.map((side: any) => ({
@@ -264,6 +270,8 @@ export class CreateEventDialogComponent implements OnInit {
           title: formValue.title,
           description: formValue.description,
           bannerUrl: formValue.bannerUrl || undefined,
+          warno: formValue.warno || undefined,
+          discordEventThread: formValue.discordEventThread || undefined,
           dateTime: formValue.dateTime,
           slotUnlockTime: slotUnlockDateTime,
           sides: formValue.sides.map((side: any) => ({
