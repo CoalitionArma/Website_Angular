@@ -99,10 +99,25 @@
               <div class="groups-section" [formGroupName]="sideIndex">
                 <div class="groups-header">
                   <h4>Groups</h4>
-                  <button type="button" mat-button color="primary" (click)="addGroup(sideIndex)">
-                    <mat-icon>add</mat-icon>
-                    Add Group
-                  </button>
+                  <div class="group-actions" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <mat-form-field appearance="fill" style="min-width: 200px; max-width: 250px;">
+                      <mat-label>Group Templates</mat-label>
+                      <mat-select placeholder="Select a template" (selectionChange)="addGroupFromTemplate(sideIndex, $event.value)">
+                        <mat-option value="">-- Select Template --</mat-option>
+                        <mat-option value="company">Company Command</mat-option>
+                        <mat-option value="platoon">Platoon</mat-option>
+                        <mat-option value="infantry-squad">Infantry Squad</mat-option>
+                        <mat-option value="armor-crew">Armor Crew</mat-option>
+                        <mat-option value="air-crew">Air Crew</mat-option>
+                        <mat-option value="logistics-team">Logistics Team</mat-option>
+                        <mat-option value="medical-team">Medical Team</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <button type="button" mat-button color="primary" (click)="addGroup(sideIndex)">
+                      <mat-icon>add</mat-icon>
+                      Add Custom Group
+                    </button>
+                  </div>
                 </div>
 
                 <div formArrayName="groups" class="groups-container">

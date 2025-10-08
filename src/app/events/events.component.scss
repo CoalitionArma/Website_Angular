@@ -113,6 +113,20 @@ html {
       font-size: 16px;
       font-weight: 500;
     }
+
+    &.arma-guid-notice {
+      background: linear-gradient(135deg, rgba(255, 193, 7, 0.15), rgba(255, 152, 0, 0.2));
+      border: 1px solid rgba(255, 193, 7, 0.4);
+
+      mat-icon {
+        color: #ffc107;
+      }
+
+      span {
+        color: #ffc107;
+        font-weight: 600;
+      }
+    }
   }
 
   .loading-container {
@@ -414,6 +428,62 @@ html {
     }
 
     .roster-section {
+        .roster-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 16px;
+          padding-bottom: 8px;
+          border-bottom: 2px solid rgba(128, 128, 128, 0.2);
+          position: relative;
+
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(45deg, rgb(182, 65, 65), rgb(150, 45, 45));
+            border-radius: 1px;
+          }
+
+          h3 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 600;
+          }
+
+          .roster-controls {
+            display: flex;
+            gap: 8px;
+
+            .roster-control-button {
+              background: rgba(182, 65, 65, 0.1);
+              border: 1px solid rgba(182, 65, 65, 0.3);
+              color: rgba(182, 65, 65, 0.9);
+              padding: 6px 12px;
+              font-size: 12px;
+              border-radius: 6px;
+              transition: all 0.3s ease;
+
+              mat-icon {
+                font-size: 16px;
+                width: 16px;
+                height: 16px;
+                margin-right: 4px;
+              }
+
+              &:hover {
+                background: rgba(182, 65, 65, 0.2);
+                border-color: rgba(182, 65, 65, 0.5);
+                color: rgba(182, 65, 65, 1);
+              }
+            }
+          }
+        }
+        
         .slot-lock-warning {
           background: rgba(255, 193, 7, 0.2);
           border: 1px solid rgba(255, 193, 7, 0.4);
@@ -435,11 +505,11 @@ html {
 
         .sides-container {
           display: flex;
-          gap: 24px;
+          gap: 16px; // Reduced from 24px
           
           @media (max-width: 768px) {
             flex-direction: column;
-            gap: 16px;
+            gap: 12px; // Reduced from 16px
           }
         }
 
@@ -448,10 +518,10 @@ html {
           min-width: 300px;
           
           .side-header {
-            margin-bottom: 20px;
-            border-radius: 8px;
+            margin-bottom: 12px; // Reduced from 20px
+            border-radius: 6px; // Reduced from 8px
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); // Reduced shadow
             position: relative;
             
             &.semi-transparent-bg::before {
@@ -468,10 +538,10 @@ html {
             
             .side-name {
               color: #ffffff;
-              font-size: 18px;
+              font-size: 16px; // Reduced from 18px
               font-weight: 600;
               margin: 0;
-              padding: 12px 16px;
+              padding: 8px 12px; // Reduced from 12px 16px
               text-align: center;
               text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
               background: rgba(0, 0, 0, 0.2); // Semi-transparent overlay for better text readability
@@ -482,11 +552,11 @@ html {
             }
           }
         }      h3 {
-        margin: 0 0 24px 0;
+        margin: 0 0 16px 0; // Reduced from 24px
         color: #ffffff;
-        font-size: 22px;
+        font-size: 20px; // Reduced from 22px
         font-weight: 600;
-        padding-bottom: 12px;
+        padding-bottom: 8px; // Reduced from 12px
         border-bottom: 2px solid rgba(128, 128, 128, 0.2);
         position: relative;
 
@@ -503,10 +573,10 @@ html {
       }
 
       .group-section {
-        margin-bottom: 32px;
+        margin-bottom: 20px; // Reduced from 32px
         background: $background-lighter;
-        border-radius: 12px;
-        padding: 20px;
+        border-radius: 8px; // Reduced from 12px
+        padding: 12px; // Reduced from 20px
         border: 1px solid rgba(128, 128, 128, 0.2);
         scroll-margin-top: 100px;
         transition: all 0.3s ease;
@@ -520,26 +590,81 @@ html {
         }
 
         .group-name-container {
-          margin: 0 0 20px 0;
+          margin: 0 0 12px 0; // Reduced from 20px
         }
 
         .group-name {
           margin: 0;
           color: rgb(200, 85, 85);
           font-weight: 600;
-          font-size: 18px;
-          padding: 12px 16px;
+          font-size: 16px; // Reduced from 18px
+          padding: 8px 12px; // Reduced from 12px 16px
           background: rgba(182, 65, 65, 0.15);
-          border-radius: 8px;
-          border-left: 4px solid rgb(182, 65, 65);
+          border-radius: 6px; // Reduced from 8px
+          border-left: 3px solid rgb(182, 65, 65); // Reduced from 4px
           display: flex;
           align-items: center;
-          gap: 8px;
+          gap: 6px; // Reduced from 8px
           position: relative;
+          transition: all 0.3s ease;
+          
+          &.clickable {
+            cursor: pointer;
+            
+            &:hover {
+              background: rgba(182, 65, 65, 0.25);
+              transform: translateY(-1px);
+            }
+          }
+          
+          .group-expand-button {
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            margin-right: 4px;
+            flex-shrink: 0;
+            
+            mat-icon {
+              font-size: 18px;
+              width: 18px;
+              height: 18px;
+              color: rgba(255, 255, 255, 0.8);
+              transition: all 0.3s ease;
+            }
+            
+            &:hover {
+              background: rgba(255, 255, 255, 0.1);
+              
+              mat-icon {
+                color: rgb(255, 255, 255);
+                transform: scale(1.1);
+              }
+            }
+          }
+          
+          .group-role-count {
+            font-size: 13px;
+            font-weight: bold;
+            margin-left: auto;
+            margin-right: 8px;
+            transition: all 0.3s ease;
+
+            &.group-empty {
+              color: rgba(255, 255, 255, 0.6);
+            }
+
+            &.group-partial {
+              color: #ffc107;
+            }
+
+            &.group-full {
+              color: #90EE90;
+            }
+          }
           
           &.semi-transparent-bg {
             background: none;
-            border-left: 4px solid var(--side-color);
+            border-left: 3px solid var(--side-color); // Reduced from 4px
             color: #ffffff;
             
             &::before {
@@ -551,8 +676,13 @@ html {
               bottom: 0;
               background-color: var(--side-color);
               opacity: 0.15;
-              border-radius: 8px;
+              border-radius: 6px; // Reduced from 8px
               z-index: 0;
+              transition: opacity 0.3s ease;
+            }
+            
+            &.clickable:hover::before {
+              opacity: 0.25;
             }
             
             * {
@@ -563,8 +693,8 @@ html {
         }
 
         .copy-group-link-button {
-          width: 20px;
-          height: 20px;
+          width: 18px; // Reduced from 20px
+          height: 18px; // Reduced from 20px
           opacity: 0.5;
           transition: opacity 0.2s ease;
           border-radius: 50%;
@@ -575,9 +705,9 @@ html {
           overflow: visible;
           
           mat-icon {
-            font-size: 14px;
-            width: 14px;
-            height: 14px;
+            font-size: 12px; // Reduced from 14px
+            width: 12px; // Reduced from 14px
+            height: 12px; // Reduced from 14px
             color: rgba(255, 255, 255, 0.8);
             transition: color 0.2s ease;
           }
@@ -595,40 +725,56 @@ html {
         .roles-list {
           display: flex;
           flex-direction: column;
-          gap: 12px;
+          gap: 6px; // Reduced from 12px
+          overflow: hidden;
+          animation: expandIn 0.3s ease-out;
+        }
+
+        @keyframes expandIn {
+          0% {
+            opacity: 0;
+            max-height: 0;
+            transform: translateY(-10px);
+          }
+          100% {
+            opacity: 1;
+            max-height: 2000px;
+            transform: translateY(0);
+          }
         }
 
         .role-item {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 16px;
+          padding: 10px 12px; // Reduced from 16px
           border: 1px solid rgba(128, 128, 128, 0.2);
-          border-radius: 10px;
+          border-radius: 6px; // Reduced from 10px
           background: $background-dark;
           transition: all 0.3s ease;
           scroll-margin-top: 100px; // Add space when scrolling to anchored role
           overflow: visible;
+          min-height: 40px; // Set minimum height for consistency
 
           &:hover {
             background: $background-darker;
             border-color: rgba(182, 65, 65, 0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-1px); // Reduced from -2px
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); // Reduced shadow
           }
 
           &.highlighted {
             background: rgba(182, 65, 65, 0.2);
             border-color: rgba(182, 65, 65, 0.6);
-            box-shadow: 0 0 20px rgba(182, 65, 65, 0.4);
-            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(182, 65, 65, 0.4); // Reduced shadow
+            transform: translateY(-1px); // Reduced from -2px
             outline: 2px solid rgba(255, 255, 255, 0.7);
             outline-offset: 2px;
             
             &:hover {
               background: rgba(182, 65, 65, 0.25);
               border-color: rgba(182, 65, 65, 0.7);
-              box-shadow: 0 0 25px rgba(182, 65, 65, 0.5);
+              box-shadow: 0 0 20px rgba(182, 65, 65, 0.5); // Reduced shadow
               outline: 2px solid rgba(255, 255, 255, 0.8);
             }
           }
@@ -636,7 +782,7 @@ html {
             .role-info {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px; // Reduced from 6px
             flex: 1;
             overflow: visible;
 
@@ -644,24 +790,24 @@ html {
               display: flex;
               align-items: center;
               width: 100%;
-              min-height: 24px;
+              min-height: 20px; // Reduced from 24px
               overflow: visible;
             }
 
             .role-name {
               font-weight: 600;
               color: #ffffff;
-              font-size: 16px;
+              font-size: 15px; // Reduced from 16px
               flex: 1;
               display: flex;
               align-items: center;
-              gap: 8px;
+              gap: 6px; // Reduced from 8px
               overflow: visible;
             }
 
             .copy-link-button {
-              width: 24px;
-              height: 24px;
+              width: 20px; // Reduced from 24px
+              height: 20px; // Reduced from 24px
               opacity: 0.6;
               transition: opacity 0.2s ease;
               border-radius: 50%;
@@ -673,9 +819,9 @@ html {
               overflow: visible;
               
               mat-icon {
-                font-size: 16px;
-                width: 16px;
-                height: 16px;
+                font-size: 14px; // Reduced from 16px
+                width: 14px; // Reduced from 16px
+                height: 14px; // Reduced from 16px
                 color: rgba(255, 255, 255, 0.8);
                 transition: color 0.2s ease;
               }
@@ -691,9 +837,9 @@ html {
             }
 
             .role-status {
-              font-size: 14px;
+              font-size: 13px; // Reduced from 14px
               color: rgba(255, 255, 255, 0.6);
-              padding: 4px 8px;
+              padding: 2px 6px; // Reduced from 4px 8px
               border-radius: 4px;
               background: rgba(128, 128, 128, 0.2);
               display: inline-block;
@@ -710,21 +856,22 @@ html {
 
           .role-actions {
             display: flex;
-            gap: 8px;
+            gap: 6px; // Reduced from 8px
 
             .slot-button {
               background: linear-gradient(45deg, #4a7c59, #3d6b47);
               color: white;
               border: none;
-              border-radius: 8px;
-              padding: 8px 16px;
+              border-radius: 6px; // Reduced from 8px
+              padding: 6px 12px; // Reduced from 8px 16px
               font-weight: 500;
+              font-size: 13px; // Reduced font size
               transition: all 0.3s ease;
-              box-shadow: 0 4px 12px rgba(74, 124, 89, 0.3);
+              box-shadow: 0 2px 8px rgba(74, 124, 89, 0.3); // Reduced shadow
 
               &:hover:not(:disabled) {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 16px rgba(74, 124, 89, 0.4);
+                transform: translateY(-1px); // Reduced from -2px
+                box-shadow: 0 4px 12px rgba(74, 124, 89, 0.4); // Reduced shadow
                 background: linear-gradient(45deg, #5a8c69, #4d7b57);
               }
 
@@ -740,15 +887,16 @@ html {
               background: linear-gradient(45deg, rgb(182, 65, 65), rgb(150, 45, 45));
               color: white;
               border: none;
-              border-radius: 8px;
-              padding: 8px 16px;
+              border-radius: 6px; // Reduced from 8px
+              padding: 6px 12px; // Reduced from 8px 16px
               font-weight: 500;
+              font-size: 13px; // Reduced font size
               transition: all 0.3s ease;
-              box-shadow: 0 4px 12px rgba(182, 65, 65, 0.3);
+              box-shadow: 0 2px 8px rgba(182, 65, 65, 0.3); // Reduced shadow
 
               &:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 16px rgba(182, 65, 65, 0.4);
+                transform: translateY(-1px); // Reduced from -2px
+                box-shadow: 0 4px 12px rgba(182, 65, 65, 0.4); // Reduced shadow
                 background: linear-gradient(45deg, rgb(200, 85, 85), rgb(170, 55, 55));
               }
             }
@@ -758,24 +906,24 @@ html {
               color: white;
               border: none;
               border-radius: 50%;
-              width: 36px;
-              height: 36px;
+              width: 30px; // Reduced from 36px
+              height: 30px; // Reduced from 36px
               padding: 0;
               display: flex;
               align-items: center;
               justify-content: center;
               transition: all 0.3s ease;
-              box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+              box-shadow: 0 2px 6px rgba(220, 53, 69, 0.3); // Reduced shadow
 
               mat-icon {
-                font-size: 18px;
-                width: 18px;
-                height: 18px;
+                font-size: 16px; // Reduced from 18px
+                width: 16px; // Reduced from 18px
+                height: 16px; // Reduced from 18px
               }
 
               &:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+                transform: translateY(-1px); // Reduced from -2px
+                box-shadow: 0 3px 10px rgba(220, 53, 69, 0.4); // Reduced shadow
                 background: linear-gradient(45deg, #e15361, #d63544);
               }
             }
@@ -880,30 +1028,89 @@ html {
       }
 
       .roster-section {
+        .roster-header {
+          flex-direction: column;
+          gap: 12px;
+          align-items: stretch;
+
+          .roster-controls {
+            justify-content: center;
+            gap: 6px;
+
+            .roster-control-button {
+              flex: 1;
+              font-size: 11px;
+              padding: 6px 8px;
+
+              mat-icon {
+                font-size: 14px;
+                width: 14px;
+                height: 14px;
+                margin-right: 2px;
+              }
+            }
+          }
+        }
+
         .group-section {
-          padding: 16px;
+          padding: 12px; // Reduced from 16px
+
+          .group-name {
+            .group-expand-button {
+              width: 20px;
+              height: 20px;
+              
+              mat-icon {
+                font-size: 16px;
+                width: 16px;
+                height: 16px;
+              }
+            }
+            
+            .group-role-count {
+              font-size: 12px;
+            }
+          }
 
           .role-item {
             flex-direction: column;
             align-items: stretch;
-            gap: 12px;
+            gap: 8px; // Reduced from 12px
+            padding: 8px; // Reduced from default
 
             .role-info {
               .copy-link-button {
-                width: 24px;
-                height: 24px;
-                opacity: 0.6; // Make slightly more visible on mobile
+                width: 20px; // Reduced from 24px
+                height: 20px; // Reduced from 24px
+                opacity: 0.7; // Make slightly more visible on mobile
                 
                 mat-icon {
-                  font-size: 16px;
-                  width: 16px;
-                  height: 16px;
+                  font-size: 14px; // Reduced from 16px
+                  width: 14px; // Reduced from 16px
+                  height: 14px; // Reduced from 16px
                 }
               }
             }
 
             .role-actions {
               justify-content: center;
+              
+              .slot-button,
+              .unslot-button {
+                padding: 6px 10px; // Further reduced for mobile
+                font-size: 12px; // Smaller font for mobile
+              }
+              
+              .kick-button {
+                width: 28px; // Reduced for mobile
+                height: 28px; // Reduced for mobile
+                
+                mat-icon {
+                  font-size: 14px; // Reduced for mobile
+                  width: 14px; // Reduced for mobile
+                  height: 14px; // Reduced for mobile
+                }
+              }
             }
           }
         }

@@ -50,6 +50,9 @@ export class EventsComponent implements OnInit, OnDestroy {
   highlightedRoleId: string | null = null;
   highlightedGroupId: string | null = null;
   
+  // Group collapse state - stores which groups are expanded
+  expandedGroups: Set<string> = new Set();
+  
   // Pagination properties
   currentPage = 0;
   pageSize = 1; // One event per page
@@ -114,6 +117,15 @@ export class EventsComponent implements OnInit, OnDestroy {
       if (eventWithRole) {
         this.selectedEvent = eventWithRole;
         
+        // Find and expand the group containing the highlighted role
+        eventWithRole.sides.forEach(side => {
+          side.groups.forEach(group => {
+            if (group.roles.some(role => role.id === roleId)) {
+              this.expandedGroups.add(group.id);
+            }
+          });
+        });
+        
         // Scroll to the role after a short delay to ensure DOM is updated
         setTimeout(() => {
           const element = document.getElementById(fragment);
@@ -141,6 +153,9 @@ export class EventsComponent implements OnInit, OnDestroy {
       
       if (eventWithGroup) {
         this.selectedEvent = eventWithGroup;
+        
+        // Expand the highlighted group
+        this.expandedGroups.add(groupId);
         
         // Scroll to the group after a short delay to ensure DOM is updated
         setTimeout(() => {
@@ -183,7 +198,10 @@ export class EventsComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.isLoading = false;
-        this.snackBar.open('Failed to load events', 'Close', { duration: 3000 });
+        this.snackBar.open('Failed to load events', 'Close', { 
+          duration: 3000,
+          politeness: 'polite'
+        });
         console.error('Error loading events:', error);
       }
     });
@@ -191,12 +209,18 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   openCreateEventDialog(): void {
     if (!this.userService.loggedIn) {
-      this.snackBar.open('You must be logged in to create events', 'Close', { duration: 3000 });
+      this.snackBar.open('You must be logged in to create events', 'Close', { 
+        duration: 3000,
+        politeness: 'polite'
+      });
       return;
     }
     
     if (!this.isAdmin) {
-      this.snackBar.open('Only administrators can create events', 'Close', { duration: 3000 });
+      this.snackBar.open('Only administrators can create events', 'Close', { 
+        duration: 3000,
+        politeness: 'polite'
+      });
       return;
     }
 
@@ -222,13 +246,22 @@ export class EventsComponent implements OnInit, OnDestroy {
     this.eventsService.createEvent(eventData).subscribe({
       next: (response) => {
         if (response.success) {
-          this.snackBar.open('Event created successfully!', 'Close', { duration: 3000 });
+          this.snackBar.open('Event created successfully!', 'Close', { 
+            duration: 3000,
+            politeness: 'polite'
+          });
         } else {
-          this.snackBar.open(response.message || 'Failed to create event', 'Close', { duration: 3000 });
+          this.snackBar.open(response.message || 'Failed to create event', 'Close', { 
+            duration: 3000,
+            politeness: 'polite'
+          });
         }
       },
       error: (error) => {
-        this.snackBar.open('Failed to create event', 'Close', { duration: 3000 });
+        this.snackBar.open('Failed to create event', 'Close', { 
+          duration: 3000,
+          politeness: 'polite'
+        });
         console.error('Error creating event:', error);
       }
     });
@@ -236,7 +269,10 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   editEvent(event: Event): void {
     if (!this.isAdmin) {
-      this.snackBar.open('Only administrators can edit events', 'Close', { duration: 3000 });
+      this.snackBar.open('Only administrators can edit events', 'Close', { 
+        duration: 3000,
+        politeness: 'polite'
+      });
       return;
     }
 
@@ -267,13 +303,22 @@ export class EventsComponent implements OnInit, OnDestroy {
     this.eventsService.updateEvent(eventId, eventData).subscribe({
       next: (response) => {
         if (response.success) {
-          this.snackBar.open('Event updated successfully!', 'Close', { duration: 3000 });
+          this.snackBar.open('Event updated successfully!', 'Close', { 
+            duration: 3000,
+            politeness: 'polite'
+          });
         } else {
-          this.snackBar.open(response.message || 'Failed to update event', 'Close', { duration: 3000 });
+          this.snackBar.open(response.message || 'Failed to update event', 'Close', { 
+            duration: 3000,
+            politeness: 'polite'
+          });
         }
       },
       error: (error) => {
-        this.snackBar.open('Failed to update event', 'Close', { duration: 3000 });
+        this.snackBar.open('Failed to update event', 'Close', { 
+          duration: 3000,
+          politeness: 'polite'
+        });
         console.error('Error updating event:', error);
       }
     });
@@ -281,7 +326,18 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   slotRole(eventId: string, sideId: string, groupId: string, roleId: string): void {
     if (!this.userService.loggedIn) {
-      this.snackBar.open('You must be logged in to slot into roles', 'Close', { duration: 3000 });
+      this.snackBar.open('You must be logged in to slot into roles', 'Close', { 
+        duration: 3000,
+        politeness: 'polite'
+      });
+      return;
+    }
+
+    if (!this.userService.dbUser?.armaguid) {
+      this.snackBar.open('You must add your ARMA GUID to your profile before slotting into roles', 'Close', { 
+        duration: 5000,
+        politeness: 'polite'
+      });
       return;
     }
 
@@ -295,13 +351,22 @@ export class EventsComponent implements OnInit, OnDestroy {
     this.eventsService.slotRole(slotData).subscribe({
       next: (response) => {
         if (response.success) {
-          this.snackBar.open('Successfully slotted into role!', 'Close', { duration: 3000 });
+          this.snackBar.open('Successfully slotted into role!', 'Close', { 
+            duration: 3000,
+            politeness: 'polite'
+          });
         } else {
-          this.snackBar.open(response.message || 'Failed to slot into role', 'Close', { duration: 3000 });
+          this.snackBar.open(response.message || 'Failed to slot into role', 'Close', { 
+            duration: 3000,
+            politeness: 'polite'
+          });
         }
       },
       error: (error) => {
-        this.snackBar.open('Failed to slot into role', 'Close', { duration: 3000 });
+        this.snackBar.open('Failed to slot into role', 'Close', { 
+          duration: 3000,
+          politeness: 'polite'
+        });
         console.error('Error slotting role:', error);
       }
     });
@@ -309,7 +374,10 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   unslotRole(eventId: string, sideId: string, groupId: string, roleId: string): void {
     if (!this.userService.loggedIn) {
-      this.snackBar.open('You must be logged in to unslot from roles', 'Close', { duration: 3000 });
+      this.snackBar.open('You must be logged in to unslot from roles', 'Close', { 
+        duration: 3000,
+        politeness: 'polite'
+      });
       return;
     }
 
@@ -323,13 +391,22 @@ export class EventsComponent implements OnInit, OnDestroy {
     this.eventsService.unslotRole(slotData).subscribe({
       next: (response) => {
         if (response.success) {
-          this.snackBar.open('Successfully unslotted from role!', 'Close', { duration: 3000 });
+          this.snackBar.open('Successfully unslotted from role!', 'Close', { 
+            duration: 3000,
+            politeness: 'polite'
+          });
         } else {
-          this.snackBar.open(response.message || 'Failed to unslot from role', 'Close', { duration: 3000 });
+          this.snackBar.open(response.message || 'Failed to unslot from role', 'Close', { 
+            duration: 3000,
+            politeness: 'polite'
+          });
         }
       },
       error: (error) => {
-        this.snackBar.open('Failed to unslot from role', 'Close', { duration: 3000 });
+        this.snackBar.open('Failed to unslot from role', 'Close', { 
+          duration: 3000,
+          politeness: 'polite'
+        });
         console.error('Error unslotting role:', error);
       }
     });
@@ -337,7 +414,10 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   kickUserFromRole(eventId: string, sideId: string, groupId: string, roleId: string): void {
     if (!this.isAdmin) {
-      this.snackBar.open('Only administrators can kick users from roles', 'Close', { duration: 3000 });
+      this.snackBar.open('Only administrators can kick users from roles', 'Close', { 
+        duration: 3000,
+        politeness: 'polite'
+      });
       return;
     }
 
@@ -351,13 +431,22 @@ export class EventsComponent implements OnInit, OnDestroy {
     this.eventsService.adminKickFromRole(slotData).subscribe({
       next: (response) => {
         if (response.success) {
-          this.snackBar.open(response.message || 'Successfully kicked user from role!', 'Close', { duration: 3000 });
+          this.snackBar.open(response.message || 'Successfully kicked user from role!', 'Close', { 
+            duration: 3000,
+            politeness: 'polite'
+          });
         } else {
-          this.snackBar.open(response.message || 'Failed to kick user from role', 'Close', { duration: 3000 });
+          this.snackBar.open(response.message || 'Failed to kick user from role', 'Close', { 
+            duration: 3000,
+            politeness: 'polite'
+          });
         }
       },
       error: (error) => {
-        this.snackBar.open('Failed to kick user from role', 'Close', { duration: 3000 });
+        this.snackBar.open('Failed to kick user from role', 'Close', { 
+          duration: 3000,
+          politeness: 'polite'
+        });
         console.error('Error kicking user from role:', error);
       }
     });
@@ -365,6 +454,11 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   canSlotRole(event: Event, sideId: string, groupId: string, roleId: string): boolean {
     if (!this.userService.loggedIn || !this.userService.dbUser) {
+      return false;
+    }
+
+    // Check if user has ARMA GUID in their profile
+    if (!this.userService.dbUser.armaguid) {
       return false;
     }
 
@@ -420,17 +514,26 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   deleteEvent(eventId: string): void {
     if (!this.userService.loggedIn) {
-      this.snackBar.open('You must be logged in to delete events', 'Close', { duration: 3000 });
+      this.snackBar.open('You must be logged in to delete events', 'Close', { 
+        duration: 3000,
+        politeness: 'polite'
+      });
       return;
     }
 
     if (confirm('Are you sure you want to delete this event? This action cannot be undone.')) {
       this.eventsService.deleteEvent(eventId).subscribe({
         next: () => {
-          this.snackBar.open('Event deleted successfully!', 'Close', { duration: 3000 });
+          this.snackBar.open('Event deleted successfully!', 'Close', { 
+            duration: 3000,
+            politeness: 'polite'
+          });
         },
         error: (error) => {
-          this.snackBar.open('Failed to delete event', 'Close', { duration: 3000 });
+          this.snackBar.open('Failed to delete event', 'Close', { 
+            duration: 3000,
+            politeness: 'polite'
+          });
           console.error('Error deleting event:', error);
         }
       });
@@ -448,6 +551,34 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   get isAdmin(): boolean {
     return this.userService.loggedIn && this.userService.dbUser?.isAdmin === true;
+  }
+
+  get hasArmaGuid(): boolean {
+    return !!(this.userService.dbUser?.armaguid);
+  }
+
+  getSlotButtonTooltip(event: Event, sideId: string, groupId: string, roleId: string): string {
+    if (!this.userService.loggedIn) {
+      return 'You must be logged in to slot into roles';
+    }
+
+    if (!this.userService.dbUser?.armaguid) {
+      return 'You must add your ARMA GUID to your profile before slotting';
+    }
+
+    if (event.slotUnlockTime && new Date() < new Date(event.slotUnlockTime)) {
+      return 'Slots are locked until: ' + this.formatDateTime(event.slotUnlockTime);
+    }
+
+    const side = event.sides.find(s => s.id === sideId);
+    const group = side?.groups.find(g => g.id === groupId);
+    const role = group?.roles.find(r => r.id === roleId);
+
+    if (role?.slottedUserId && role.slottedUserId !== this.userService.dbUser?.discordid) {
+      return `Role is occupied by ${role.slottedUser || 'another user'}`;
+    }
+
+    return 'Click to slot into this role';
   }
 
   formatDateTime(date: Date): string {
@@ -523,7 +654,8 @@ export class EventsComponent implements OnInit, OnDestroy {
         this.snackBar.open('Role link copied!', 'Close', { 
           duration: 2000,
           horizontalPosition: 'center',
-          verticalPosition: 'bottom'
+          verticalPosition: 'bottom',
+          politeness: 'polite'
         });
       }).catch(err => {
         console.error('Failed to copy to clipboard:', err);
@@ -545,7 +677,8 @@ export class EventsComponent implements OnInit, OnDestroy {
         this.snackBar.open('Group link copied!', 'Close', { 
           duration: 2000,
           horizontalPosition: 'center',
-          verticalPosition: 'bottom'
+          verticalPosition: 'bottom',
+          politeness: 'polite'
         });
       }).catch(err => {
         console.error('Failed to copy to clipboard:', err);
@@ -576,16 +709,102 @@ export class EventsComponent implements OnInit, OnDestroy {
         this.snackBar.open(message, 'Close', { 
           duration: 2000,
           horizontalPosition: 'center',
-          verticalPosition: 'bottom'
+          verticalPosition: 'bottom',
+          politeness: 'polite'
         });
       } else {
-        this.snackBar.open('Failed to copy link', 'Close', { duration: 3000 });
+        this.snackBar.open('Failed to copy link', 'Close', { 
+          duration: 3000,
+          politeness: 'polite'
+        });
       }
     } catch (err) {
       console.error('Fallback: Could not copy text:', err);
-      this.snackBar.open('Failed to copy link', 'Close', { duration: 3000 });
+      this.snackBar.open('Failed to copy link', 'Close', { 
+        duration: 3000,
+        politeness: 'polite'
+      });
     }
     
     document.body.removeChild(textArea);
+  }
+
+  // Slot counting methods
+  getSlottedCount(event: Event): number {
+    let slottedCount = 0;
+    event.sides.forEach(side => {
+      side.groups.forEach(group => {
+        group.roles.forEach(role => {
+          if (role.slottedUserId) {
+            slottedCount++;
+          }
+        });
+      });
+    });
+    return slottedCount;
+  }
+
+  getTotalRoles(event: Event): number {
+    let totalRoles = 0;
+    event.sides.forEach(side => {
+      side.groups.forEach(group => {
+        totalRoles += group.roles.length;
+      });
+    });
+    return totalRoles;
+  }
+
+  getSlotSummary(event: Event): string {
+    const slotted = this.getSlottedCount(event);
+    const total = this.getTotalRoles(event);
+    return `${slotted} / ${total}`;
+  }
+
+  // Group collapse/expand methods
+  toggleGroup(groupId: string): void {
+    if (this.expandedGroups.has(groupId)) {
+      this.expandedGroups.delete(groupId);
+    } else {
+      this.expandedGroups.add(groupId);
+    }
+  }
+
+  isGroupExpanded(groupId: string): boolean {
+    return this.expandedGroups.has(groupId);
+  }
+
+  getGroupSlotSummary(group: any): string {
+    const slottedCount = group.roles.filter((role: any) => role.slottedUserId).length;
+    const totalCount = group.roles.length;
+    return `${slottedCount}/${totalCount}`;
+  }
+
+  getGroupSlotClass(group: any): string {
+    const slottedCount = group.roles.filter((role: any) => role.slottedUserId).length;
+    const totalCount = group.roles.length;
+    
+    if (slottedCount === 0) {
+      return 'group-empty';
+    } else if (slottedCount === totalCount) {
+      return 'group-full';
+    } else {
+      return 'group-partial';
+    }
+  }
+
+  expandAllGroups(event: Event): void {
+    event.sides.forEach(side => {
+      side.groups.forEach(group => {
+        this.expandedGroups.add(group.id);
+      });
+    });
+  }
+
+  collapseAllGroups(event: Event): void {
+    event.sides.forEach(side => {
+      side.groups.forEach(group => {
+        this.expandedGroups.delete(group.id);
+      });
+    });
   }
 }

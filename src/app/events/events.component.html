@@ -22,6 +22,11 @@
       <span>Only administrators can create events</span>
     </div>
 
+    <div *ngIf="isLoggedIn && !hasArmaGuid" class="login-notice arma-guid-notice">
+      <mat-icon>warning</mat-icon>
+      <span>You must add your ARMA GUID to your profile before slotting into roles</span>
+    </div>
+
     <div *ngIf="isLoading" class="loading-container">
       <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
       <p>Loading events...</p>
@@ -96,7 +101,11 @@
                 </div>
                 <div class="meta-item" style="display: flex; align-items: center; gap: 6px; color: #e0e0e0; font-size: 15px;">
                   <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: rgba(182, 65, 65, 0.8);">person_outline</mat-icon>
-                  <span>{{ currentEvent.createdByUsername }}</span>
+                  <span>by: {{ currentEvent.createdByUsername }}</span>
+                </div>
+                <div class="meta-item" style="display: flex; align-items: center; gap: 6px; color: #e0e0e0; font-size: 15px;">
+                  <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: rgba(182, 65, 65, 0.8);">group</mat-icon>
+                  <span>{{ getSlotSummary(currentEvent) }} slots</span>
                 </div>
               </div>
             </div>
@@ -139,7 +148,27 @@
 
           <!-- Groups and Roles - Only show when selected -->
           <div *ngIf="isEventSelected(currentEvent)" class="roster-section">
-            <h3>Event Roster</h3>
+            <div class="roster-header">
+              <h3>Event Roster</h3>
+              <div class="roster-controls">
+                <button 
+                  mat-stroked-button 
+                  color="primary" 
+                  (click)="expandAllGroups(currentEvent); $event.stopPropagation()"
+                  class="roster-control-button">
+                  <mat-icon>unfold_more</mat-icon>
+                  Expand All
+                </button>
+                <button 
+                  mat-stroked-button 
+                  color="primary" 
+                  (click)="collapseAllGroups(currentEvent); $event.stopPropagation()"
+                  class="roster-control-button">
+                  <mat-icon>unfold_less</mat-icon>
+                  Collapse All
+                </button>
+              </div>
+            </div>
             
             <!-- Slot Lock Warning -->
             <div *ngIf="areSlotsLocked(currentEvent)" class="slot-lock-warning">
@@ -162,7 +191,17 @@
                      [class.highlighted]="highlightedGroupId === group.id">
                   <div class="group-name-container">
                     <h4 class="group-name semi-transparent-bg" 
-                        [style.--side-color]="side.color">{{ group.name }}
+                        [style.--side-color]="side.color"
+                        (click)="toggleGroup(group.id); $event.stopPropagation()"
+                        [class.clickable]="true">
+                      <button 
+                        mat-icon-button
+                        class="group-expand-button"
+                        (click)="toggleGroup(group.id); $event.stopPropagation()">
+                        <mat-icon>{{ isGroupExpanded(group.id) ? 'expand_less' : 'expand_more' }}</mat-icon>
+                      </button>
+                      {{ group.name }}
+                      <span class="group-role-count" [class]="getGroupSlotClass(group)">({{ getGroupSlotSummary(group) }})</span>
                       <button 
                         mat-icon-button
                         class="copy-group-link-button"
@@ -172,7 +211,7 @@
                     </h4>
                   </div>
                   
-                  <div class="roles-list">
+                  <div class="roles-list" *ngIf="isGroupExpanded(group.id)">
                     <div 
                       *ngFor="let role of group.roles" 
                       class="role-item"
@@ -213,6 +252,7 @@
                           color="primary" 
                           (click)="slotRole(currentEvent.id, side.id, group.id, role.id); $event.stopPropagation()"
                           [disabled]="!canSlotRole(currentEvent, side.id, group.id, role.id)"
+                          [title]="getSlotButtonTooltip(currentEvent, side.id, group.id, role.id)"
                           class="slot-button">
                           Slot
                         </button>
