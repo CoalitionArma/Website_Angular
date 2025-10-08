@@ -11,15 +11,25 @@ export interface EventGroup {
   roles: EventRole[];
 }
 
+export interface EventSide {
+  id: string;
+  name: string;
+  color?: string; // Optional color for the side (e.g., "#4a7c59" for coalition, "#b64141" for opposition)
+  groups: EventGroup[];
+}
+
 export interface Event {
   id: string;
   title: string;
   description: string;
   bannerUrl?: string;
+  warno?: string; // Warning Order
+  discordEventThread?: string; // Discord Event Thread URL
   dateTime: Date;
+  slotUnlockTime?: Date; // When slots become available for signup
   createdBy: string; // Discord ID of creator
   createdByUsername: string; // Discord username of creator
-  groups: EventGroup[];
+  sides: EventSide[]; // Multi-side support
   createdAt: Date;
   updatedAt: Date;
 }
@@ -28,8 +38,22 @@ export interface CreateEventRequest {
   title: string;
   description: string;
   bannerUrl?: string;
+  warno?: string; // Warning Order
+  discordEventThread?: string; // Discord Event Thread URL
   dateTime: Date;
-  groups: Omit<EventGroup, 'id'>[];
+  slotUnlockTime?: Date;
+  sides: Omit<EventSide, 'id'>[];
+}
+
+export interface UpdateEventRequest {
+  title: string;
+  description: string;
+  bannerUrl?: string;
+  warno?: string; // Warning Order
+  discordEventThread?: string; // Discord Event Thread URL
+  dateTime: Date;
+  slotUnlockTime?: Date;
+  sides: EventSide[]; // Full sides with IDs for edit mode
 }
 
 export interface CreateEventResponse {
@@ -40,6 +64,7 @@ export interface CreateEventResponse {
 
 export interface SlotRoleRequest {
   eventId: string;
+  sideId: string;
   groupId: string;
   roleId: string;
 }
