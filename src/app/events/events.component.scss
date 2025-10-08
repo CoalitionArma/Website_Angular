@@ -449,8 +449,22 @@ html {
           
           .side-header {
             margin-bottom: 20px;
-            border-left: 4px solid transparent;
-            padding-left: 8px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+            
+            &.semi-transparent-bg::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background-color: var(--side-color);
+              opacity: 0.5;
+              z-index: 0;
+            }
             
             .side-name {
               color: #ffffff;
@@ -458,10 +472,13 @@ html {
               font-weight: 600;
               margin: 0;
               padding: 12px 16px;
-              background: linear-gradient(45deg, rgba(182, 65, 65, 0.3), rgba(150, 45, 45, 0.3));
-              border-radius: 8px;
-              border: 1px solid rgba(182, 65, 65, 0.4);
               text-align: center;
+              text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+              background: rgba(0, 0, 0, 0.2); // Semi-transparent overlay for better text readability
+              backdrop-filter: blur(2px);
+              border: none;
+              position: relative;
+              z-index: 1;
             }
           }
         }      h3 {
@@ -518,6 +535,31 @@ html {
           display: flex;
           align-items: center;
           gap: 8px;
+          position: relative;
+          
+          &.semi-transparent-bg {
+            background: none;
+            border-left: 4px solid var(--side-color);
+            color: #ffffff;
+            
+            &::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background-color: var(--side-color);
+              opacity: 0.15;
+              border-radius: 8px;
+              z-index: 0;
+            }
+            
+            * {
+              position: relative;
+              z-index: 1;
+            }
+          }
         }
 
         .copy-group-link-button {

@@ -127,7 +127,9 @@
             <!-- Sides-based Layout -->
             <div class="sides-container">
               <div *ngFor="let side of currentEvent.sides" class="side-column">
-                <div class="side-header" [style.border-left-color]="side.color">
+                <div class="side-header semi-transparent-bg" 
+                     [style.--side-color]="side.color"
+                     [style.border-color]="side.color">
                   <h4 class="side-name">{{ side.name }}</h4>
                 </div>
                 
@@ -136,7 +138,8 @@
                      [id]="'group-' + group.id"
                      [class.highlighted]="highlightedGroupId === group.id">
                   <div class="group-name-container">
-                    <h4 class="group-name">{{ group.name }}
+                    <h4 class="group-name semi-transparent-bg" 
+                        [style.--side-color]="side.color">{{ group.name }}
                       <button 
                         mat-icon-button
                         class="copy-group-link-button"
