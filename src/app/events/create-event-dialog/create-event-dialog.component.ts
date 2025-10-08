@@ -71,11 +71,11 @@ export class CreateEventDialogComponent implements OnInit {
       dateTime: ['', Validators.required],
       slotUnlockDate: [''], // Optional date for when slots become available
       slotUnlockTime: [''], // Optional time for when slots become available (HH:MM format)
-      groups: this.fb.array([])
+      sides: this.fb.array([])
     });
 
-    // Add initial group
-    this.addGroup();
+    // Add initial side with a group
+    this.addSide();
   }
   
   ngOnInit(): void {
@@ -83,37 +83,58 @@ export class CreateEventDialogComponent implements OnInit {
     // We could add any initialization logic here if needed
   }
 
-  get groups(): FormArray {
-    return this.eventForm.get('groups') as FormArray;
+  get sides(): FormArray {
+    return this.eventForm.get('sides') as FormArray;
   }
 
-  getRolesArray(groupIndex: number): FormArray {
-    return this.groups.at(groupIndex).get('roles') as FormArray;
+  getGroupsArray(sideIndex: number): FormArray {
+    return this.sides.at(sideIndex).get('groups') as FormArray;
   }
 
-  addGroup(): void {
+  getRolesArray(sideIndex: number, groupIndex: number): FormArray {
+    return this.getGroupsArray(sideIndex).at(groupIndex).get('roles') as FormArray;
+  }
+
+  addSide(): void {
+    const sideForm = this.fb.group({
+      name: ['', Validators.required],
+      color: ['#4a7c59'], // Default coalition color
+      groups: this.fb.array([])
+    });
+
+    this.sides.push(sideForm);
+    
+    // Add initial group to the new side
+    this.addGroup(this.sides.length - 1);
+  }
+
+  removeSide(sideIndex: number): void {
+    this.sides.removeAt(sideIndex);
+  }
+
+  addGroup(sideIndex: number): void {
     const groupForm = this.fb.group({
       name: ['', Validators.required],
       roles: this.fb.array([])
     });
 
-    this.groups.push(groupForm);
+    this.getGroupsArray(sideIndex).push(groupForm);
     
     // Add initial role to the new group
-    this.addRole(this.groups.length - 1);
+    this.addRole(sideIndex, this.getGroupsArray(sideIndex).length - 1);
   }
 
-  removeGroup(groupIndex: number): void {
-    this.groups.removeAt(groupIndex);
+  removeGroup(sideIndex: number, groupIndex: number): void {
+    this.getGroupsArray(sideIndex).removeAt(groupIndex);
   }
 
-  addRole(groupIndex: number): void {
-    const rolesArray = this.getRolesArray(groupIndex);
+  addRole(sideIndex: number, groupIndex: number): void {
+    const rolesArray = this.getRolesArray(sideIndex, groupIndex);
     rolesArray.push(this.fb.control('', Validators.required));
   }
 
-  removeRole(groupIndex: number, roleIndex: number): void {
-    const rolesArray = this.getRolesArray(groupIndex);
+  removeRole(sideIndex: number, groupIndex: number, roleIndex: number): void {
+    const rolesArray = this.getRolesArray(sideIndex, groupIndex);
     rolesArray.removeAt(roleIndex);
   }
 
@@ -144,10 +165,14 @@ export class CreateEventDialogComponent implements OnInit {
         bannerUrl: formValue.bannerUrl || undefined,
         dateTime: formValue.dateTime,
         slotUnlockTime: slotUnlockDateTime,
-        groups: formValue.groups.map((group: any) => ({
-          name: group.name,
-          roles: group.roles.map((roleName: string) => ({
-            name: roleName
+        sides: formValue.sides.map((side: any) => ({
+          name: side.name,
+          color: side.color,
+          groups: side.groups.map((group: any) => ({
+            name: group.name,
+            roles: group.roles.map((roleName: string) => ({
+              name: roleName
+            }))
           }))
         }))
       };

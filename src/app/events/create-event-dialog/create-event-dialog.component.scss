@@ -328,6 +328,158 @@
   }
 }
 
+// Sides container
+.sides-container {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xl;
+}
+
+// Side card
+.side-card {
+  @extend %card-style;
+  border: 2px solid rgba($primary-color, 0.4);
+  
+  &:hover {
+    border-color: rgba($primary-color, 0.6);
+    box-shadow: $shadow-lg;
+  }
+  
+  ::ng-deep {
+    .mat-mdc-card-header {
+      padding: $spacing-lg $spacing-lg $spacing-md;
+      background: rgba($primary-color, 0.1);
+      overflow: visible;
+    }
+    
+    .mat-mdc-card-content {
+      padding: $spacing-md $spacing-lg $spacing-lg;
+      overflow: visible;
+    }
+  }
+}
+
+// Side title and controls
+.side-title {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  width: 100%;
+  
+  .side-details-container {
+    flex: 1;
+    width: 100%;
+  }
+  
+  button[mat-icon-button] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 8px;
+    
+    .mat-icon {
+      margin: 0 !important;
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.side-name-row {
+  display: flex;
+  gap: $spacing-md;
+  align-items: center;
+  
+  .side-name-field {
+    flex: 2;
+    overflow: visible;
+  }
+  
+  .side-color-field {
+    flex: 1;
+    min-width: 120px;
+    overflow: visible;
+    
+    ::ng-deep {
+      .mat-mdc-form-field {
+        .mdc-text-field__input,
+        .mat-mdc-input-element {
+          padding: 8px 12px !important;
+          height: 40px;
+          cursor: pointer;
+          
+          &[type="color"] {
+            border: none;
+            background: none;
+            border-radius: 6px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Add Side button container
+.add-side-container {
+  display: flex;
+  justify-content: center;
+  margin-top: $spacing-xl;
+  
+  button {
+    @extend %button-primary;
+    font-size: 16px;
+    padding: 12px $spacing-xl;
+    
+    &:hover {
+      @extend %button-primary-hover;
+    }
+  }
+}
+
+// Groups section within sides
+.groups-section {
+  margin-top: $spacing-md;
+  
+  .groups-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-lg;
+    padding: $spacing-sm $spacing-md;
+    background: rgba(80, 80, 80, 0.3);
+    border-radius: $border-radius-md;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    h4 {
+      margin: 0;
+      color: $text-color;
+      font-size: $font-size-normal;
+      font-weight: $font-weight-medium;
+    }
+    
+    button[mat-button] {
+      color: #ffffff !important;
+      font-size: 14px;
+      
+      .mat-icon {
+        color: #ffffff !important;
+        font-size: 18px;
+      }
+    }
+  }
+  
+  .groups-container {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+}
+
 // Groups container
 .groups-container {
   display: flex;
@@ -335,7 +487,7 @@
   gap: $spacing-lg;
 }
 
-// Add Group button container
+// Add Group button container  
 .add-group-container {
   display: flex;
   justify-content: center;

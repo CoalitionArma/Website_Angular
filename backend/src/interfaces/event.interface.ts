@@ -1,3 +1,10 @@
+export interface EventSide {
+    id: string;
+    name: string;
+    color: string;
+    groups: EventGroup[];
+}
+
 export interface EventGroup {
     id: string;
     name: string;
@@ -17,14 +24,19 @@ export interface CreateEventRequest {
     bannerUrl?: string;
     dateTime: string;
     slotUnlockTime?: string; // When slots become available for signup
-    groups: Array<{
+    sides: Array<{
         name: string;
-        roles: Array<{ name: string }>;
+        color: string;
+        groups: Array<{
+            name: string;
+            roles: Array<{ name: string }>;
+        }>;
     }>;
 }
 
 export interface SlotRoleRequest {
     eventId: string;
+    sideId: string;
     groupId: string;
     roleId: string;
 }

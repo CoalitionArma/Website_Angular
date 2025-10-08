@@ -104,8 +104,10 @@ export class EventsComponent implements OnInit, OnDestroy {
       
       // Find the event containing this role and expand it
       const eventWithRole = this.allEvents.find(event => 
-        event.groups.some(group => 
-          group.roles.some(role => role.id === roleId)
+        event.sides.some(side =>
+          side.groups.some(group => 
+            group.roles.some(role => role.id === roleId)
+          )
         )
       );
       
@@ -132,7 +134,9 @@ export class EventsComponent implements OnInit, OnDestroy {
       
       // Find the event containing this group and expand it
       const eventWithGroup = this.allEvents.find(event => 
-        event.groups.some(group => group.id === groupId)
+        event.sides.some(side =>
+          side.groups.some(group => group.id === groupId)
+        )
       );
       
       if (eventWithGroup) {
@@ -230,7 +234,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     });
   }
 
-  slotRole(eventId: string, groupId: string, roleId: string): void {
+  slotRole(eventId: string, sideId: string, groupId: string, roleId: string): void {
     if (!this.userService.loggedIn) {
       this.snackBar.open('You must be logged in to slot into roles', 'Close', { duration: 3000 });
       return;
@@ -238,6 +242,7 @@ export class EventsComponent implements OnInit, OnDestroy {
 
     const slotData: SlotRoleRequest = {
       eventId,
+      sideId,
       groupId,
       roleId
     };
@@ -257,7 +262,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     });
   }
 
-  unslotRole(eventId: string, groupId: string, roleId: string): void {
+  unslotRole(eventId: string, sideId: string, groupId: string, roleId: string): void {
     if (!this.userService.loggedIn) {
       this.snackBar.open('You must be logged in to unslot from roles', 'Close', { duration: 3000 });
       return;
@@ -265,6 +270,7 @@ export class EventsComponent implements OnInit, OnDestroy {
 
     const slotData: SlotRoleRequest = {
       eventId,
+      sideId,
       groupId,
       roleId
     };
@@ -284,7 +290,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     });
   }
 
-  kickUserFromRole(eventId: string, groupId: string, roleId: string): void {
+  kickUserFromRole(eventId: string, sideId: string, groupId: string, roleId: string): void {
     if (!this.isAdmin) {
       this.snackBar.open('Only administrators can kick users from roles', 'Close', { duration: 3000 });
       return;
@@ -292,6 +298,7 @@ export class EventsComponent implements OnInit, OnDestroy {
 
     const slotData: SlotRoleRequest = {
       eventId,
+      sideId,
       groupId,
       roleId
     };
@@ -311,7 +318,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     });
   }
 
-  canSlotRole(event: Event, groupId: string, roleId: string): boolean {
+  canSlotRole(event: Event, sideId: string, groupId: string, roleId: string): boolean {
     if (!this.userService.loggedIn || !this.userService.dbUser) {
       return false;
     }
@@ -321,7 +328,10 @@ export class EventsComponent implements OnInit, OnDestroy {
       return false;
     }
 
-    const group = event.groups.find(g => g.id === groupId);
+    const side = event.sides.find(s => s.id === sideId);
+    if (!side) return false;
+
+    const group = side.groups.find(g => g.id === groupId);
     if (!group) return false;
 
     const role = group.roles.find(r => r.id === roleId);
@@ -346,12 +356,15 @@ export class EventsComponent implements OnInit, OnDestroy {
     return `Slots will unlock on ${this.formatDateTime(unlockTime)}`;
   }
 
-  isUserSlottedInRole(event: Event, groupId: string, roleId: string): boolean {
+  isUserSlottedInRole(event: Event, sideId: string, groupId: string, roleId: string): boolean {
     if (!this.userService.loggedIn || !this.userService.dbUser) {
       return false;
     }
 
-    const group = event.groups.find(g => g.id === groupId);
+    const side = event.sides.find(s => s.id === sideId);
+    if (!side) return false;
+
+    const group = side.groups.find(g => g.id === groupId);
     if (!group) return false;
 
     const role = group.roles.find(r => r.id === roleId);

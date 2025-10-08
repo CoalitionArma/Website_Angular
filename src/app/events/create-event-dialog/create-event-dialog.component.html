@@ -45,7 +45,7 @@
 
           <mat-form-field appearance="fill" class="compact-field full-width-field">
             <mat-label>Description</mat-label>
-            <textarea matInput formControlName="description" rows="2" placeholder="Describe your event"></textarea>
+            <textarea matInput formControlName="description" rows="2" placeholder="Flavor text of the event here"></textarea>
           </mat-form-field>
 
           <mat-form-field appearance="fill" class="compact-field full-width-field">
@@ -57,59 +57,95 @@
 
       <mat-divider></mat-divider>
 
-      <!-- Groups and Roles -->
+      <!-- Sides and Groups -->
       <div class="section">
         <div class="section-header">
-          <h3>ORBAT</h3>
+          <h3>ORBAT - Sides & Groups</h3>
         </div>
 
-        <div formArrayName="groups" class="groups-container">
-          <mat-card *ngFor="let group of groups.controls; let groupIndex = index" class="group-card">
+        <div formArrayName="sides" class="sides-container">
+          <mat-card *ngFor="let side of sides.controls; let sideIndex = index" class="side-card">
             <mat-card-header>
-              <mat-card-title class="group-title">
-                <div [formGroupName]="groupIndex" class="group-name-container" style="width: 100%">
-                  <mat-form-field appearance="fill" class="group-name-field">
-                    <mat-label>Group Name</mat-label>
-                    <input matInput formControlName="name" placeholder="e.g., Alpha Squad, Bravo Team">
-                  </mat-form-field>
+              <mat-card-title class="side-title">
+                <div [formGroupName]="sideIndex" class="side-details-container">
+                  <div class="side-name-row">
+                    <mat-form-field appearance="fill" class="side-name-field">
+                      <mat-label>Side Name</mat-label>
+                      <input matInput formControlName="name" placeholder="e.g., Coalition Forces, Opposition">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="side-color-field">
+                      <mat-label>Color</mat-label>
+                      <input matInput type="color" formControlName="color">
+                    </mat-form-field>
+                  </div>
                 </div>
-                <button type="button" mat-icon-button color="warn" (click)="removeGroup(groupIndex)">
+                <button type="button" mat-icon-button color="warn" (click)="removeSide(sideIndex)" [disabled]="sides.length <= 1">
                   <mat-icon>delete</mat-icon>
                 </button>
               </mat-card-title>
             </mat-card-header>
 
             <mat-card-content>
-              <div class="roles-section" [formGroupName]="groupIndex">
-                <div class="roles-header">
-                  <h4>Roles</h4>
-                  <button type="button" mat-button color="primary" (click)="addRole(groupIndex)">
+              <div class="groups-section" [formGroupName]="sideIndex">
+                <div class="groups-header">
+                  <h4>Groups</h4>
+                  <button type="button" mat-button color="primary" (click)="addGroup(sideIndex)">
                     <mat-icon>add</mat-icon>
-                    Add Role
+                    Add Group
                   </button>
                 </div>
 
-                <div formArrayName="roles" class="roles-container">
-                  <div *ngFor="let role of getRolesArray(groupIndex).controls; let roleIndex = index" 
-                       class="role-item">
-                    <mat-form-field appearance="fill" class="role-name-field">
-                      <mat-label>Role Name</mat-label>
-                      <input matInput [formControlName]="roleIndex" placeholder="e.g., Squad Leader, Medic, Rifleman">
-                    </mat-form-field>
-                    <button type="button" mat-icon-button color="warn" (click)="removeRole(groupIndex, roleIndex)">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </div>
+                <div formArrayName="groups" class="groups-container">
+                  <mat-card *ngFor="let group of getGroupsArray(sideIndex).controls; let groupIndex = index" class="group-card">
+                    <mat-card-header>
+                      <mat-card-title class="group-title">
+                        <div [formGroupName]="groupIndex" class="group-name-container" style="width: 100%">
+                          <mat-form-field appearance="fill" class="group-name-field">
+                            <mat-label>Group Name</mat-label>
+                            <input matInput formControlName="name" placeholder="e.g., Alpha Squad, Bravo Team">
+                          </mat-form-field>
+                        </div>
+                        <button type="button" mat-icon-button color="warn" (click)="removeGroup(sideIndex, groupIndex)">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </mat-card-title>
+                    </mat-card-header>
+
+                    <mat-card-content>
+                      <div class="roles-section" [formGroupName]="groupIndex">
+                        <div class="roles-header">
+                          <h4>Roles</h4>
+                          <button type="button" mat-button color="primary" (click)="addRole(sideIndex, groupIndex)">
+                            <mat-icon>add</mat-icon>
+                            Add Role
+                          </button>
+                        </div>
+
+                        <div formArrayName="roles" class="roles-container">
+                          <div *ngFor="let role of getRolesArray(sideIndex, groupIndex).controls; let roleIndex = index" 
+                               class="role-item">
+                            <mat-form-field appearance="fill" class="role-name-field">
+                              <mat-label>Role Name</mat-label>
+                              <input matInput [formControlName]="roleIndex" placeholder="e.g., Squad Leader, Medic, Rifleman">
+                            </mat-form-field>
+                            <button type="button" mat-icon-button color="warn" (click)="removeRole(sideIndex, groupIndex, roleIndex)">
+                              <mat-icon>delete</mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </mat-card-content>
+                  </mat-card>
                 </div>
               </div>
             </mat-card-content>
           </mat-card>
         </div>
         
-        <div class="add-group-container">
-          <button type="button" mat-raised-button color="primary" (click)="addGroup()">
+        <div class="add-side-container">
+          <button type="button" mat-raised-button color="primary" (click)="addSide()">
             <mat-icon>add</mat-icon>
-            Add Group
+            Add Side
           </button>
         </div>
       </div>

@@ -18,6 +18,7 @@ import {
     AuthenticatedRequest 
 } from './interfaces/request.interface';
 import { 
+    EventSide,
     EventGroup, 
     EventRole, 
     CreateEventRequest, 
@@ -462,10 +463,14 @@ app.get('/api/events', async (req: Request, res: Response): Promise<void> => {
             const eventData = event.toJSON();
             return {
                 ...eventData,
-                groups: typeof eventData.groups === 'string' 
+                sides: typeof eventData.groups === 'string' 
                     ? JSON.parse(eventData.groups) 
-                    : eventData.groups
+                    : eventData.groups,
+                groups: undefined // Remove old groups field
             };
+        }).map(event => {
+            delete event.groups; // Clean up
+            return event;
         });
 
         res.status(200).json(transformedEvents);
@@ -481,7 +486,7 @@ app.get('/api/events', async (req: Request, res: Response): Promise<void> => {
 // Create a new event
 app.post('/api/events/create', authenticateToken, async (req: Request<{}, {}, CreateEventRequest>, res: Response): Promise<void> => {
     try {
-        const { title, description, bannerUrl, dateTime, slotUnlockTime, groups } = req.body;
+        const { title, description, bannerUrl, dateTime, slotUnlockTime, sides } = req.body;
         const userId = (req.body as any).id; // From JWT token
 
         // Get user info for the createdByUsername
@@ -491,15 +496,20 @@ app.post('/api/events/create', authenticateToken, async (req: Request<{}, {}, Cr
             return;
         }
 
-        // Generate IDs for groups and roles and transform the data
-        const processedGroups: EventGroup[] = groups.map(group => ({
+        // Generate IDs for sides, groups and roles and transform the data
+        const processedSides: EventSide[] = sides.map(side => ({
             id: require('crypto').randomUUID(),
-            name: group.name,
-            roles: group.roles.map(role => ({
+            name: side.name,
+            color: side.color,
+            groups: side.groups.map(group => ({
                 id: require('crypto').randomUUID(),
-                name: role.name,
-                slottedUser: undefined,
-                slottedUserId: undefined
+                name: group.name,
+                roles: group.roles.map(role => ({
+                    id: require('crypto').randomUUID(),
+                    name: role.name,
+                    slottedUser: undefined,
+                    slottedUserId: undefined
+                }))
             }))
         }));
 
@@ -512,15 +522,17 @@ app.post('/api/events/create', authenticateToken, async (req: Request<{}, {}, Cr
             slotUnlockTime: slotUnlockTime ? new Date(slotUnlockTime) : undefined,
             createdBy: userId,
             createdByUsername: user.username,
-            groups: JSON.stringify(processedGroups)
+            groups: JSON.stringify(processedSides) // Store sides in the groups field (for now)
         });
 
-        // Return the created event with parsed groups
+        // Return the created event with parsed sides
         const eventData = event.toJSON();
         const responseEvent = {
             ...eventData,
-            groups: JSON.parse(eventData.groups as string)
+            sides: JSON.parse(eventData.groups as string), // Parse sides from groups field
+            groups: undefined // Remove the old groups field from response
         };
+        delete responseEvent.groups; // Clean up
 
         res.status(201).json({
             success: true,
@@ -540,7 +552,7 @@ app.post('/api/events/create', authenticateToken, async (req: Request<{}, {}, Cr
 // Slot a user into a role
 app.post('/api/events/slot', authenticateToken, async (req: Request<{}, {}, SlotRoleRequest>, res: Response): Promise<void> => {
     try {
-        const { eventId, groupId, roleId } = req.body;
+        const { eventId, sideId, groupId, roleId } = req.body;
         const userId = (req.body as any).id; // From JWT token
 
         // Get user info
@@ -570,11 +582,20 @@ app.post('/api/events/slot', authenticateToken, async (req: Request<{}, {}, Slot
             return;
         }
 
-        // Parse the groups
-        const groups: EventGroup[] = JSON.parse(event.groups as string);
+        // Parse the sides
+        const sides: EventSide[] = JSON.parse(event.groups as string); // Stored in groups field
         
-        // Find the group and role
-        const group = groups.find(g => g.id === groupId);
+        // Find the side, group and role
+        const side = sides.find(s => s.id === sideId);
+        if (!side) {
+            res.status(404).json({
+                success: false,
+                message: 'Side not found'
+            });
+            return;
+        }
+
+        const group = side.groups.find(g => g.id === groupId);
         if (!group) {
             res.status(404).json({
                 success: false,
@@ -603,15 +624,18 @@ app.post('/api/events/slot', authenticateToken, async (req: Request<{}, {}, Slot
 
         // Check if user is already slotted in another role in this event
         let userAlreadySlotted = false;
-        for (const g of groups) {
-            for (const r of g.roles) {
-                if (r.slottedUserId === userId && r.id !== roleId) {
-                    // Unslot user from the previous role
-                    r.slottedUser = undefined;
-                    r.slottedUserId = undefined;
-                    userAlreadySlotted = true;
-                    break;
+        for (const s of sides) {
+            for (const g of s.groups) {
+                for (const r of g.roles) {
+                    if (r.slottedUserId === userId && r.id !== roleId) {
+                        // Unslot user from the previous role
+                        r.slottedUser = undefined;
+                        r.slottedUserId = undefined;
+                        userAlreadySlotted = true;
+                        break;
+                    }
                 }
+                if (userAlreadySlotted) break;
             }
             if (userAlreadySlotted) break;
         }
@@ -621,14 +645,16 @@ app.post('/api/events/slot', authenticateToken, async (req: Request<{}, {}, Slot
         role.slottedUserId = userId;
 
         // Update the event
-        await event.update({ groups: JSON.stringify(groups) });
+        await event.update({ groups: JSON.stringify(sides) });
 
         // Return the updated event
         const eventData = event.toJSON();
         const responseEvent = {
             ...eventData,
-            groups: JSON.parse(eventData.groups as string)
+            sides: JSON.parse(eventData.groups as string),
+            groups: undefined
         };
+        delete responseEvent.groups;
 
         res.status(200).json({
             success: true,
@@ -648,7 +674,7 @@ app.post('/api/events/slot', authenticateToken, async (req: Request<{}, {}, Slot
 // Unslot a user from a role
 app.post('/api/events/unslot', authenticateToken, async (req: Request<{}, {}, SlotRoleRequest>, res: Response): Promise<void> => {
     try {
-        const { eventId, groupId, roleId } = req.body;
+        const { eventId, sideId, groupId, roleId } = req.body;
         const userId = (req.body as any).id; // From JWT token
 
         // Find the event
@@ -661,11 +687,20 @@ app.post('/api/events/unslot', authenticateToken, async (req: Request<{}, {}, Sl
             return;
         }
 
-        // Parse the groups
-        const groups: EventGroup[] = JSON.parse(event.groups as string);
+        // Parse the sides
+        const sides: EventSide[] = JSON.parse(event.groups as string);
         
-        // Find the group and role
-        const group = groups.find(g => g.id === groupId);
+        // Find the side, group and role
+        const side = sides.find(s => s.id === sideId);
+        if (!side) {
+            res.status(404).json({
+                success: false,
+                message: 'Side not found'
+            });
+            return;
+        }
+
+        const group = side.groups.find(g => g.id === groupId);
         if (!group) {
             res.status(404).json({
                 success: false,
@@ -697,14 +732,16 @@ app.post('/api/events/unslot', authenticateToken, async (req: Request<{}, {}, Sl
         role.slottedUserId = undefined;
 
         // Update the event
-        await event.update({ groups: JSON.stringify(groups) });
+        await event.update({ groups: JSON.stringify(sides) });
 
         // Return the updated event
         const eventData = event.toJSON();
         const responseEvent = {
             ...eventData,
-            groups: JSON.parse(eventData.groups as string)
+            sides: JSON.parse(eventData.groups as string),
+            groups: undefined
         };
+        delete responseEvent.groups;
 
         res.status(200).json({
             success: true,
@@ -724,7 +761,7 @@ app.post('/api/events/unslot', authenticateToken, async (req: Request<{}, {}, Sl
 // Admin kick a user from a role
 app.post('/api/events/admin/kick', authenticateToken, async (req: Request<{}, {}, SlotRoleRequest>, res: Response): Promise<void> => {
     try {
-        const { eventId, groupId, roleId } = req.body;
+        const { eventId, sideId, groupId, roleId } = req.body;
         const userId = (req.body as any).id; // From JWT token
 
         // Check if the user is an admin
@@ -747,11 +784,20 @@ app.post('/api/events/admin/kick', authenticateToken, async (req: Request<{}, {}
             return;
         }
 
-        // Parse the groups
-        const groups: EventGroup[] = JSON.parse(event.groups as string);
+        // Parse the sides
+        const sides: EventSide[] = JSON.parse(event.groups as string);
         
-        // Find the group and role
-        const group = groups.find(g => g.id === groupId);
+        // Find the side, group and role
+        const side = sides.find(s => s.id === sideId);
+        if (!side) {
+            res.status(404).json({
+                success: false,
+                message: 'Side not found'
+            });
+            return;
+        }
+
+        const group = side.groups.find(g => g.id === groupId);
         if (!group) {
             res.status(404).json({
                 success: false,
@@ -785,14 +831,16 @@ app.post('/api/events/admin/kick', authenticateToken, async (req: Request<{}, {}
         role.slottedUserId = undefined;
 
         // Update the event
-        await event.update({ groups: JSON.stringify(groups) });
+        await event.update({ groups: JSON.stringify(sides) });
 
         // Return the updated event
         const eventData = event.toJSON();
         const responseEvent = {
             ...eventData,
-            groups: JSON.parse(eventData.groups as string)
+            sides: JSON.parse(eventData.groups as string),
+            groups: undefined
         };
+        delete responseEvent.groups;
 
         res.status(200).json({
             success: true,

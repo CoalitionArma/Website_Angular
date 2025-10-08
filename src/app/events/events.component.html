@@ -114,74 +114,83 @@
               <span>{{ getSlotLockMessage(currentEvent) }}</span>
             </div>
             
-            <div *ngFor="let group of currentEvent.groups" 
-                 class="group-section"
-                 [id]="'group-' + group.id"
-                 [class.highlighted]="highlightedGroupId === group.id">
-              <div class="group-name-container">
-                <h4 class="group-name">{{ group.name }}
-                  <button 
-                    mat-icon-button
-                    class="copy-group-link-button"
-                    (click)="copyGroupLink(group.id); $event.stopPropagation()">
-                    <mat-icon>link</mat-icon>
-                  </button>
-                </h4>
-              </div>
-              
-              <div class="roles-list">
-                <div 
-                  *ngFor="let role of group.roles" 
-                  class="role-item"
-                  [id]="'role-' + role.id"
-                  [class.highlighted]="highlightedRoleId === role.id">
-                  <div class="role-info">
-                    <div class="role-name-container">
-                      <span class="role-name">{{ role.name }}
-                        <button 
-                          mat-icon-button
-                          class="copy-link-button"
-                          (click)="copyRoleLink(role.id); $event.stopPropagation()">
-                          <mat-icon>link</mat-icon>
-                        </button>
-                      </span>
-                    </div>
-                    <span class="role-status" [class.slotted]="role.slottedUser">
-                      {{ role.slottedUser || 'OPEN' }}
-                    </span>
+            <!-- Sides-based Layout -->
+            <div class="sides-container">
+              <div *ngFor="let side of currentEvent.sides" class="side-column">
+                <div class="side-header" [style.border-left-color]="side.color">
+                  <h4 class="side-name">{{ side.name }}</h4>
+                </div>
+                
+                <div *ngFor="let group of side.groups" 
+                     class="group-section"
+                     [id]="'group-' + group.id"
+                     [class.highlighted]="highlightedGroupId === group.id">
+                  <div class="group-name-container">
+                    <h4 class="group-name">{{ group.name }}
+                      <button 
+                        mat-icon-button
+                        class="copy-group-link-button"
+                        (click)="copyGroupLink(group.id); $event.stopPropagation()">
+                        <mat-icon>link</mat-icon>
+                      </button>
+                    </h4>
                   </div>
                   
-                  <!-- Role actions only for future events -->
-                  <div class="role-actions" *ngIf="isLoggedIn">
-                    <!-- Admin kick button - only show for admins when role is slotted by someone else -->
-                    <button 
-                      *ngIf="isAdmin && role.slottedUserId && !isUserSlottedInRole(currentEvent, group.id, role.id)" 
-                      mat-icon-button 
-                      color="warn" 
-                      (click)="kickUserFromRole(currentEvent.id, group.id, role.id); $event.stopPropagation()"
-                      class="kick-button"
-                      title="Kick {{ role.slottedUser }} from this role">
-                      <mat-icon>person_remove</mat-icon>
-                    </button>
+                  <div class="roles-list">
+                    <div 
+                      *ngFor="let role of group.roles" 
+                      class="role-item"
+                      [id]="'role-' + role.id"
+                      [class.highlighted]="highlightedRoleId === role.id">
+                      <div class="role-info">
+                        <div class="role-name-container">
+                          <span class="role-name">{{ role.name }}
+                            <button 
+                              mat-icon-button
+                              class="copy-link-button"
+                              (click)="copyRoleLink(role.id); $event.stopPropagation()">
+                              <mat-icon>link</mat-icon>
+                            </button>
+                          </span>
+                        </div>
+                        <span class="role-status" [class.slotted]="role.slottedUser">
+                          {{ role.slottedUser || 'OPEN' }}
+                        </span>
+                      </div>
+                      
+                      <!-- Role actions only for future events -->
+                      <div class="role-actions" *ngIf="isLoggedIn">
+                        <!-- Admin kick button - only show for admins when role is slotted by someone else -->
+                        <button 
+                          *ngIf="isAdmin && role.slottedUserId && !isUserSlottedInRole(currentEvent, side.id, group.id, role.id)" 
+                          mat-icon-button 
+                          color="warn" 
+                          (click)="kickUserFromRole(currentEvent.id, side.id, group.id, role.id); $event.stopPropagation()"
+                          class="kick-button"
+                          title="Kick {{ role.slottedUser }} from this role">
+                          <mat-icon>person_remove</mat-icon>
+                        </button>
 
-                    <button 
-                      *ngIf="!isUserSlottedInRole(currentEvent, group.id, role.id)" 
-                      mat-raised-button 
-                      color="primary" 
-                      (click)="slotRole(currentEvent.id, group.id, role.id); $event.stopPropagation()"
-                      [disabled]="!canSlotRole(currentEvent, group.id, role.id)"
-                      class="slot-button">
-                      Slot
-                    </button>
-                    
-                    <button 
-                      *ngIf="isUserSlottedInRole(currentEvent, group.id, role.id)" 
-                      mat-raised-button 
-                      color="warn" 
-                      (click)="unslotRole(currentEvent.id, group.id, role.id); $event.stopPropagation()"
-                      class="unslot-button">
-                      Unslot
-                    </button>
+                        <button 
+                          *ngIf="!isUserSlottedInRole(currentEvent, side.id, group.id, role.id)" 
+                          mat-raised-button 
+                          color="primary" 
+                          (click)="slotRole(currentEvent.id, side.id, group.id, role.id); $event.stopPropagation()"
+                          [disabled]="!canSlotRole(currentEvent, side.id, group.id, role.id)"
+                          class="slot-button">
+                          Slot
+                        </button>
+                        
+                        <button 
+                          *ngIf="isUserSlottedInRole(currentEvent, side.id, group.id, role.id)" 
+                          mat-raised-button 
+                          color="warn" 
+                          (click)="unslotRole(currentEvent.id, side.id, group.id, role.id); $event.stopPropagation()"
+                          class="unslot-button">
+                          Unslot
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
