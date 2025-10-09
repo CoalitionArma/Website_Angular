@@ -576,8 +576,8 @@ app.post('/api/events/slot', authenticateToken, async (req: Request<{}, {}, Slot
             return;
         }
 
-        // Check if slots are unlocked (if slotUnlockTime is set)
-        if (event.slotUnlockTime && new Date() < new Date(event.slotUnlockTime)) {
+        // Check if slots are unlocked (if slotUnlockTime is set) - admins can bypass this
+        if (event.slotUnlockTime && new Date() < new Date(event.slotUnlockTime) && !user.isAdmin) {
             res.status(403).json({
                 success: false,
                 message: 'Slots are not yet available for signup',
