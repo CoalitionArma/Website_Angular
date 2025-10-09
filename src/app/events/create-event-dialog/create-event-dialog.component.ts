@@ -80,6 +80,7 @@ export class CreateEventDialogComponent implements OnInit {
       warno: [''],
       discordEventThread: [''],
       dateTime: ['', Validators.required],
+      eventTime: ['19:00', Validators.required], // Default to 7:00 PM
       slotUnlockDate: [''], // Optional date for when slots become available
       slotUnlockTime: [''], // Optional time for when slots become available (HH:MM format)
       sides: this.fb.array([])
@@ -101,6 +102,19 @@ export class CreateEventDialogComponent implements OnInit {
   private populateFormWithEventData(): void {
     if (!this.eventToEdit) return;
 
+    // Parse the dateTime to separate date and time
+    const eventDate = new Date(this.eventToEdit.dateTime);
+    const eventTimeString = eventDate.toTimeString().substring(0, 5); // Extract HH:MM format
+
+    // Parse slotUnlockTime to separate date and time if it exists
+    let slotUnlockDate = null;
+    let slotUnlockTimeString = '';
+    if (this.eventToEdit.slotUnlockTime) {
+      const slotDate = new Date(this.eventToEdit.slotUnlockTime);
+      slotUnlockDate = slotDate;
+      slotUnlockTimeString = slotDate.toTimeString().substring(0, 5);
+    }
+
     // Set basic event data
     this.eventForm.patchValue({
       title: this.eventToEdit.title,
@@ -109,8 +123,10 @@ export class CreateEventDialogComponent implements OnInit {
       bannerUrl: this.eventToEdit.bannerUrl || '',
       warno: this.eventToEdit.warno || '',
       discordEventThread: this.eventToEdit.discordEventThread || '',
-      dateTime: new Date(this.eventToEdit.dateTime),
-      slotUnlockTime: this.eventToEdit.slotUnlockTime ? new Date(this.eventToEdit.slotUnlockTime) : null
+      dateTime: eventDate,
+      eventTime: eventTimeString,
+      slotUnlockDate: slotUnlockDate,
+      slotUnlockTime: slotUnlockTimeString
     });
 
     // Clear existing sides array and populate with event data
@@ -226,6 +242,13 @@ export class CreateEventDialogComponent implements OnInit {
 
       const formValue = this.eventForm.value;
       
+      // Combine dateTime and eventTime into a single DateTime
+      let eventDateTime: Date = new Date(formValue.dateTime);
+      if (formValue.eventTime) {
+        const [hours, minutes] = formValue.eventTime.split(':').map(Number);
+        eventDateTime.setHours(hours, minutes, 0, 0);
+      }
+      
       // Combine slotUnlockDate and slotUnlockTime into a single DateTime
       let slotUnlockDateTime: Date | undefined = undefined;
       if (formValue.slotUnlockDate) {
@@ -249,7 +272,7 @@ export class CreateEventDialogComponent implements OnInit {
           bannerUrl: formValue.bannerUrl || undefined,
           warno: formValue.warno || undefined,
           discordEventThread: formValue.discordEventThread || undefined,
-          dateTime: formValue.dateTime,
+          dateTime: eventDateTime,
           slotUnlockTime: slotUnlockDateTime,
           sides: formValue.sides.map((side: any) => ({
             id: side.id, // Keep existing ID
@@ -278,7 +301,7 @@ export class CreateEventDialogComponent implements OnInit {
           bannerUrl: formValue.bannerUrl || undefined,
           warno: formValue.warno || undefined,
           discordEventThread: formValue.discordEventThread || undefined,
-          dateTime: formValue.dateTime,
+          dateTime: eventDateTime,
           slotUnlockTime: slotUnlockDateTime,
           sides: formValue.sides.map((side: any) => ({
             name: side.name,
