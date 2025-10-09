@@ -67,6 +67,20 @@ export class EventsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute
   ) {}
 
+  // Asynchronous toast message helper to prevent UI freezing
+  private showToast(message: string, action: string = 'Close', duration: number = 3000): void {
+    // Use setTimeout to make the toast asynchronous and prevent UI blocking
+    setTimeout(() => {
+      this.snackBar.open(message, action, {
+        duration: duration,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        // Remove politeness to prevent accessibility blocking
+        panelClass: ['custom-snackbar']
+      });
+    }, 0);
+  }
+
   ngOnInit(): void {
     this.loadEvents();
     
@@ -251,10 +265,7 @@ export class EventsComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.isLoading = false;
-        this.snackBar.open('Failed to load events', 'Close', { 
-          duration: 3000,
-          politeness: 'polite'
-        });
+        this.showToast('Failed to load events');
         console.error('Error loading events:', error);
       }
     });
@@ -262,18 +273,12 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   openCreateEventDialog(): void {
     if (!this.userService.loggedIn) {
-      this.snackBar.open('You must be logged in to create events', 'Close', { 
-        duration: 3000,
-        politeness: 'polite'
-      });
+      this.showToast('You must be logged in to create events');
       return;
     }
     
     if (!this.isAdmin) {
-      this.snackBar.open('Only administrators can create events', 'Close', { 
-        duration: 3000,
-        politeness: 'polite'
-      });
+      this.showToast('Only administrators can create events');
       return;
     }
 
@@ -299,22 +304,13 @@ export class EventsComponent implements OnInit, OnDestroy {
     this.eventsService.createEvent(eventData).subscribe({
       next: (response) => {
         if (response.success) {
-          this.snackBar.open('Event created successfully!', 'Close', { 
-            duration: 3000,
-            politeness: 'polite'
-          });
+          this.showToast('Event created successfully!');
         } else {
-          this.snackBar.open(response.message || 'Failed to create event', 'Close', { 
-            duration: 3000,
-            politeness: 'polite'
-          });
+          this.showToast(response.message || 'Failed to create event');
         }
       },
       error: (error) => {
-        this.snackBar.open('Failed to create event', 'Close', { 
-          duration: 3000,
-          politeness: 'polite'
-        });
+        this.showToast('Failed to create event');
         console.error('Error creating event:', error);
       }
     });
@@ -322,10 +318,7 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   editEvent(event: Event): void {
     if (!this.isAdmin) {
-      this.snackBar.open('Only administrators can edit events', 'Close', { 
-        duration: 3000,
-        politeness: 'polite'
-      });
+      this.showToast('Only administrators can edit events');
       return;
     }
 
@@ -356,22 +349,13 @@ export class EventsComponent implements OnInit, OnDestroy {
     this.eventsService.updateEvent(eventId, eventData).subscribe({
       next: (response) => {
         if (response.success) {
-          this.snackBar.open('Event updated successfully!', 'Close', { 
-            duration: 3000,
-            politeness: 'polite'
-          });
+          this.showToast('Event updated successfully!');
         } else {
-          this.snackBar.open(response.message || 'Failed to update event', 'Close', { 
-            duration: 3000,
-            politeness: 'polite'
-          });
+          this.showToast(response.message || 'Failed to update event');
         }
       },
       error: (error) => {
-        this.snackBar.open('Failed to update event', 'Close', { 
-          duration: 3000,
-          politeness: 'polite'
-        });
+        this.showToast('Failed to update event');
         console.error('Error updating event:', error);
       }
     });
@@ -379,18 +363,12 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   slotRole(eventId: string, sideId: string, groupId: string, roleId: string): void {
     if (!this.userService.loggedIn) {
-      this.snackBar.open('You must be logged in to slot into roles', 'Close', { 
-        duration: 3000,
-        politeness: 'polite'
-      });
+      this.showToast('You must be logged in to slot into roles');
       return;
     }
 
     if (!this.userService.dbUser?.armaguid) {
-      this.snackBar.open('You must add your ARMA GUID to your profile before slotting into roles', 'Close', { 
-        duration: 5000,
-        politeness: 'polite'
-      });
+      this.showToast('You must add your ARMA GUID to your profile before slotting into roles', 'Close', 5000);
       return;
     }
 
@@ -404,22 +382,13 @@ export class EventsComponent implements OnInit, OnDestroy {
     this.eventsService.slotRole(slotData).subscribe({
       next: (response) => {
         if (response.success) {
-          this.snackBar.open('Successfully slotted into role!', 'Close', { 
-            duration: 3000,
-            politeness: 'polite'
-          });
+          this.showToast('Successfully slotted into role!');
         } else {
-          this.snackBar.open(response.message || 'Failed to slot into role', 'Close', { 
-            duration: 3000,
-            politeness: 'polite'
-          });
+          this.showToast(response.message || 'Failed to slot into role');
         }
       },
       error: (error) => {
-        this.snackBar.open('Failed to slot into role', 'Close', { 
-          duration: 3000,
-          politeness: 'polite'
-        });
+        this.showToast('Failed to slot into role');
         console.error('Error slotting role:', error);
       }
     });
@@ -427,10 +396,7 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   unslotRole(eventId: string, sideId: string, groupId: string, roleId: string): void {
     if (!this.userService.loggedIn) {
-      this.snackBar.open('You must be logged in to unslot from roles', 'Close', { 
-        duration: 3000,
-        politeness: 'polite'
-      });
+      this.showToast('You must be logged in to unslot from roles');
       return;
     }
 
@@ -444,22 +410,13 @@ export class EventsComponent implements OnInit, OnDestroy {
     this.eventsService.unslotRole(slotData).subscribe({
       next: (response) => {
         if (response.success) {
-          this.snackBar.open('Successfully unslotted from role!', 'Close', { 
-            duration: 3000,
-            politeness: 'polite'
-          });
+          this.showToast('Successfully unslotted from role!');
         } else {
-          this.snackBar.open(response.message || 'Failed to unslot from role', 'Close', { 
-            duration: 3000,
-            politeness: 'polite'
-          });
+          this.showToast(response.message || 'Failed to unslot from role');
         }
       },
       error: (error) => {
-        this.snackBar.open('Failed to unslot from role', 'Close', { 
-          duration: 3000,
-          politeness: 'polite'
-        });
+        this.showToast('Failed to unslot from role');
         console.error('Error unslotting role:', error);
       }
     });
@@ -467,10 +424,7 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   kickUserFromRole(eventId: string, sideId: string, groupId: string, roleId: string): void {
     if (!this.isAdmin) {
-      this.snackBar.open('Only administrators can kick users from roles', 'Close', { 
-        duration: 3000,
-        politeness: 'polite'
-      });
+      this.showToast('Only administrators can kick users from roles');
       return;
     }
 
@@ -484,22 +438,13 @@ export class EventsComponent implements OnInit, OnDestroy {
     this.eventsService.adminKickFromRole(slotData).subscribe({
       next: (response) => {
         if (response.success) {
-          this.snackBar.open(response.message || 'Successfully kicked user from role!', 'Close', { 
-            duration: 3000,
-            politeness: 'polite'
-          });
+          this.showToast(response.message || 'Successfully kicked user from role!');
         } else {
-          this.snackBar.open(response.message || 'Failed to kick user from role', 'Close', { 
-            duration: 3000,
-            politeness: 'polite'
-          });
+          this.showToast(response.message || 'Failed to kick user from role');
         }
       },
       error: (error) => {
-        this.snackBar.open('Failed to kick user from role', 'Close', { 
-          duration: 3000,
-          politeness: 'polite'
-        });
+        this.showToast('Failed to kick user from role');
         console.error('Error kicking user from role:', error);
       }
     });
@@ -583,26 +528,17 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   deleteEvent(eventId: string): void {
     if (!this.userService.loggedIn) {
-      this.snackBar.open('You must be logged in to delete events', 'Close', { 
-        duration: 3000,
-        politeness: 'polite'
-      });
+      this.showToast('You must be logged in to delete events', 'Close', 3000);
       return;
     }
 
     if (confirm('Are you sure you want to delete this event? This action cannot be undone.')) {
       this.eventsService.deleteEvent(eventId).subscribe({
         next: () => {
-          this.snackBar.open('Event deleted successfully!', 'Close', { 
-            duration: 3000,
-            politeness: 'polite'
-          });
+          this.showToast('Event deleted successfully!', 'Close', 3000);
         },
         error: (error) => {
-          this.snackBar.open('Failed to delete event', 'Close', { 
-            duration: 3000,
-            politeness: 'polite'
-          });
+          this.showToast('Failed to delete event', 'Close', 3000);
           console.error('Error deleting event:', error);
         }
       });
@@ -736,12 +672,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     // Use the modern Clipboard API if available
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(roleAnchorUrl).then(() => {
-        this.snackBar.open('Role link copied!', 'Close', { 
-          duration: 2000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom',
-          politeness: 'polite'
-        });
+        this.showToast('Role link copied!', 'Close', 2000);
       }).catch(err => {
         console.error('Failed to copy to clipboard:', err);
         this.fallbackCopyTextToClipboard(roleAnchorUrl);
@@ -759,12 +690,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     // Use the modern Clipboard API if available
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(groupAnchorUrl).then(() => {
-        this.snackBar.open('Group link copied!', 'Close', { 
-          duration: 2000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom',
-          politeness: 'polite'
-        });
+        this.showToast('Group link copied!', 'Close', 2000);
       }).catch(err => {
         console.error('Failed to copy to clipboard:', err);
         this.fallbackCopyTextToClipboard(groupAnchorUrl);
@@ -782,12 +708,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     // Use the modern Clipboard API if available
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(eventAnchorUrl).then(() => {
-        this.snackBar.open('Event link copied!', 'Close', { 
-          duration: 2000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom',
-          politeness: 'polite'
-        });
+        this.showToast('Event link copied!', 'Close', 2000);
       }).catch(err => {
         console.error('Failed to copy to clipboard:', err);
         this.fallbackCopyTextToClipboard(eventAnchorUrl);
@@ -814,24 +735,13 @@ export class EventsComponent implements OnInit, OnDestroy {
       const successful = document.execCommand('copy');
       if (successful) {
         const message = text.includes('#group-') ? 'Group link copied!' : 'Role link copied!';
-        this.snackBar.open(message, 'Close', { 
-          duration: 2000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom',
-          politeness: 'polite'
-        });
+        this.showToast(message, 'Close', 2000);
       } else {
-        this.snackBar.open('Failed to copy link', 'Close', { 
-          duration: 3000,
-          politeness: 'polite'
-        });
+        this.showToast('Failed to copy link', 'Close', 3000);
       }
     } catch (err) {
       console.error('Fallback: Could not copy text:', err);
-      this.snackBar.open('Failed to copy link', 'Close', { 
-        duration: 3000,
-        politeness: 'polite'
-      });
+      this.showToast('Failed to copy link', 'Close', 3000);
     }
     
     document.body.removeChild(textArea);
