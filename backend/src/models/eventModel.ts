@@ -6,6 +6,7 @@ export interface EventAttributes {
   id: string;
   title: string;
   description?: string;
+  gametype?: string; // Game type: TVT, COOP, or COTVT
   bannerUrl?: string;
   warno?: string; // Warning Order
   discordEventThread?: string; // Discord Event Thread URL
@@ -26,6 +27,7 @@ export class Event extends Model<EventAttributes, EventCreationAttributes> imple
   public id!: string;
   public title!: string;
   public description!: string;
+  public gametype!: string;
   public bannerUrl!: string;
   public warno!: string;
   public discordEventThread!: string;
@@ -54,6 +56,10 @@ Event.init(
     },
     description: {
       type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    gametype: {
+      type: DataTypes.STRING(10),
       allowNull: true,
     },
     bannerUrl: {

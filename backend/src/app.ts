@@ -487,7 +487,7 @@ app.get('/api/events', async (req: Request, res: Response): Promise<void> => {
 // Create a new event
 app.post('/api/events/create', authenticateToken, async (req: Request<{}, {}, CreateEventRequest>, res: Response): Promise<void> => {
     try {
-        const { title, description, bannerUrl, warno, discordEventThread, dateTime, slotUnlockTime, sides } = req.body;
+        const { title, description, gametype, bannerUrl, warno, discordEventThread, dateTime, slotUnlockTime, sides } = req.body;
         const userId = (req.body as any).id; // From JWT token
 
         // Get user info for the createdByUsername
@@ -518,6 +518,7 @@ app.post('/api/events/create', authenticateToken, async (req: Request<{}, {}, Cr
         const event = await Event.create({
             title,
             description: description || '',
+            gametype: gametype || undefined,
             bannerUrl: bannerUrl || '',
             warno: warno || '',
             discordEventThread: discordEventThread || '',
@@ -864,7 +865,7 @@ app.post('/api/events/admin/kick', authenticateToken, async (req: Request<{}, {}
 app.put('/api/events/:eventId', authenticateToken, async (req: Request<{ eventId: string }, {}, UpdateEventRequest>, res: Response): Promise<void> => {
     try {
         const { eventId } = req.params;
-        const { title, description, bannerUrl, warno, discordEventThread, dateTime, slotUnlockTime, sides } = req.body;
+        const { title, description, gametype, bannerUrl, warno, discordEventThread, dateTime, slotUnlockTime, sides } = req.body;
         const userId = (req.body as any).id; // From JWT token
 
         // Check if the user is an admin
@@ -908,6 +909,7 @@ app.put('/api/events/:eventId', authenticateToken, async (req: Request<{ eventId
         await event.update({
             title,
             description: description || '',
+            gametype: gametype || undefined,
             bannerUrl: bannerUrl || '',
             warno: warno || '',
             discordEventThread: discordEventThread || '',

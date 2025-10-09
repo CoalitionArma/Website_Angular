@@ -85,7 +85,7 @@ export class EventsComponent implements OnInit, OnDestroy {
       this.filterFutureEvents();
       
       // Check for URL fragment after events are loaded
-      this.checkForRoleFragment();
+      this.checkForUrlFragment();
     });
 
     // Listen for URL fragment changes
@@ -94,7 +94,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     });
   }
 
-  private checkForRoleFragment(): void {
+  private checkForUrlFragment(): void {
     const fragment = this.route.snapshot.fragment;
     if (fragment) {
       this.handleFragment(fragment);
@@ -108,8 +108,39 @@ export class EventsComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Check if fragment starts with 'event-'
+    if (fragment.startsWith('event-')) {
+      const eventId = fragment.substring(6); // Remove 'event-' prefix
+      this.highlightedRoleId = null;
+      this.highlightedGroupId = null;
+      
+      // Find the event with this ID
+      const targetEvent = this.allEvents.find(event => event.id === eventId);
+      
+      if (targetEvent) {
+        // Set the target event as selected
+        this.selectedEvent = targetEvent;
+        
+        // Find the index of this event in the filtered events array
+        const eventIndex = this.events.findIndex(event => event.id === eventId);
+        if (eventIndex !== -1) {
+          this.currentPage = eventIndex;
+        }
+        
+        // Scroll to the event after a short delay to ensure DOM is updated
+        setTimeout(() => {
+          const element = document.getElementById(fragment);
+          if (element) {
+            element.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'start' 
+            });
+          }
+        }, 100);
+      }
+    }
     // Check if fragment starts with 'role-'
-    if (fragment.startsWith('role-')) {
+    else if (fragment.startsWith('role-')) {
       const roleId = fragment.substring(5); // Remove 'role-' prefix
       this.highlightedRoleId = roleId;
       this.highlightedGroupId = null;
@@ -741,6 +772,29 @@ export class EventsComponent implements OnInit, OnDestroy {
     } else {
       // Fallback for older browsers or non-secure contexts
       this.fallbackCopyTextToClipboard(groupAnchorUrl);
+    }
+  }
+
+  copyEventLink(eventId: string): void {
+    const currentUrl = window.location.origin + window.location.pathname;
+    const eventAnchorUrl = `${currentUrl}#event-${eventId}`;
+    
+    // Use the modern Clipboard API if available
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(eventAnchorUrl).then(() => {
+        this.snackBar.open('Event link copied!', 'Close', { 
+          duration: 2000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+          politeness: 'polite'
+        });
+      }).catch(err => {
+        console.error('Failed to copy to clipboard:', err);
+        this.fallbackCopyTextToClipboard(eventAnchorUrl);
+      });
+    } else {
+      // Fallback for older browsers or non-secure contexts
+      this.fallbackCopyTextToClipboard(eventAnchorUrl);
     }
   }
 

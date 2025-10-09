@@ -1,3 +1,5 @@
+export type GameType = 'TVT' | 'COOP' | 'COTVT';
+
 export interface EventSide {
     id: string;
     name: string;
@@ -21,6 +23,7 @@ export interface EventRole {
 export interface CreateEventRequest {
     title: string;
     description?: string;
+    gametype?: GameType; // Game type: TVT, COOP, or COTVT
     bannerUrl?: string;
     warno?: string; // Warning Order
     discordEventThread?: string; // Discord Event Thread URL
@@ -39,6 +42,7 @@ export interface CreateEventRequest {
 export interface UpdateEventRequest {
     title: string;
     description?: string;
+    gametype?: GameType; // Game type: TVT, COOP, or COTVT
     bannerUrl?: string;
     warno?: string; // Warning Order
     discordEventThread?: string; // Discord Event Thread URL

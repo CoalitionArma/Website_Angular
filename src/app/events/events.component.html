@@ -65,13 +65,21 @@
       <!-- Current Event Display -->
       <mat-card *ngIf="currentEvent" 
                 class="event-card" 
+                [id]="'event-' + currentEvent.id"
                 [class.selected]="isEventSelected(currentEvent)"
                 (click)="selectEvent(currentEvent)">
         <!-- Event Header -->
         <mat-card-header style="position: relative;">
           <!-- Action buttons in top right -->
-          <span class="event-actions" *ngIf="isAdmin || canDeleteEvent(currentEvent) || currentEvent.discordEventThread" 
+          <span class="event-actions" *ngIf="isAdmin || canDeleteEvent(currentEvent) || currentEvent.discordEventThread || events.length > 1" 
                 style="position: absolute; top: 0; right: 0; z-index: 10;">
+            <button 
+              mat-icon-button 
+              color="accent" 
+              (click)="copyEventLink(currentEvent.id); $event.stopPropagation()" 
+              title="Copy link to this event">
+              <mat-icon>link</mat-icon>
+            </button>
             <button 
               *ngIf="isAdmin"
               mat-icon-button 
@@ -95,6 +103,10 @@
               <div style="font-size: 32px; font-weight: 600; margin-bottom: 12px; padding-right: 80px;">{{ currentEvent.title }}</div>
               <!-- Modern Event Meta Section -->
               <div class="event-meta-modern" style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+                <div *ngIf="currentEvent.gametype" class="meta-item" style="display: flex; align-items: center; gap: 6px; color: #e0e0e0; font-size: 15px;">
+                  <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: rgba(182, 65, 65, 0.8);">sports_esports</mat-icon>
+                  <span>{{ currentEvent.gametype }}</span>
+                </div>
                 <div class="meta-item" style="display: flex; align-items: center; gap: 6px; color: #e0e0e0; font-size: 15px;">
                   <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: rgba(182, 65, 65, 0.8);">schedule</mat-icon>
                   <span>{{ currentEvent.dateTime ? formatDateTime(currentEvent.dateTime) : 'Date TBD' }}</span>

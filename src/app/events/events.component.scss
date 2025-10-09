@@ -246,6 +246,7 @@ html {
     backdrop-filter: blur(10px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     cursor: pointer;
+    scroll-margin-top: 100px; // Add scroll margin for anchor links
 
     &:hover {
       transform: translateY(-5px);
@@ -327,6 +328,15 @@ html {
         &:hover {
           transform: translateY(-2px);
           box-shadow: 0 6px 16px rgba(182, 65, 65, 0.4);
+        }
+
+        // Special styling for the copy event link button
+        &[color="accent"] {
+          background: linear-gradient(45deg, #4a7c59, #3a6b47);
+          
+          &:hover {
+            box-shadow: 0 6px 16px rgba(74, 124, 89, 0.4);
+          }
         }
       }
     }

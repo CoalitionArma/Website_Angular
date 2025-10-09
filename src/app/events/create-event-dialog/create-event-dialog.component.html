@@ -27,6 +27,16 @@
           </mat-form-field>
 
           <mat-form-field appearance="fill" class="compact-field">
+            <mat-label>Game Type</mat-label>
+            <mat-select formControlName="gametype" placeholder="Select game type">
+              <mat-option value="">-- Select Game Type --</mat-option>
+              <mat-option value="TVT">TVT (Team vs Team)</mat-option>
+              <mat-option value="COOP">COOP (Cooperative)</mat-option>
+              <mat-option value="COTVT">COTVT (CO-OP vs Team)</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="compact-field">
             <mat-label>Slot Unlock Date (optional)</mat-label>
             <input matInput [matDatepicker]="slotUnlockPicker" formControlName="slotUnlockDate" 
                    placeholder="When can people sign up?">

@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSelectModule } from '@angular/material/select';
-import { CreateEventRequest, UpdateEventRequest, EventGroup, EventRole, Event } from '../../interfaces/event.interface';
+import { CreateEventRequest, UpdateEventRequest, EventGroup, EventRole, Event, GameType } from '../../interfaces/event.interface';
 import { NativeDateAdapter } from '@angular/material/core';
 
 @Component({
@@ -75,6 +75,7 @@ export class CreateEventDialogComponent implements OnInit {
     this.eventForm = this.fb.group({
       title: ['', Validators.required],
       description: [''],
+      gametype: [''], // Optional game type selection
       bannerUrl: [''],
       warno: [''],
       discordEventThread: [''],
@@ -104,6 +105,7 @@ export class CreateEventDialogComponent implements OnInit {
     this.eventForm.patchValue({
       title: this.eventToEdit.title,
       description: this.eventToEdit.description || '',
+      gametype: this.eventToEdit.gametype || '',
       bannerUrl: this.eventToEdit.bannerUrl || '',
       warno: this.eventToEdit.warno || '',
       discordEventThread: this.eventToEdit.discordEventThread || '',
@@ -243,6 +245,7 @@ export class CreateEventDialogComponent implements OnInit {
         const eventData: UpdateEventRequest = {
           title: formValue.title,
           description: formValue.description,
+          gametype: formValue.gametype || undefined,
           bannerUrl: formValue.bannerUrl || undefined,
           warno: formValue.warno || undefined,
           discordEventThread: formValue.discordEventThread || undefined,
@@ -271,6 +274,7 @@ export class CreateEventDialogComponent implements OnInit {
         const eventData: CreateEventRequest = {
           title: formValue.title,
           description: formValue.description,
+          gametype: formValue.gametype || undefined,
           bannerUrl: formValue.bannerUrl || undefined,
           warno: formValue.warno || undefined,
           discordEventThread: formValue.discordEventThread || undefined,
