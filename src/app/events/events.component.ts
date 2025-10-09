@@ -72,7 +72,16 @@ export class EventsComponent implements OnInit, OnDestroy {
     
     // Subscribe to events updates
     this.eventsSubscription = this.eventsService.events$.subscribe(events => {
-      this.allEvents = events.sort((a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime());
+      this.allEvents = events.sort((a, b) => {
+        const dateA = new Date(a.dateTime);
+        const dateB = new Date(b.dateTime);
+        
+        // Handle invalid dates - put them at the end
+        if (isNaN(dateA.getTime())) return 1;
+        if (isNaN(dateB.getTime())) return -1;
+        
+        return dateA.getTime() - dateB.getTime();
+      });
       this.filterFutureEvents();
       
       // Check for URL fragment after events are loaded
@@ -173,7 +182,17 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   private filterFutureEvents(): void {
     const now = new Date();
-    this.events = this.allEvents.filter(event => new Date(event.dateTime) > now);
+    this.events = this.allEvents.filter(event => {
+      const eventDate = new Date(event.dateTime);
+      
+      // Skip events with invalid dates
+      if (isNaN(eventDate.getTime())) {
+        console.error('Event with invalid dateTime:', event.id, event.dateTime);
+        return false;
+      }
+      
+      return eventDate > now;
+    });
     
     // Reset pagination when events change
     if (this.currentPage >= this.events.length) {
@@ -181,8 +200,11 @@ export class EventsComponent implements OnInit, OnDestroy {
     }
     
     // If selected event is now in the past, deselect it
-    if (this.selectedEvent && new Date(this.selectedEvent.dateTime) <= now) {
-      this.selectedEvent = null;
+    if (this.selectedEvent) {
+      const selectedEventDate = new Date(this.selectedEvent.dateTime);
+      if (isNaN(selectedEventDate.getTime()) || selectedEventDate <= now) {
+        this.selectedEvent = null;
+      }
     }
   }
 
@@ -481,7 +503,17 @@ export class EventsComponent implements OnInit, OnDestroy {
   }
 
   areSlotsLocked(event: Event): boolean {
-    return event.slotUnlockTime ? new Date() < new Date(event.slotUnlockTime) : false;
+    if (!event.slotUnlockTime) return false;
+    
+    const unlockTime = new Date(event.slotUnlockTime);
+    
+    // If unlock time is invalid, assume slots are not locked (safer default)
+    if (isNaN(unlockTime.getTime())) {
+      console.error('Invalid slotUnlockTime in areSlotsLocked:', event.slotUnlockTime);
+      return false;
+    }
+    
+    return new Date() < unlockTime;
   }
 
   getSlotLockMessage(event: Event): string {
@@ -489,6 +521,12 @@ export class EventsComponent implements OnInit, OnDestroy {
     
     const unlockTime = new Date(event.slotUnlockTime);
     const now = new Date();
+    
+    // Check if unlock time is valid
+    if (isNaN(unlockTime.getTime())) {
+      console.error('Invalid slotUnlockTime in event:', event.slotUnlockTime);
+      return '';
+    }
     
     if (now >= unlockTime) return '';
     
@@ -581,7 +619,15 @@ export class EventsComponent implements OnInit, OnDestroy {
     return 'Click to slot into this role';
   }
 
-  formatDateTime(date: Date): string {
+  formatDateTime(date: Date | string): string {
+    const dateObj = new Date(date);
+    
+    // Check if the date is valid
+    if (isNaN(dateObj.getTime())) {
+      console.error('Invalid date provided to formatDateTime:', date);
+      return 'Invalid Date';
+    }
+    
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: 'long',
@@ -589,11 +635,19 @@ export class EventsComponent implements OnInit, OnDestroy {
       hour: '2-digit',
       minute: '2-digit',
       timeZoneName: 'short'
-    }).format(date);
+    }).format(dateObj);
   }
 
-  isEventInPast(date: Date): boolean {
-    return new Date() > date;
+  isEventInPast(date: Date | string): boolean {
+    const dateObj = new Date(date);
+    
+    // If date is invalid, consider it not in the past (safer default)
+    if (isNaN(dateObj.getTime())) {
+      console.error('Invalid date provided to isEventInPast:', date);
+      return false;
+    }
+    
+    return new Date() > dateObj;
   }
 
   selectEvent(event: Event): void {
