@@ -372,6 +372,13 @@ export class EventsComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Find the event to check timing restrictions for non-admins
+    const event = this.events.find(e => e.id === eventId);
+    if (event && event.slotUnlockTime && new Date() < new Date(event.slotUnlockTime) && !this.isAdmin) {
+      this.showToast('Slot signups are not yet available for this event', 'Close', 3000);
+      return;
+    }
+
     const slotData: SlotRoleRequest = {
       eventId,
       sideId,
@@ -460,8 +467,8 @@ export class EventsComponent implements OnInit, OnDestroy {
       return false;
     }
 
-    // Check if slots are unlocked (if slotUnlockTime is set)
-    if (event.slotUnlockTime && new Date() < new Date(event.slotUnlockTime)) {
+    // Check if slots are unlocked (if slotUnlockTime is set) - admins can bypass this
+    if (event.slotUnlockTime && new Date() < new Date(event.slotUnlockTime) && !this.isAdmin) {
       return false;
     }
 
@@ -505,6 +512,10 @@ export class EventsComponent implements OnInit, OnDestroy {
     }
     
     if (now >= unlockTime) return '';
+    
+    if (this.isAdmin) {
+      return `Slots locked for regular users until ${this.formatDateTime(unlockTime)} (Admin: You can slot anyway)`;
+    }
     
     return `Slots will unlock on ${this.formatDateTime(unlockTime)}`;
   }
@@ -572,6 +583,9 @@ export class EventsComponent implements OnInit, OnDestroy {
     }
 
     if (event.slotUnlockTime && new Date() < new Date(event.slotUnlockTime)) {
+      if (this.isAdmin) {
+        return 'Admin: Click to slot (slots are locked for regular users until: ' + this.formatDateTime(event.slotUnlockTime) + ')';
+      }
       return 'Slots are locked until: ' + this.formatDateTime(event.slotUnlockTime);
     }
 
