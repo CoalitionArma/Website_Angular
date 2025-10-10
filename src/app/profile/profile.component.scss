@@ -163,19 +163,64 @@
 
 // Modern Profile Container
 .profile-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 24px;
   min-height: 100vh;
   
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  display: grid;
+  grid-template-columns: 1fr 800px 1fr 380px;
+  grid-template-areas: 
+    ". header . admin"
+    ". main . admin"
+    ". stats . admin";
+  gap: 32px;
+  align-items: start;
+  
+  @media (max-width: 1200px) {
+    grid-template-columns: 1fr 800px 1fr;
+    grid-template-areas: 
+      ". header ."
+      ". main ."
+      ". admin ."
+      ". stats .";
+    gap: 24px;
+  }
+  
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    grid-template-areas: 
+      "header"
+      "main"
+      "admin"
+      "stats";
+    gap: 24px;
+  }
   
   @media (max-width: 768px) {
     padding: 16px;
     gap: 16px;
   }
+}
+
+// Grid area assignments
+.profile-header-card {
+  grid-area: header;
+}
+
+.main-content {
+  grid-area: main;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.admin-sidebar {
+  grid-area: admin;
+}
+
+.statistics-card {
+  grid-area: stats;
 }
 
 // Profile Header Card Styling
@@ -349,56 +394,65 @@
 }
 
 // Admin Card Styling
-.admin-card {
-  background: linear-gradient(135deg, rgba(66, 40, 66, 0.9) 0%, rgba(48, 30, 48, 0.9) 100%);
-  backdrop-filter: blur(10px);
-  border-radius: 16px !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
-  border: 1px solid rgba(255, 152, 0, 0.3);
-  overflow: hidden;
-  
-  .admin-panel {
-    background: transparent;
-    box-shadow: none !important;
+.admin-sidebar {
+  .admin-card {
+    background: linear-gradient(135deg, rgba(66, 40, 66, 0.9) 0%, rgba(48, 30, 48, 0.9) 100%);
+    backdrop-filter: blur(10px);
+    border-radius: 16px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+    border: 1px solid rgba(255, 152, 0, 0.3);
+    overflow: hidden;
+    height: fit-content;
+    position: sticky;
+    top: 24px;
     
-    .mat-expansion-panel-header {
+    .admin-panel {
       background: transparent;
-      color: white;
-      height: 64px;
-      padding: 0 24px;
+      box-shadow: none !important;
       
-      &:hover {
-        background: rgba(255, 152, 0, 0.1) !important;
-      }
-      
-      .mat-content {
-        align-items: center;
-      }
-      
-      .admin-title {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin: 0;
+      .mat-expansion-panel-header {
+        background: transparent;
+        color: white;
+        height: 56px;
+        padding: 0 16px;
         
-        mat-icon {
-          color: #ff9800;
+        &:hover {
+          background: rgba(255, 152, 0, 0.1) !important;
+        }
+        
+        .mat-content {
+          align-items: center;
+        }
+        
+        .admin-title {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 1.1rem;
+          font-weight: 600;
+          margin: 0;
+          
+          mat-icon {
+            color: #ff9800;
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+          }
+        }
+        
+        .mat-expansion-panel-header-description {
+          color: rgba(255, 255, 255, 0.7);
+          font-size: 0.8rem;
+          margin-left: 28px;
         }
       }
       
-      .mat-expansion-panel-header-description {
-        color: rgba(255, 255, 255, 0.7);
-        margin-left: 32px;
-      }
-    }
-    
-    .mat-expansion-panel-content {
-      background: transparent;
-      
-      .mat-expansion-panel-body {
-        padding: 0 24px 24px 24px;
+      .mat-expansion-panel-content {
+        background: transparent;
+        
+        .mat-expansion-panel-body {
+          padding: 0 16px 16px 16px;
+        }
       }
     }
   }
@@ -406,14 +460,14 @@
 
 // Admin Content Styling
 .admin-content {
-  padding: 24px !important;
+  padding: 16px !important;
   position: relative;
 }
 
 .admin-form {
   .admin-form-grid {
     display: grid;
-    gap: 24px;
+    gap: 16px;
   }
   
   .admin-field {

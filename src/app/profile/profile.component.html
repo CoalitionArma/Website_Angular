@@ -23,144 +23,150 @@
       </div>
     </mat-card-content>
   </mat-card>
-  <!-- General Info Section -->
-  <mat-card class="settings-card">
-    <mat-expansion-panel [(expanded)]="generalInfoExpanded" class="general-info-panel">
-      <mat-expansion-panel-header>
-        <mat-panel-title class="section-title">
-          <mat-icon>info</mat-icon>
-          General Info
-        </mat-panel-title>
-        <mat-panel-description>
-          Account settings and profile information
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-    
-      <div class="settings-content">
-        <!-- Toast Messages -->
-        <div *ngIf="saveFailed || saved" class="toast-container">
-          <div *ngIf="saveFailed" class="toast error-toast">
-            <mat-icon>error</mat-icon>
-            <span>{{ saveFailedReason }}</span>
-            <button mat-icon-button (click)="dismissToast()">
-              <mat-icon>close</mat-icon>
-            </button>
+
+  <!-- Main Content Area -->
+  <div class="main-content">
+    <!-- General Info Section -->
+    <mat-card class="settings-card">
+      <mat-expansion-panel [(expanded)]="generalInfoExpanded" class="general-info-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title class="section-title">
+            <mat-icon>info</mat-icon>
+            General Info
+          </mat-panel-title>
+          <mat-panel-description>
+            Account settings and profile information
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+      
+        <div class="settings-content">
+          <!-- Toast Messages -->
+          <div *ngIf="saveFailed || saved" class="toast-container">
+            <div *ngIf="saveFailed" class="toast error-toast">
+              <mat-icon>error</mat-icon>
+              <span>{{ saveFailedReason }}</span>
+              <button mat-icon-button (click)="dismissToast()">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+            <div *ngIf="saved" class="toast success-toast">
+              <mat-icon>check_circle</mat-icon>
+              <span>Profile updated successfully!</span>
+              <button mat-icon-button (click)="dismissToast()">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
           </div>
-          <div *ngIf="saved" class="toast success-toast">
-            <mat-icon>check_circle</mat-icon>
-            <span>Profile updated successfully!</span>
-            <button mat-icon-button (click)="dismissToast()">
-              <mat-icon>close</mat-icon>
-            </button>
+          <!-- Loading Overlay -->
+          <div *ngIf="formLoading" class="loading-overlay">
+            <mat-spinner diameter="40"></mat-spinner>
+            <span class="loading-text">Loading profile...</span>
           </div>
+
+          <!-- Profile Form -->
+          <form [formGroup]="userInfoForm" (ngSubmit)="saveChanges()" class="profile-form">
+            <div class="form-grid">
+              <!-- Email Field -->
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Email Address</mat-label>
+                <mat-icon matPrefix>email</mat-icon>
+                <input type="email" matInput formControlName="email" placeholder="your.email@example.com">
+                <mat-error *ngIf="userInfoForm.get('email')?.hasError('email')">
+                  Please enter a valid email address
+                </mat-error>
+                <mat-error *ngIf="userInfoForm.get('email')?.hasError('required')">
+                  Email is required
+                </mat-error>
+              </mat-form-field>
+
+              <!-- ARMA GUID Field -->
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>ARMA GUID</mat-label>
+                <mat-icon matPrefix>videogame_asset</mat-icon>
+                <input type="text" matInput formControlName="armaID" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+                <mat-hint>Required for event participation</mat-hint>
+                <mat-error *ngIf="userInfoForm.get('armaID')?.hasError('pattern')">
+                  Please enter a valid ARMA GUID
+                </mat-error>
+                <mat-error *ngIf="userInfoForm.get('armaID')?.hasError('required')">
+                  ARMA GUID is required
+                </mat-error>
+              </mat-form-field>
+
+              <!-- Steam ID Field -->
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Steam ID64</mat-label>
+                <mat-icon matPrefix>sports_esports</mat-icon>
+                <input type="text" matInput formControlName="steamID" placeholder="17-digit Steam ID">
+                <mat-hint>Optional: Links your Steam profile</mat-hint>
+                <mat-error *ngIf="userInfoForm.get('steamID')?.hasError('pattern')">
+                  Please enter a valid 17-digit Steam ID64
+                </mat-error>
+              </mat-form-field>
+
+            </div>
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+              <button 
+                *ngIf="shouldShowDiscardButton" 
+                mat-stroked-button 
+                color="warn" 
+                type="button"
+                (click)="discardChanges()"
+                [disabled]="saving"
+                class="discard-btn">
+                <mat-icon>cancel</mat-icon>
+                Discard Changes
+              </button>
+              
+              <button 
+                mat-raised-button 
+                color="primary" 
+                type="submit"
+                [disabled]="shouldDisableSaveButton"
+                class="save-btn">
+                <mat-icon *ngIf="saving" class="spinning-icon">refresh</mat-icon>
+                <mat-icon *ngIf="!saving">save</mat-icon>
+                {{ saving ? 'Saving...' : 'Save Changes' }}
+              </button>
+            </div>
+          </form>
         </div>
-        <!-- Loading Overlay -->
-        <div *ngIf="formLoading" class="loading-overlay">
-          <mat-spinner diameter="40"></mat-spinner>
-          <span class="loading-text">Loading profile...</span>
+      </mat-expansion-panel>
+    </mat-card>
+  </div>
+
+  <!-- Admin Sidebar - Only visible for admins -->
+  <div *ngIf="userService.dbUser?.isAdmin" class="admin-sidebar">
+    <mat-card class="admin-card">
+      <mat-expansion-panel [(expanded)]="adminExpanded" class="admin-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title class="section-title admin-title">
+            <mat-icon>admin_panel_settings</mat-icon>
+            Admin
+          </mat-panel-title>
+          <mat-panel-description>
+            Administrative settings
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+      
+        <div class="admin-content">
+          <!-- Admin Form -->
+          <form [formGroup]="userInfoForm" class="admin-form">
+            <div class="admin-form-grid">
+              <!-- Admin Callsign Field -->
+              <mat-form-field appearance="outline" class="form-field admin-field">
+                <mat-label>Callsign Assignment</mat-label>
+                <mat-icon matPrefix class="admin-icon">military_tech</mat-icon>
+                <input type="text" matInput formControlName="callsign" placeholder="Enter callsign...">
+                <mat-hint>Admin privilege: Assign callsign to this user</mat-hint>
+              </mat-form-field>
+            </div>
+          </form>
         </div>
-
-        <!-- Profile Form -->
-        <form [formGroup]="userInfoForm" (ngSubmit)="saveChanges()" class="profile-form">
-          <div class="form-grid">
-            <!-- Email Field -->
-            <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Email Address</mat-label>
-              <mat-icon matPrefix>email</mat-icon>
-              <input type="email" matInput formControlName="email" placeholder="your.email@example.com">
-              <mat-error *ngIf="userInfoForm.get('email')?.hasError('email')">
-                Please enter a valid email address
-              </mat-error>
-              <mat-error *ngIf="userInfoForm.get('email')?.hasError('required')">
-                Email is required
-              </mat-error>
-            </mat-form-field>
-
-            <!-- ARMA GUID Field -->
-            <mat-form-field appearance="outline" class="form-field">
-              <mat-label>ARMA GUID</mat-label>
-              <mat-icon matPrefix>videogame_asset</mat-icon>
-              <input type="text" matInput formControlName="armaID" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
-              <mat-hint>Required for event participation</mat-hint>
-              <mat-error *ngIf="userInfoForm.get('armaID')?.hasError('pattern')">
-                Please enter a valid ARMA GUID
-              </mat-error>
-              <mat-error *ngIf="userInfoForm.get('armaID')?.hasError('required')">
-                ARMA GUID is required
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Steam ID Field -->
-            <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Steam ID64</mat-label>
-              <mat-icon matPrefix>sports_esports</mat-icon>
-              <input type="text" matInput formControlName="steamID" placeholder="17-digit Steam ID">
-              <mat-hint>Optional: Links your Steam profile</mat-hint>
-              <mat-error *ngIf="userInfoForm.get('steamID')?.hasError('pattern')">
-                Please enter a valid 17-digit Steam ID64
-              </mat-error>
-            </mat-form-field>
-
-          </div>
-          <!-- Action Buttons -->
-          <div class="action-buttons">
-            <button 
-              *ngIf="shouldShowDiscardButton" 
-              mat-stroked-button 
-              color="warn" 
-              type="button"
-              (click)="discardChanges()"
-              [disabled]="saving"
-              class="discard-btn">
-              <mat-icon>cancel</mat-icon>
-              Discard Changes
-            </button>
-            
-            <button 
-              mat-raised-button 
-              color="primary" 
-              type="submit"
-              [disabled]="shouldDisableSaveButton"
-              class="save-btn">
-              <mat-icon *ngIf="saving" class="spinning-icon">refresh</mat-icon>
-              <mat-icon *ngIf="!saving">save</mat-icon>
-              {{ saving ? 'Saving...' : 'Save Changes' }}
-            </button>
-          </div>
-        </form>
-      </div>
-    </mat-expansion-panel>
-  </mat-card>
-
-  <!-- Admin Section - Only visible for admins -->
-  <mat-card *ngIf="userService.dbUser?.isAdmin" class="admin-card">
-    <mat-expansion-panel [(expanded)]="adminExpanded" class="admin-panel">
-      <mat-expansion-panel-header>
-        <mat-panel-title class="section-title admin-title">
-          <mat-icon>admin_panel_settings</mat-icon>
-          Admin
-        </mat-panel-title>
-        <mat-panel-description>
-          Administrative privileges and settings
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-    
-      <div class="admin-content">
-        <!-- Admin Form -->
-        <form [formGroup]="userInfoForm" class="admin-form">
-          <div class="admin-form-grid">
-            <!-- Admin Callsign Field -->
-            <mat-form-field appearance="outline" class="form-field admin-field">
-              <mat-label>Callsign Assignment</mat-label>
-              <mat-icon matPrefix class="admin-icon">military_tech</mat-icon>
-              <input type="text" matInput formControlName="callsign" placeholder="Enter callsign...">
-              <mat-hint>Admin privilege: Assign callsign to this user</mat-hint>
-            </mat-form-field>
-          </div>
-        </form>
-      </div>
-    </mat-expansion-panel>
-  </mat-card>
+      </mat-expansion-panel>
+    </mat-card>
+  </div>
 
   <!-- Statistics Section -->
   <mat-card class="statistics-card">
