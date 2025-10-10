@@ -9,12 +9,15 @@ export class CreateUser {
     }
 
     static async createNewUser(user: DiscordUserResponse): Promise<void> {
+        // Use global_name if available, otherwise fallback to username
+        const displayName = user.global_name || user.username;
+        
         await SQLUsers.create({
             discordid: user.id,
             steamid: null,
             email: user.email,
             teamspeakid: null,
-            username: user.global_name,
+            username: displayName,
             section: 'N/A',
             veterancy: 'N/A',
             armaguid: null

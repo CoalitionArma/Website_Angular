@@ -3,7 +3,8 @@ import { Request } from 'express';
 export interface CreateUserRequest {
     id: string;
     email: string;
-    global_name: string;
+    global_name: string | null;
+    username: string;
 }
 
 export interface UpdateUserRequest {

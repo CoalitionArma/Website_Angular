@@ -125,13 +125,16 @@ app.post('/api/oauth/token', async (req: Request, res: Response): Promise<void> 
 
 // User Management Endpoints
 app.post('/api/users', async (req: Request<{}, {}, CreateUserRequest>, res: Response): Promise<void> => {
-    const { id, email, global_name } = req.body;
+    const { id, email, global_name, username } = req.body;
     
     try {
         const user = await SQLUsers.findOne({ where: { discordid: id } });
         
+        // Use global_name if available, otherwise fallback to username
+        const displayName = global_name || username;
+        
         if (user) {
-            user.username = global_name;
+            user.username = displayName;
             user.email = email;
             const savedUser = await user.save();
             const token = generateToken(savedUser.discordid);
@@ -142,7 +145,7 @@ app.post('/api/users', async (req: Request<{}, {}, CreateUserRequest>, res: Resp
                 steamid: null,
                 email: email,
                 teamspeakid: null,
-                username: global_name,
+                username: displayName,
                 section: 'N/A',
                 veterancy: 'N/A',
                 armaguid: null,
