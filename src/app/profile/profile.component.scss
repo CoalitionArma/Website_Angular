@@ -1,67 +1,592 @@
 @use '@angular/material' as mat;
 
-// Profile container styling
-#main {
-  position: relative;
-  overflow-y: auto; // Ensure the main container can scroll
-  background-attachment: scroll; // Better mobile compatibility
+// Full-width background for the entire component
+:host {
+  display: block;
+  min-height: 100vh;
+  background: 
+    linear-gradient(135deg, rgba(26, 26, 26, 0.85) 0%, rgba(45, 45, 45, 0.85) 100%),
+    url('/assets/images/profile_bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   
-  @media (min-width: 1024px) {
-    background-attachment: fixed; // Fixed background on larger screens
+  @media (max-width: 768px) {
+    background-attachment: scroll;
+  }
+  
+  // Global Material Form Field Overrides for Profile Component
+  ::ng-deep {
+    // Material Form Field Styling for Outline Appearance - SCOPED TO PROFILE COMPONENT
+    .profile-container .mat-mdc-form-field {
+      width: 100%;
+      
+      // Universal border removal for ALL child elements
+      * {
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+      }
+      
+      // Text field wrapper (background) - lighter than card
+      .mat-mdc-text-field-wrapper {
+        background-color: rgba(255, 255, 255, 0.15) !important;
+        border-radius: 8px !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        transition: border-color 0.3s ease !important;
+      }
+      
+      // Completely hide all Material outline elements
+      .mat-mdc-form-field-outline,
+      .mat-mdc-form-field-outline-thick,
+      .mat-mdc-form-field-outline-start,
+      .mat-mdc-form-field-outline-notch,
+      .mat-mdc-form-field-outline-end {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        border: none !important;
+        border-color: transparent !important;
+        color: transparent !important;
+        background: transparent !important;
+      }
+      
+      // Additional safety - hide any remaining outline elements
+      [class*="mat-mdc-form-field-outline"] {
+        display: none !important;
+      }
+      
+      // Input text color and padding
+      .mat-mdc-input-element {
+        color: #ffffff !important;
+        caret-color: #b71c1c !important;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+      }
+      
+      // Remove any lines from form field flex container
+      .mat-mdc-form-field-flex {
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+      }
+      
+      // Remove lines from infix
+      .mat-mdc-form-field-infix {
+        border: none !important;
+        border-top: none !important;
+        border-bottom: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+      }
+      
+      // Remove any underline
+      .mat-mdc-form-field-underline {
+        display: none !important;
+      }
+      
+      // Label styling - use default positioning but change colors
+      .mat-mdc-floating-label {
+        color: rgba(255, 255, 255, 0.7) !important;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6) !important;
+        font-weight: bold !important;
+        
+        &.mdc-floating-label--float-above {
+          color: #fa2e2e !important;
+          transform: translateY(-20px) scale(0.85) !important; // Move label higher
+        }
+      }
+      
+      // Prefix icon styling (matPrefix)
+      .mat-mdc-form-field-icon-prefix {
+        color: #b71c1c !important;
+        margin-right: 12px !important;
+        
+        mat-icon {
+          font-size: 20px !important;
+          width: 20px !important;
+          height: 20px !important;
+        }
+      }
+      
+      // Admin icon special styling
+      &.admin-field .mat-mdc-form-field-icon-prefix {
+        color: #ff9800 !important;
+      }
+      
+      // Hint text
+      .mat-mdc-form-field-hint {
+        color: rgba(255, 255, 255, 0.6) !important;
+      }
+      
+      // Error text
+      .mat-mdc-form-field-error {
+        color: #f44336 !important;
+      }
+      
+      // Focused state
+      &.mat-focused {
+        .mat-mdc-text-field-wrapper {
+          border-color: #b71c1c !important;
+          box-shadow: 0 0 0 2px rgba(183, 28, 28, 0.2) !important;
+        }
+        
+        .mat-mdc-floating-label {
+          color: #b71c1c !important;
+        }
+        
+        .mat-mdc-form-field-icon-prefix {
+          color: #b71c1c !important;
+        }
+        
+        &.admin-field .mat-mdc-form-field-icon-prefix {
+          color: #ff9800 !important;
+        }
+      }
+      
+      // Placeholder styling
+      .mat-mdc-input-element::placeholder {
+        color: rgba(255, 255, 255, 0.5) !important;
+      }
+      
+      // Hover state
+      &:hover:not(.mat-focused) {
+        .mat-mdc-text-field-wrapper {
+          border-color: rgba(255, 255, 255, 0.5) !important;
+        }
+      }
+    }
   }
 }
 
-:root {
-    @include mat.card-overrides((
-        container-color: rgb(45, 45, 45),
-        subtitle-text-color: white
-    ));
+// Modern Profile Container
+.profile-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  min-height: 100vh;
+  
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  
+  @media (max-width: 768px) {
+    padding: 16px;
+    gap: 16px;
   }
-
-div {
-    color: white;
 }
 
-h1 {
-    color: red;
-    font-size: 36px;
+// Profile Header Card Styling
+.profile-header-card {
+  background: linear-gradient(135deg, rgba(66, 66, 66, 0.9) 0%, rgba(48, 48, 48, 0.9) 100%);
+  backdrop-filter: blur(10px);
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  
+  .profile-header-content {
+    padding: 32px !important;
+  }
+  
+  .profile-avatar-section {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+      text-align: center;
+      gap: 16px;
+    }
+  }
+  
+  .profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+  
+  .profile-info {
+    flex: 1;
+  }
+  
+  .profile-name {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0 0 16px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
+    
+    .callsign-inline {
+      font-size: 1.8rem;
+      font-weight: 500;
+      color: #b71c1c;
+      margin-left: 12px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+      
+      @media (max-width: 768px) {
+        font-size: 1.4rem;
+        margin-left: 8px;
+        display: block;
+        margin-top: 4px;
+        margin-left: 0;
+      }
+    }
+  }
+  
+  .profile-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    
+    @media (max-width: 768px) {
+      justify-content: center;
+    }
+  }
+  
+  .badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    &.rank-badge {
+      background: linear-gradient(135deg, #8e24aa 0%, #7b1fa2 100%);
+      border: 1px solid rgba(142, 36, 170, 0.3);
+    }
+    
+    &.section-badge {
+      background: linear-gradient(135deg, #f57c00 0%, #ef6c00 100%);
+      border: 1px solid rgba(245, 124, 0, 0.3);
+    }
+  }
 }
 
-:host ::ng-deep mat-form-field > div > div.mdc-line-ripple {
-    display: none;
+// Settings Card with Expansion Panel
+.settings-card {
+  background: linear-gradient(135deg, rgba(66, 66, 66, 0.9) 0%, rgba(48, 48, 48, 0.9) 100%);
+  backdrop-filter: blur(10px);
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+  
+  .general-info-panel {
+    background: transparent;
+    box-shadow: none !important;
+    
+    .mat-expansion-panel-header {
+      background: transparent;
+      color: white;
+      height: 64px;
+      padding: 0 24px;
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.05) !important;
+      }
+      
+      .mat-content {
+        align-items: center;
+      }
+      
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0;
+        
+        mat-icon {
+          color: #4fc3f7;
+        }
+      }
+      
+      .mat-expansion-panel-header-description {
+        color: rgba(255, 255, 255, 0.7);
+        margin-left: 32px;
+      }
+    }
+    
+    .mat-expansion-panel-content {
+      background: transparent;
+      
+      .mat-expansion-panel-body {
+        padding: 0 24px 24px 24px;
+      }
+    }
+  }
 }
 
-:host ::ng-deep .mdc-text-field {
-    padding: 0px
+// Admin Card Styling
+.admin-card {
+  background: linear-gradient(135deg, rgba(66, 40, 66, 0.9) 0%, rgba(48, 30, 48, 0.9) 100%);
+  backdrop-filter: blur(10px);
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(255, 152, 0, 0.3);
+  overflow: hidden;
+  
+  .admin-panel {
+    background: transparent;
+    box-shadow: none !important;
+    
+    .mat-expansion-panel-header {
+      background: transparent;
+      color: white;
+      height: 64px;
+      padding: 0 24px;
+      
+      &:hover {
+        background: rgba(255, 152, 0, 0.1) !important;
+      }
+      
+      .mat-content {
+        align-items: center;
+      }
+      
+      .admin-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0;
+        
+        mat-icon {
+          color: #ff9800;
+        }
+      }
+      
+      .mat-expansion-panel-header-description {
+        color: rgba(255, 255, 255, 0.7);
+        margin-left: 32px;
+      }
+    }
+    
+    .mat-expansion-panel-content {
+      background: transparent;
+      
+      .mat-expansion-panel-body {
+        padding: 0 24px 24px 24px;
+      }
+    }
+  }
 }
 
-mat-form-field {
-    width: 350px;
+// Admin Content Styling
+.admin-content {
+  padding: 24px !important;
+  position: relative;
 }
 
-:host ::ng-deep input.mat-mdc-input-element {
-    border: 2px solid white;
-    padding: 2px 4px;
+.admin-form {
+  .admin-form-grid {
+    display: grid;
+    gap: 24px;
+  }
+  
+  .admin-field {
+    width: 100%;
+  }
 }
 
-:host ::ng-deep data-changed-component-snack {
-    color: white
+// Statistics Cards
+.statistics-card {
+  background: linear-gradient(135deg, rgba(66, 66, 66, 0.9) 0%, rgba(48, 48, 48, 0.9) 100%);
+  backdrop-filter: blur(10px);
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  
+  .mat-mdc-card-header {
+    padding: 24px 24px 0 24px !important;
+  }
+  
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.5rem !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    margin: 0 !important;
+    
+    mat-icon {
+      color: #b71c1c;
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+  }
+  
+  .mat-mdc-card-subtitle {
+    color: #bdbdbd !important;
+    margin-top: 8px !important;
+  }
 }
 
-
-:host ::ng-deep button.mat-mdc-raised-button {
-    background-color: white;
-    color: rgb(45, 45, 45)
+// Settings Content Styling
+.settings-content {
+  padding: 24px !important;
+  position: relative;
 }
-// :host ::ng-deep input {
-//     color: green
-// }
 
-// Toast notification animations
-.animate-slide-down {
+// Toast Messages
+.toast-container {
+  margin-bottom: 24px;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  color: #ffffff;
   animation: slideDown 0.3s ease-out;
+  
+  &.error-toast {
+    background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+    border: 1px solid rgba(211, 47, 47, 0.3);
+  }
+  
+  &.success-toast {
+    background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+    border: 1px solid rgba(56, 142, 60, 0.3);
+  }
+  
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+  
+  span {
+    flex: 1;
+    font-weight: 500;
+  }
+  
+  button {
+    color: inherit !important;
+    
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
 }
 
+// Loading Overlay
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(48, 48, 48, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  border-radius: 16px;
+  z-index: 10;
+  
+  .loading-text {
+    color: #ffffff;
+    font-weight: 500;
+  }
+}
+
+// Profile Form Styling
+.profile-form {
+  .form-grid {
+    display: grid;
+    gap: 24px;
+    
+    @media (min-width: 768px) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  
+  .form-field {
+    width: 100%;
+  }
+}
+
+// Action Buttons
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 32px;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+  
+  .discard-btn {
+    border-color: #d32f2f !important;
+    color: #d32f2f !important;
+    
+    &:hover {
+      background-color: rgba(211, 47, 47, 0.1) !important;
+    }
+  }
+  
+  .save-btn {
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%) !important;
+    color: #ffffff !important;
+    min-width: 140px;
+    
+    &:hover {
+      background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%) !important;
+    }
+    
+    .spinning-icon {
+      animation: spin 1s linear infinite;
+    }
+  }
+}
+
+// Statistics Content
+.statistics-content {
+  padding: 24px !important;
+}
+
+// Animations
 @keyframes slideDown {
   from {
     transform: translateY(-100%);
@@ -70,5 +595,31 @@ mat-form-field {
   to {
     transform: translateY(0);
     opacity: 1;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Responsive Design
+@media (max-width: 1200px) {
+  .profile-container {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-form .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .admin-form .admin-form-grid {
+    grid-template-columns: 1fr;
   }
 }

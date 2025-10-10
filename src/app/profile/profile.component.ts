@@ -4,6 +4,9 @@ import { UserService } from '../services/user.service';
 import { StatsService } from '../services/stats.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ErrorStateMatcher } from '@angular/material/core';
 import {MAT_SNACK_BAR_DATA, MatSnackBar, MatSnackBarAction, MatSnackBarActions, MatSnackBarLabel, MatSnackBarModule, MatSnackBarRef} from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
@@ -26,7 +29,17 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   selector: 'app-profile',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, MatCardModule, MatInputModule, ReactiveFormsModule, MatSnackBarModule, MatButtonModule, UserStatsComponent
+    CommonModule, 
+    FormsModule, 
+    MatCardModule, 
+    MatInputModule, 
+    MatIconModule,
+    MatExpansionModule,
+    MatProgressSpinnerModule,
+    ReactiveFormsModule, 
+    MatSnackBarModule, 
+    MatButtonModule, 
+    UserStatsComponent
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
@@ -65,6 +78,8 @@ export class ProfileComponent implements OnInit {
   saved = false
   saving = false
   formLoading = true
+  generalInfoExpanded = true // Controls expansion panel state
+  adminExpanded = true // Controls admin panel state
 
   ngOnInit(): void {
     // Debug: Check what's in localStorage when component initializes

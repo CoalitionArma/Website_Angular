@@ -1,200 +1,179 @@
-<div id="main" class="py-24 flex flex-col items-center min-h-screen bg-cover bg-center bg-fixed" style="background-image: url('./assets/images/profile_bg.jpg'); background-repeat: no-repeat;">
-    <section id="profile-header" class="w-2/3 h-[300px]">
-        <div class="flex flex-row w-full h-full">
-            <img [src]=userService.avatarUrl class="h-full">
-            <div class="pl-10">
-                <div class="bg-neutral-800 px-2 py-1 bg-opacity-60 text-4xl">{{userService.discordUser?.global_name?.toUpperCase()}}</div>
-                @if (userService.dbUser?.callsign) {
-                    <div class="bg-blue-800 px-2 py-1 bg-opacity-60 text-lg font-bold">CALLSIGN: "{{userService.dbUser?.callsign?.toUpperCase()}}"</div>
-                }
-                <div class="bg-neutral-800 px-2 py-1 bg-opacity-60 text-sm">RANK: {{userService.dbUser?.veterancy?.toUpperCase()}}</div>
-                <div class="bg-neutral-800 px-2 py-1 bg-opacity-60 text-sm">SECTION: {{userService.dbUser?.section?.toUpperCase()}}</div>
-
-            </div>
+<div class="profile-container">
+  <!-- Modern Profile Header Card -->
+  <mat-card class="profile-header-card">
+    <mat-card-content class="profile-header-content">
+      <div class="profile-avatar-section">
+        <img [src]="userService.avatarUrl" class="profile-avatar" alt="User Avatar">
+        <div class="profile-info">
+          <h1 class="profile-name">
+            {{ userService.discordUser?.global_name }}
+            <span *ngIf="userService.dbUser?.callsign" class="callsign-inline">"{{ userService.dbUser?.callsign }}"</span>
+          </h1>
+          <div class="profile-badges">
+            <span class="badge rank-badge">
+              <mat-icon>workspace_premium</mat-icon>
+              {{ userService.dbUser?.veterancy || 'N/A' }}
+            </span>
+            <span class="badge section-badge">
+              <mat-icon>group</mat-icon>
+              {{ userService.dbUser?.section || 'N/A' }}
+            </span>
+          </div>
         </div>
-    </section>
-    <div class="h-[25px]"></div>
-    <div class="w-2/3">
-        <div class="bg-neutral-800 px-2 py-1 bg-opacity-60 text-3xl">SETTINGS</div>
-    </div>
-    <div class="h-[5px]"></div>
-    <section id="settings" class="w-2/3">
-        <div class="bg-neutral-800 w-full px-1 mb-1">INFO</div>
-
-        <div class="bg-neutral-800 bg-opacity-60 w-full h-full flex flex-col relative">
-            <!-- Toast Banner Messages -->
-            @if (saveFailed || saved) {
-                <div class="absolute top-0 left-0 right-0 z-20 animate-slide-down">
-                    @if (saveFailed) {
-                        <div class="bg-red-600 border-l-4 border-red-800 text-white px-4 py-3 shadow-lg">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-2">
-                                    <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-                                    </svg>
-                                    <span class="font-medium">{{saveFailedReason}}</span>
-                                </div>
-                                <button (click)="dismissToast()" class="text-white hover:text-red-200 transition-colors">
-                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    }
-                    @if (saved) {
-                        <div class="bg-green-600 border-l-4 border-green-800 text-white px-4 py-3 shadow-lg">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-2">
-                                    <svg class="w-5 h-5 flex-shrink-0 animate-bounce" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                                    </svg>
-                                    <span class="font-medium">🎉 Profile updated successfully!</span>
-                                </div>
-                                <button (click)="dismissToast()" class="text-white hover:text-green-200 transition-colors">
-                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    }
-                </div>
-            }
-            
-            <!-- Loading Overlay -->
-            @if (formLoading) {
-                <div class="absolute inset-0 bg-neutral-800 bg-opacity-80 flex items-center justify-center z-10">
-                    <div class="flex flex-col items-center gap-4">
-                        <svg class="animate-spin h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        <span class="text-white text-sm">Loading profile...</span>
-                    </div>
-                </div>
-            }
-            
-            <form [formGroup]="userInfoForm" (ngSubmit)="saveChanges()">
-                <div id="email" class="flex flex-row items-end items-center gap-x-4 px-4 py-1" matTooltip="Self explanatory. Enter your email address">
-                    <img src="./assets/icons/email.png" class="w-[40px]" alt="Email Icon" loading="lazy">
-                    <div class="flex flex-col">
-                        <span class="text-neutral-400 text-s">EMAIL</span>
-                        @if (formLoading) {
-                            <!-- Skeleton loading for email field -->
-                            <div class="animate-pulse bg-neutral-600 h-[56px] w-[250px] rounded"></div>
-                        } @else {
-                            <mat-form-field>
-                                <input type="email" matInput formControlName="email">
-                                <mat-error *ngIf="userInfoForm.get('email')?.hasError('email') && !userInfoForm.get('email')?.hasError('required')">
-                                    Please enter a valid email address
-                                </mat-error>
-                                <mat-error *ngIf="userInfoForm.get('email')?.hasError('required')">
-                                    Email is <strong>required</strong>
-                                </mat-error>
-                            </mat-form-field>
-                        }
-                    </div>
-                </div>
-
-                <div id="arma" class="flex flex-row items-end items-center gap-x-4 px-4 py-1">
-                    <img src="./assets/icons/arma.png" class="w-[40px]" alt="ARMA Icon" loading="lazy">
-                    <div class="flex flex-col">
-                        <span class="text-neutral-400 text-s">ARMA GUID</span>
-                        @if (formLoading) {
-                            <!-- Skeleton loading for ARMA field -->
-                            <div class="animate-pulse bg-neutral-600 h-[56px] w-[250px] rounded"></div>
-                        } @else {
-                            <mat-form-field>
-                                <input type="text" matInput formControlName="armaID">
-                                <mat-error *ngIf="userInfoForm.get('armaID')?.hasError('pattern') && !userInfoForm.get('armaID')?.hasError('required')">
-                                    Please enter a valid ARMA GUID
-                                </mat-error>
-                                <mat-error *ngIf="userInfoForm.get('armaID')?.hasError('required')">
-                                    ARMA GUID is <strong>required</strong>
-                                </mat-error>
-                            </mat-form-field>
-                        }
-                    </div>
-                </div>
-
-                <div id="steam" class="flex flex-row items-end items-center gap-x-4 px-4 py-1">
-                    <img src="./assets/icons/steam-logo.png" class="w-[40px]" alt="Steam Icon" loading="lazy">
-                    <div class="flex flex-col">
-                        <span class="text-neutral-400 text-s">STEAMID64</span>
-                        @if (formLoading) {
-                            <!-- Skeleton loading for Steam field -->
-                            <div class="animate-pulse bg-neutral-600 h-[56px] w-[250px] rounded"></div>
-                        } @else {
-                            <mat-form-field>
-                                <input type="text" matInput formControlName="steamID">
-                                <mat-error *ngIf="userInfoForm.get('steamID')?.hasError('pattern')">
-                                    Please enter a valid SteamID64
-                                </mat-error>
-                            </mat-form-field>
-                        }
-                    </div>
-                </div>
-
-                <!-- Admin Callsign Management Section -->
-                @if (userService.dbUser?.isAdmin) {
-                    <div id="callsign-admin" class="flex flex-row items-end items-center gap-x-4 px-4 py-1">
-                        <img src="./assets/icons/arma.png" class="w-[40px]" alt="Admin Icon" loading="lazy">
-                        <div class="flex flex-col">
-                            <span class="text-orange-400 text-s font-bold">CALLSIGN (ADMIN)</span>
-                            @if (formLoading) {
-                                <!-- Skeleton loading for callsign field -->
-                                <div class="animate-pulse bg-neutral-600 h-[56px] w-[250px] rounded"></div>
-                            } @else {
-                                <mat-form-field>
-                                    <input type="text" matInput formControlName="callsign" placeholder="Enter callsign...">
-                                    <mat-hint>As an admin, you can assign a callsign to this user</mat-hint>
-                                </mat-form-field>
-                            }
-                        </div>
-                    </div>
-                }
-            </form>
-            
-            <div class="flex justify-end gap-x-2 px-4 py-2">
-                @if (formLoading) {
-                    <!-- Skeleton loading for buttons -->
-                    <div class="flex gap-x-2">
-                        <div class="animate-pulse bg-neutral-600 h-[40px] w-[100px] rounded"></div>
-                        <div class="animate-pulse bg-neutral-600 h-[40px] w-[100px] rounded"></div>
-                    </div>
-                } @else {
-                    <button mat-raised-button color="warn" class="!bg-red-600 hover:!bg-red-700 !text-white !rounded-none !min-w-[100px] !h-[40px] !px-4 !py-2" (click)="discardChanges()" [hidden]="!shouldShowDiscardButton" [disabled]="saving">DISCARD</button>
-                    <button mat-raised-button color="primary" class="!bg-green-600 hover:!bg-green-700 !text-white !rounded-none !min-w-[100px] !h-[40px] !px-4 !py-2" (click)="saveChanges()" [disabled]="shouldDisableSaveButton">
-                        @if (saving) {
-                            <span class="flex items-center gap-2">
-                                <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                SAVING...
-                            </span>
-                        } @else {
-                            SAVE
-                        }
-                    </button>
-                }
-            </div>
-        </div>
-    </section>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <!-- General Info Section -->
+  <mat-card class="settings-card">
+    <mat-expansion-panel [(expanded)]="generalInfoExpanded" class="general-info-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="section-title">
+          <mat-icon>info</mat-icon>
+          General Info
+        </mat-panel-title>
+        <mat-panel-description>
+          Account settings and profile information
+        </mat-panel-description>
+      </mat-expansion-panel-header>
     
-    <!-- Spacing between settings and statistics sections -->
-    <div class="h-[80px]"></div>
-    
-    <!-- User Statistics Section -->
-    <div class="w-2/3 clear-both">
-        <div class="bg-neutral-800 px-2 py-1 bg-opacity-60 text-3xl">STATISTICS</div>
-    </div>
-    <div class="h-[5px]"></div>
-    <section id="stats" class="w-2/3 clear-both">
-        <div class="bg-neutral-800 w-full px-1 mb-1">📊 REFORGER/ARMA 4</div>
-        <div class="bg-neutral-800 bg-opacity-60 w-full max-h-[600px] overflow-y-auto p-4">
-            <app-user-stats></app-user-stats>
+      <div class="settings-content">
+        <!-- Toast Messages -->
+        <div *ngIf="saveFailed || saved" class="toast-container">
+          <div *ngIf="saveFailed" class="toast error-toast">
+            <mat-icon>error</mat-icon>
+            <span>{{ saveFailedReason }}</span>
+            <button mat-icon-button (click)="dismissToast()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          <div *ngIf="saved" class="toast success-toast">
+            <mat-icon>check_circle</mat-icon>
+            <span>Profile updated successfully!</span>
+            <button mat-icon-button (click)="dismissToast()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
         </div>
-    </section>
+        <!-- Loading Overlay -->
+        <div *ngIf="formLoading" class="loading-overlay">
+          <mat-spinner diameter="40"></mat-spinner>
+          <span class="loading-text">Loading profile...</span>
+        </div>
+
+        <!-- Profile Form -->
+        <form [formGroup]="userInfoForm" (ngSubmit)="saveChanges()" class="profile-form">
+          <div class="form-grid">
+            <!-- Email Field -->
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Email Address</mat-label>
+              <mat-icon matPrefix>email</mat-icon>
+              <input type="email" matInput formControlName="email" placeholder="your.email@example.com">
+              <mat-error *ngIf="userInfoForm.get('email')?.hasError('email')">
+                Please enter a valid email address
+              </mat-error>
+              <mat-error *ngIf="userInfoForm.get('email')?.hasError('required')">
+                Email is required
+              </mat-error>
+            </mat-form-field>
+
+            <!-- ARMA GUID Field -->
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>ARMA GUID</mat-label>
+              <mat-icon matPrefix>videogame_asset</mat-icon>
+              <input type="text" matInput formControlName="armaID" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+              <mat-hint>Required for event participation</mat-hint>
+              <mat-error *ngIf="userInfoForm.get('armaID')?.hasError('pattern')">
+                Please enter a valid ARMA GUID
+              </mat-error>
+              <mat-error *ngIf="userInfoForm.get('armaID')?.hasError('required')">
+                ARMA GUID is required
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Steam ID Field -->
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Steam ID64</mat-label>
+              <mat-icon matPrefix>sports_esports</mat-icon>
+              <input type="text" matInput formControlName="steamID" placeholder="17-digit Steam ID">
+              <mat-hint>Optional: Links your Steam profile</mat-hint>
+              <mat-error *ngIf="userInfoForm.get('steamID')?.hasError('pattern')">
+                Please enter a valid 17-digit Steam ID64
+              </mat-error>
+            </mat-form-field>
+
+          </div>
+          <!-- Action Buttons -->
+          <div class="action-buttons">
+            <button 
+              *ngIf="shouldShowDiscardButton" 
+              mat-stroked-button 
+              color="warn" 
+              type="button"
+              (click)="discardChanges()"
+              [disabled]="saving"
+              class="discard-btn">
+              <mat-icon>cancel</mat-icon>
+              Discard Changes
+            </button>
+            
+            <button 
+              mat-raised-button 
+              color="primary" 
+              type="submit"
+              [disabled]="shouldDisableSaveButton"
+              class="save-btn">
+              <mat-icon *ngIf="saving" class="spinning-icon">refresh</mat-icon>
+              <mat-icon *ngIf="!saving">save</mat-icon>
+              {{ saving ? 'Saving...' : 'Save Changes' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </mat-expansion-panel>
+  </mat-card>
+
+  <!-- Admin Section - Only visible for admins -->
+  <mat-card *ngIf="userService.dbUser?.isAdmin" class="admin-card">
+    <mat-expansion-panel [(expanded)]="adminExpanded" class="admin-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="section-title admin-title">
+          <mat-icon>admin_panel_settings</mat-icon>
+          Admin
+        </mat-panel-title>
+        <mat-panel-description>
+          Administrative privileges and settings
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+    
+      <div class="admin-content">
+        <!-- Admin Form -->
+        <form [formGroup]="userInfoForm" class="admin-form">
+          <div class="admin-form-grid">
+            <!-- Admin Callsign Field -->
+            <mat-form-field appearance="outline" class="form-field admin-field">
+              <mat-label>Callsign Assignment</mat-label>
+              <mat-icon matPrefix class="admin-icon">military_tech</mat-icon>
+              <input type="text" matInput formControlName="callsign" placeholder="Enter callsign...">
+              <mat-hint>Admin privilege: Assign callsign to this user</mat-hint>
+            </mat-form-field>
+          </div>
+        </form>
+      </div>
+    </mat-expansion-panel>
+  </mat-card>
+
+  <!-- Statistics Section -->
+  <mat-card class="statistics-card">
+    <mat-card-header>
+      <mat-card-title class="section-title">
+        <mat-icon>bar_chart</mat-icon>
+        Player Statistics
+      </mat-card-title>
+      <mat-card-subtitle>ARMA 4 / Reforger Performance Data</mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content class="statistics-content">
+      <app-user-stats></app-user-stats>
+    </mat-card-content>
+  </mat-card>
 </div>
