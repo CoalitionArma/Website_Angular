@@ -278,7 +278,12 @@ export class EventsComponent implements OnInit, OnDestroy {
   loadCommunities(): void {
     this.loadingCommunities = true;
     
-    this.userService.getCommunitiesList().subscribe({
+    // Use public endpoint if not logged in, authenticated endpoint if logged in
+    const communitiesRequest = this.userService.loggedIn 
+      ? this.userService.getCommunitiesList()
+      : this.userService.getPublicCommunitiesList();
+    
+    communitiesRequest.subscribe({
       next: (response: any) => {
         // Extract the communities array from the response
         const communities = response?.communities || response;
