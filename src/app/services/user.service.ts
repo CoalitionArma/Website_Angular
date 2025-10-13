@@ -17,6 +17,8 @@ export class UserService {
     private USERURL = `${environment.discordApiUrl}/users/@me`;
     private UPDATEURL = `${environment.apiUrl}/update/user`;
     private UPDATECALLSIGNURL = `${environment.apiUrl}/update/callsign`;
+    private COMMUNITIESLISTURL = `${environment.apiUrl}/communities/list`;
+    private ADMINUSERSURL = `${environment.apiUrl}/admin/users`;
     
     // Use BehaviorSubject for reactive login state
     private loggedInSubject = new BehaviorSubject<boolean>(this.isTokenValid());
@@ -264,6 +266,56 @@ export class UserService {
         );
     }
 
+    getCommunitiesList(): Observable<any> {
+        const jwtToken = localStorage.getItem('jwt_token');
+        if (!jwtToken) {
+            console.warn('No JWT token found, user needs to log in again');
+            return throwError(() => new Error('No JWT token found. Please log out and log back in.'));
+        }
+        
+        if (!this.isTokenValid()) {
+            console.warn('Discord token expired');
+            return throwError(() => new Error('Session expired. Please log in again.'));
+        }
+        
+        return this.http.get(this.COMMUNITIESLISTURL, {
+            headers: {
+                'access_token': `${jwtToken}`,
+                'Content-Type': 'application/json'
+            }
+        }).pipe(
+            catchError((error) => {
+                console.error('Communities list request failed:', error);
+                return this.handleError(error);
+            })
+        );
+    }
+
+    getAllUsers(): Observable<any> {
+        const jwtToken = localStorage.getItem('jwt_token');
+        if (!jwtToken) {
+            console.warn('No JWT token found, user needs to log in again');
+            return throwError(() => new Error('No JWT token found. Please log out and log back in.'));
+        }
+        
+        if (!this.isTokenValid()) {
+            console.warn('Discord token expired');
+            return throwError(() => new Error('Session expired. Please log in again.'));
+        }
+        
+        return this.http.get(this.ADMINUSERSURL, {
+            headers: {
+                'access_token': `${jwtToken}`,
+                'Content-Type': 'application/json'
+            }
+        }).pipe(
+            catchError((error) => {
+                console.error('Users list request failed:', error);
+                return this.handleError(error);
+            })
+        );
+    }
+
     setAvatarUrl(): void {
         this.avatarUrl = `${environment.discordCdnUrl}/avatars/${this.discordUser?.id}/${this.discordUser?.avatar}.png`;
     }
@@ -284,6 +336,7 @@ export class UserService {
             armaguid: form.value.armaID,
             callsign: form.value.callsign !== undefined ? form.value.callsign : this.dbUser?.callsign, // Include callsign from form
             isAdmin: this.dbUser?.isAdmin || false,
+            communityId: form.value.communityId !== undefined ? form.value.communityId : this.dbUser?.communityId, // Include communityId from form
         };
     }
 
@@ -323,5 +376,38 @@ export class UserService {
         
         // Return true if token expires within next 10 minutes
         return now > (expiry - 10 * 60 * 1000);
+    }
+
+    // Update user properties (admin only)
+    updateUserProperties(userData: {
+        discordid: string;
+        callsign?: string;
+        section?: string;
+        veterancy?: string;
+        communityId?: number | null;
+        isAdmin?: boolean;
+    }): Observable<any> {
+        const jwtToken = localStorage.getItem('jwt_token');
+        if (!jwtToken) {
+            console.warn('No JWT token found, user needs to log in again');
+            return throwError(() => new Error('No JWT token found. Please log out and log back in.'));
+        }
+        
+        if (!this.isTokenValid()) {
+            console.warn('Discord token expired');
+            return throwError(() => new Error('Session expired. Please log in again.'));
+        }
+        
+        const headers = {
+            'access_token': `${jwtToken}`,
+            'Content-Type': 'application/json'
+        };
+
+        return this.http.put(`${environment.apiUrl}/admin/users/${userData.discordid}`, userData, { headers }).pipe(
+            catchError((error) => {
+                console.error('Update user properties request failed:', error);
+                return this.handleError(error);
+            })
+        );
     }
 }

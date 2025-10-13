@@ -1,0 +1,499 @@
+@use '@angular/material' as mat;
+
+// User Management Container
+.user-management-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  min-height: 100vh;
+  background: 
+    linear-gradient(135deg, rgba(26, 26, 26, 0.85) 0%, rgba(45, 45, 45, 0.85) 100%),
+    url('/assets/images/admin_bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  
+  @media (max-width: 768px) {
+    padding: 16px;
+    background-attachment: scroll;
+  }
+}
+
+// Header Section
+.header-section {
+  margin-bottom: 32px;
+  text-align: center;
+  
+  .page-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0 0 16px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    
+    mat-icon {
+      font-size: 2.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      color: #ff9800;
+    }
+    
+    @media (max-width: 768px) {
+      font-size: 2rem;
+      
+      mat-icon {
+        font-size: 2rem;
+        width: 2rem;
+        height: 2rem;
+      }
+    }
+  }
+  
+  .page-description {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+    margin: 0;
+  }
+}
+
+// Card Styling
+.filter-card,
+.table-card,
+.callsign-card {
+  background: linear-gradient(135deg, rgba(66, 40, 66, 0.9) 0%, rgba(48, 30, 48, 0.9) 100%);
+  backdrop-filter: blur(10px);
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(255, 152, 0, 0.3);
+  margin-bottom: 24px;
+  
+  .mat-mdc-card-header {
+    .mat-mdc-card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #ffffff !important;
+      font-size: 1.25rem !important;
+      font-weight: 600 !important;
+      
+      mat-icon {
+        color: #ff9800;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}
+
+// Toast Messages
+.toast-container {
+  margin-bottom: 24px;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  color: #ffffff;
+  animation: slideDown 0.3s ease-out;
+  
+  &.error-toast {
+    background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+    border: 1px solid rgba(211, 47, 47, 0.3);
+  }
+  
+  &.success-toast {
+    background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+    border: 1px solid rgba(56, 142, 60, 0.3);
+  }
+  
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+  
+  span {
+    flex: 1;
+    font-weight: 500;
+  }
+  
+  button {
+    color: inherit !important;
+    
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+// Search Form
+.search-form {
+  .filter-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 16px;
+    align-items: end;
+    
+    @media (max-width: 968px) {
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .filter-field {
+    width: 100%;
+  }
+  
+  .refresh-btn {
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%) !important;
+    color: #ffffff !important;
+    height: 56px;
+    min-width: 120px;
+    
+    &:hover {
+      background: linear-gradient(135deg, #f57c00 0%, #ef6c00 100%) !important;
+    }
+  }
+}
+
+// Table Styling
+.table-container {
+  position: relative;
+  overflow-x: auto;
+  
+  .users-table {
+    width: 100%;
+    background: transparent;
+    
+    th {
+      background: rgba(255, 152, 0, 0.1) !important;
+      color: #ffffff !important;
+      font-weight: 600 !important;
+      border-bottom: 2px solid rgba(255, 152, 0, 0.3) !important;
+      
+      mat-icon {
+        color: #ff9800;
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+    }
+    
+    td {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+      color: #ffffff !important;
+      padding: 16px !important;
+    }
+    
+    tr:hover {
+      background-color: rgba(255, 152, 0, 0.05) !important;
+    }
+  }
+  
+  .user-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    
+    .username {
+      font-weight: 600;
+      color: #ffffff;
+    }
+    
+    .email {
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+  
+  .callsign {
+    font-weight: 500;
+    color: #ff9800;
+    
+    &.no-callsign {
+      color: rgba(255, 255, 255, 0.5);
+      font-style: italic;
+    }
+  }
+  
+  .section,
+  .veterancy,
+  .community {
+    color: #ffffff;
+  }
+  
+  .action-btn {
+    color: #ff9800 !important;
+    
+    &:hover {
+      background-color: rgba(255, 152, 0, 0.1) !important;
+    }
+  }
+}
+
+// Loading Overlay
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(48, 30, 48, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  border-radius: 16px;
+  z-index: 10;
+  
+  .loading-text {
+    color: #ffffff;
+    font-weight: 500;
+  }
+}
+
+// No Data Message
+.no-data {
+  text-align: center;
+  padding: 48px 24px;
+  color: rgba(255, 255, 255, 0.7);
+  
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: rgba(255, 152, 0, 0.5);
+    margin-bottom: 16px;
+  }
+  
+  h3 {
+    margin: 0 0 8px 0;
+    color: #ffffff;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+}
+
+// Callsign Form
+.callsign-form {
+  .callsign-form-content {
+    margin-bottom: 24px;
+  }
+  
+  .callsign-field {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .callsign-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    
+    @media (max-width: 600px) {
+      flex-direction: column;
+    }
+    
+    .cancel-btn {
+      border-color: #d32f2f !important;
+      color: #d32f2f !important;
+      
+      &:hover {
+        background-color: rgba(211, 47, 47, 0.1) !important;
+      }
+    }
+    
+    .save-btn {
+      background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%) !important;
+      color: #ffffff !important;
+      min-width: 140px;
+      
+      &:hover {
+        background: linear-gradient(135deg, #f57c00 0%, #ef6c00 100%) !important;
+      }
+      
+      .spinning-icon {
+        animation: spin 1s linear infinite;
+      }
+    }
+  }
+}
+
+// Global Form Field Overrides for Admin Theme
+:host {
+  ::ng-deep {
+    .mat-mdc-form-field {
+      width: 100%;
+      
+      // Universal border removal for ALL child elements
+      * {
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+      }
+      
+      // Text field wrapper (background) - admin purple theme
+      .mat-mdc-text-field-wrapper {
+        background-color: rgba(255, 152, 0, 0.15) !important;
+        border-radius: 8px !important;
+        border: 1px solid rgba(255, 152, 0, 0.3) !important;
+        transition: border-color 0.3s ease !important;
+      }
+      
+      // Hide all Material outline elements
+      .mat-mdc-form-field-outline,
+      .mat-mdc-form-field-outline-thick,
+      .mat-mdc-form-field-outline-start,
+      .mat-mdc-form-field-outline-notch,
+      .mat-mdc-form-field-outline-end {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+      }
+      
+      // Input text color
+      .mat-mdc-input-element {
+        color: #ffffff !important;
+        caret-color: #ff9800 !important;
+      }
+      
+      // Select styling
+      .mat-mdc-select-value,
+      .mat-mdc-select-value-text {
+        color: #ffffff !important;
+      }
+      
+      .mat-mdc-select-placeholder {
+        color: rgba(255, 255, 255, 0.5) !important;
+      }
+      
+      .mat-mdc-select-trigger {
+        color: #ffffff !important;
+      }
+      
+      .mat-mdc-select-arrow {
+        color: rgba(255, 255, 255, 0.7) !important;
+      }
+      
+      // Label styling
+      .mat-mdc-floating-label {
+        color: rgba(255, 255, 255, 0.7) !important;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6) !important;
+        font-weight: bold !important;
+        
+        &.mdc-floating-label--float-above {
+          color: #ff9800 !important;
+        }
+      }
+      
+      // Prefix icon styling
+      .mat-mdc-form-field-icon-prefix {
+        color: #ff9800 !important;
+        margin-right: 12px !important;
+      }
+      
+      // Hint text
+      .mat-mdc-form-field-hint {
+        color: rgba(255, 255, 255, 0.6) !important;
+      }
+      
+      // Error text
+      .mat-mdc-form-field-error {
+        color: #f44336 !important;
+      }
+      
+      // Focused state
+      &.mat-focused {
+        .mat-mdc-text-field-wrapper {
+          border-color: #ff9800 !important;
+          box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.2) !important;
+        }
+        
+        .mat-mdc-floating-label {
+          color: #ff9800 !important;
+        }
+        
+        .mat-mdc-select-arrow {
+          color: #ff9800 !important;
+        }
+      }
+      
+      // Hover state
+      &:hover:not(.mat-focused) {
+        .mat-mdc-text-field-wrapper {
+          border-color: rgba(255, 152, 0, 0.5) !important;
+        }
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .user-management-container {
+    padding: 16px;
+  }
+  
+  .filter-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .table-container {
+    font-size: 0.875rem;
+  }
+}
+
+// Global dialog panel styling
+::ng-deep .edit-user-dialog-panel {
+  .mat-mdc-dialog-container {
+    padding: 0;
+    border-radius: 16px;
+    box-shadow: 
+      0 24px 38px 3px rgba(0, 0, 0, 0.14),
+      0 9px 46px 8px rgba(0, 0, 0, 0.12),
+      0 11px 15px -7px rgba(0, 0, 0, 0.2);
+  }
+}
+
+::ng-deep .edit-user-dialog-backdrop {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}

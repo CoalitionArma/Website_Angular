@@ -671,6 +671,29 @@ html {
               color: #90EE90;
             }
           }
+
+          .group-restriction-badge {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 8px;
+            margin-right: 8px;
+            flex-shrink: 0;
+            font-size: 12px;
+            color: rgba(255, 165, 0, 1);
+            
+            .restriction-icon {
+              font-size: 16px;
+              width: 16px;
+              height: 16px;
+              margin-right: 4px;
+              color: inherit;
+            }
+            
+            .restriction-text {
+              font-weight: 500;
+              white-space: nowrap;
+            }
+          }
           
           &.semi-transparent-bg {
             background: none;
@@ -789,6 +812,21 @@ html {
             }
           }
 
+          &.restricted {
+            opacity: 0.6;
+            background: rgba(100, 100, 100, 0.1);
+            border-color: rgba(255, 165, 0, 0.4); // Orange border for restricted
+            
+            &:hover {
+              background: rgba(100, 100, 100, 0.15);
+              border-color: rgba(255, 165, 0, 0.6);
+            }
+            
+            .role-name {
+              color: rgba(255, 255, 255, 0.7);
+            }
+          }
+
             .role-info {
             display: flex;
             flex-direction: column;
@@ -843,6 +881,23 @@ html {
                 mat-icon {
                   color: rgb(182, 65, 65);
                 }
+              }
+            }
+
+            .restriction-icon {
+              font-size: 16px;
+              width: 16px;
+              height: 16px;
+              color: rgba(255, 165, 0, 0.8); // Orange for restrictions
+              margin-left: 4px;
+              flex-shrink: 0;
+              
+              &.group-restriction {
+                color: rgba(255, 140, 0, 0.7); // Slightly different orange for group restrictions
+              }
+              
+              &:hover {
+                color: rgba(255, 165, 0, 1);
               }
             }
 

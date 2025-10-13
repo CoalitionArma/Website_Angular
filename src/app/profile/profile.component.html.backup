@@ -1,7 +1,36 @@
 <div class="profile-container">
   <!-- Modern Profile Header Card -->
   <mat-card class="profile-header-card">
-    <mat-card-content class="profile-header-content">
+    <              <!-- Section Selection Field -->
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Section</mat-label>
+                <mat-icon matPrefix>group</mat-icon>
+                <mat-select formControlName="section" placeholder="Select your section">
+                  <mat-option value="HQ">HQ</mat-option>
+                  <mat-option value="Company">Company</mat-option>
+                  <mat-option value="non-member">Non-Member</mat-option>
+                </mat-select>
+                <mat-hint>Your section within the Coalition</mat-hint>
+              </mat-form-field>
+
+              <!-- Rank Selection Field -->
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Rank</mat-label>
+                <mat-icon matPrefix>workspace_premium</mat-icon>
+                <mat-select formControlName="veterancy" placeholder="Select your rank">
+                  <mat-option value="N/A">N/A</mat-option>
+                  <mat-option value="Recruit">Recruit</mat-option>
+                  <mat-option value="Member">Member</mat-option>
+                  <mat-option value="Veteran">Veteran</mat-option>
+                  <mat-option value="Senior">Senior</mat-option>
+                  <mat-option value="Leader">Leader</mat-option>
+                  <mat-option value="Officer">Officer</mat-option>
+                  <mat-option value="Commander">Commander</mat-option>
+                </mat-select>
+                <mat-hint>Your rank within the Coalition</mat-hint>
+              </mat-form-field>
+
+            </div>ent class="profile-header-content">
       <div class="profile-avatar-section">
         <img [src]="userService.avatarUrl" class="profile-avatar" alt="User Avatar">
         <div class="profile-info">
@@ -9,13 +38,6 @@
             {{ userService.discordUser?.global_name }}
             <span *ngIf="userService.dbUser?.callsign" class="callsign-inline">"{{ userService.dbUser?.callsign }}"</span>
           </h1>
-
-          <!-- Community Information -->
-          <div class="community-info" *ngIf="getCommunityName()">
-            <mat-icon>groups</mat-icon>
-            <span>{{ getCommunityName() }}</span>
-          </div>
-          
           <div class="profile-badges">
             <span class="badge rank-badge">
               <mat-icon>workspace_premium</mat-icon>

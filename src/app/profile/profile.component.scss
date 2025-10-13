@@ -66,6 +66,19 @@
         background: transparent !important;
       }
       
+      // Material Select Text Color
+      .mat-mdc-select-value {
+        color: #ffffff !important;
+      }
+      
+      .mat-mdc-select-value-text {
+        color: #ffffff !important;
+      }
+      
+      .mat-mdc-select-placeholder {
+        color: rgba(255, 255, 255, 0.5) !important;
+      }
+      
       // Remove any lines from form field flex container
       .mat-mdc-form-field-flex {
         border: none !important;
@@ -111,11 +124,6 @@
         }
       }
       
-      // Admin icon special styling
-      &.admin-field .mat-mdc-form-field-icon-prefix {
-        color: #ff9800 !important;
-      }
-      
       // Hint text
       .mat-mdc-form-field-hint {
         color: rgba(255, 255, 255, 0.6) !important;
@@ -140,10 +148,6 @@
         .mat-mdc-form-field-icon-prefix {
           color: #b71c1c !important;
         }
-        
-        &.admin-field .mat-mdc-form-field-icon-prefix {
-          color: #ff9800 !important;
-        }
       }
       
       // Placeholder styling
@@ -158,6 +162,78 @@
         }
       }
     }
+
+    // Material Select Dropdown Panel Styling
+    .mat-mdc-select-panel {
+      background-color: rgba(66, 66, 66, 0.95) !important;
+      backdrop-filter: blur(10px) !important;
+      border-radius: 8px !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+      max-height: 300px !important;
+      
+      .mat-mdc-option {
+        background-color: transparent !important;
+        color: #ffffff !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        
+        &:last-child {
+          border-bottom: none !important;
+        }
+        
+        &:hover {
+          background-color: rgba(183, 28, 28, 0.2) !important;
+        }
+        
+        &.mat-mdc-option-active {
+          background-color: rgba(183, 28, 28, 0.3) !important;
+        }
+        
+        &.mdc-list-item--selected {
+          background-color: rgba(183, 28, 28, 0.4) !important;
+          
+          .mdc-list-item__primary-text {
+            color: #ffffff !important;
+            font-weight: 600 !important;
+          }
+        }
+        
+        .mdc-list-item__primary-text {
+          color: #ffffff !important;
+        }
+      }
+    }
+
+    // Material Select Arrow Icon
+    .mat-mdc-select-arrow {
+      color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    // Material Select focused state arrow
+    .mat-focused .mat-mdc-select-arrow {
+      color: #b71c1c !important;
+    }
+    
+    // Additional Material Select styling for form fields
+    .mat-mdc-form-field .mat-mdc-select {
+      color: #ffffff !important;
+      
+      .mat-mdc-select-value {
+        color: #ffffff !important;
+      }
+      
+      .mat-mdc-select-value-text {
+        color: #ffffff !important;
+      }
+      
+      .mat-mdc-select-placeholder {
+        color: rgba(255, 255, 255, 0.5) !important;
+      }
+      
+      .mat-mdc-select-trigger {
+        color: #ffffff !important;
+      }
+    }
   }
 }
 
@@ -169,30 +245,19 @@
   min-height: 100vh;
   
   display: grid;
-  grid-template-columns: 1fr 800px 1fr 380px;
+  grid-template-columns: 1fr 800px 1fr;
   grid-template-areas: 
-    ". header . admin"
-    ". main . admin"
-    ". stats . admin";
+    ". header ."
+    ". main ."
+    ". stats .";
   gap: 32px;
   align-items: start;
-  
-  @media (max-width: 1200px) {
-    grid-template-columns: 1fr 800px 1fr;
-    grid-template-areas: 
-      ". header ."
-      ". main ."
-      ". admin ."
-      ". stats .";
-    gap: 24px;
-  }
   
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
     grid-template-areas: 
       "header"
       "main"
-      "admin"
       "stats";
     gap: 24px;
   }
@@ -213,10 +278,6 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-}
-
-.admin-sidebar {
-  grid-area: admin;
 }
 
 .statistics-card {
@@ -268,7 +329,7 @@
     font-size: 2.5rem;
     font-weight: 600;
     color: #ffffff;
-    margin: 0 0 16px 0;
+    margin: 0 0 4px 0;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     
     @media (max-width: 768px) {
@@ -289,6 +350,29 @@
         margin-top: 4px;
         margin-left: 0;
       }
+    }
+  }
+  
+  .community-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    
+    @media (max-width: 768px) {
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+    
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: #4caf50;
     }
   }
   
@@ -390,88 +474,6 @@
         padding: 0 24px 24px 24px;
       }
     }
-  }
-}
-
-// Admin Card Styling
-.admin-sidebar {
-  .admin-card {
-    background: linear-gradient(135deg, rgba(66, 40, 66, 0.9) 0%, rgba(48, 30, 48, 0.9) 100%);
-    backdrop-filter: blur(10px);
-    border-radius: 16px !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
-    border: 1px solid rgba(255, 152, 0, 0.3);
-    overflow: hidden;
-    height: fit-content;
-    position: sticky;
-    top: 24px;
-    
-    .admin-panel {
-      background: transparent;
-      box-shadow: none !important;
-      
-      .mat-expansion-panel-header {
-        background: transparent;
-        color: white;
-        height: 56px;
-        padding: 0 16px;
-        
-        &:hover {
-          background: rgba(255, 152, 0, 0.1) !important;
-        }
-        
-        .mat-content {
-          align-items: center;
-        }
-        
-        .admin-title {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-size: 1.1rem;
-          font-weight: 600;
-          margin: 0;
-          
-          mat-icon {
-            color: #ff9800;
-            font-size: 20px;
-            width: 20px;
-            height: 20px;
-          }
-        }
-        
-        .mat-expansion-panel-header-description {
-          color: rgba(255, 255, 255, 0.7);
-          font-size: 0.8rem;
-          margin-left: 28px;
-        }
-      }
-      
-      .mat-expansion-panel-content {
-        background: transparent;
-        
-        .mat-expansion-panel-body {
-          padding: 0 16px 16px 16px;
-        }
-      }
-    }
-  }
-}
-
-// Admin Content Styling
-.admin-content {
-  padding: 16px !important;
-  position: relative;
-}
-
-.admin-form {
-  .admin-form-grid {
-    display: grid;
-    gap: 16px;
-  }
-  
-  .admin-field {
-    width: 100%;
   }
 }
 
@@ -670,10 +672,6 @@
 
 @media (max-width: 768px) {
   .profile-form .form-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .admin-form .admin-form-grid {
     grid-template-columns: 1fr;
   }
 }

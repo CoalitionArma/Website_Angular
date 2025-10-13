@@ -5,12 +5,14 @@ export interface EventRole {
   name: string;
   slottedUser?: string; // Discord username of slotted user, undefined if OPEN
   slottedUserId?: string; // Discord ID of slotted user
+  communityRestriction?: number; // Community ID that can slot this role (null = no restriction)
 }
 
 export interface EventGroup {
   id: string;
   name: string;
   roles: EventRole[];
+  communityRestriction?: number; // Community ID that can access this group (null = no restriction)
 }
 
 export interface EventSide {
