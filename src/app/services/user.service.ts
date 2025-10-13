@@ -291,6 +291,16 @@ export class UserService {
         );
     }
 
+    getPublicCommunitiesList(): Observable<any> {
+        // Public endpoint that doesn't require authentication
+        return this.http.get(`${environment.apiUrl}/communities/public`).pipe(
+            catchError((error) => {
+                console.error('Public communities list request failed:', error);
+                return this.handleError(error);
+            })
+        );
+    }
+
     getAllUsers(): Observable<any> {
         const jwtToken = localStorage.getItem('jwt_token');
         if (!jwtToken) {

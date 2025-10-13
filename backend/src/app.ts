@@ -1429,6 +1429,29 @@ app.get('/api/communities/list', authenticateToken, async (req: Request, res: Re
     }
 });
 
+// Get public communities list (no authentication required) - for event restrictions display
+app.get('/api/communities/public', async (req: Request, res: Response): Promise<void> => {
+    try {
+        // Get communities from database using Sequelize model
+        // Only return basic information needed for public display
+        const communities = await Community.findAll({
+            attributes: ['id', 'name'], // Only include id and name for public access
+            order: [['name', 'ASC']]
+        });
+
+        res.status(200).json({
+            success: true,
+            communities: communities.map(community => community.toJSON())
+        });
+    } catch (error) {
+        console.error('Error fetching public communities list:', error);
+        res.status(500).json({
+            error: 'Failed to fetch communities list',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
 // Create a new community
 app.post('/api/communities', authenticateToken, async (req: Request<{}, {}, CreateCommunityRequest>, res: Response): Promise<void> => {
     try {
