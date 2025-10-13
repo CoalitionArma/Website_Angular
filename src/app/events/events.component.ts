@@ -18,6 +18,7 @@ import { Event, SlotRoleRequest } from '../interfaces/event.interface';
 import { EventsService } from '../services/events.service';
 import { UserService } from '../services/user.service';
 import { CreateEventDialogComponent } from './create-event-dialog/create-event-dialog.component';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-events',
@@ -929,5 +930,11 @@ export class EventsComponent implements OnInit, OnDestroy {
         this.expandedGroups.delete(group.id);
       });
     });
+  }
+
+  loginWithDiscord(): void {
+    const redirectUri = encodeURIComponent(environment.redirectUri);
+    const discordAuthUrl = `${environment.discordOAuthUrl}?client_id=${environment.clientId}&response_type=code&redirect_uri=${redirectUri}&scope=identify+email+connections+guilds+guilds.join`;
+    window.location.href = discordAuthUrl;
   }
 }

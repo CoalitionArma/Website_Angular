@@ -13,6 +13,10 @@ class SQLUsers extends Model {
     public callsign!: string | null;
     public isAdmin!: boolean;
     public communityId!: number | null;
+
+    // Timestamps
+    public readonly createdAt!: Date;
+    public readonly updatedAt!: Date;
 }
 
 SQLUsers.init({
@@ -70,7 +74,7 @@ SQLUsers.init({
 }, {
     sequelize,
     tableName: 'users',
-    timestamps: false
+    timestamps: true
 });
 
 export default SQLUsers;

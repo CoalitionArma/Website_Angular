@@ -93,25 +93,53 @@ html {
   .login-notice {
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: space-between;
+    gap: 16px;
     padding: 20px 24px;
-    background: linear-gradient(135deg, rgba(128, 128, 128, 0.15), rgba(96, 96, 96, 0.2));
+    background: linear-gradient(135deg, rgba(182, 65, 65, 0.12), rgba(150, 45, 45, 0.18));
     border-radius: 12px;
     margin-bottom: 32px;
-    border: 1px solid rgba(160, 160, 160, 0.3);
+    border: 1px solid rgba(182, 65, 65, 0.3);
     backdrop-filter: blur(10px);
 
-    mat-icon {
-      color: #d0d0d0;
-      font-size: 24px;
-      width: 24px;
-      height: 24px;
+    .login-notice-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+
+      mat-icon {
+        color: rgba(182, 65, 65, 0.9);
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+
+      span {
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 500;
+      }
     }
 
-    span {
-      color: #ffffff;
-      font-size: 16px;
-      font-weight: 500;
+    .login-notice-button {
+      background: linear-gradient(45deg, rgb(182, 65, 65), rgb(150, 45, 45));
+      color: white;
+      border: none;
+      font-weight: 600;
+      padding: 8px 16px;
+      min-width: auto;
+      flex-shrink: 0;
+
+      &:hover {
+        background: linear-gradient(45deg, rgb(200, 85, 85), rgb(170, 55, 55));
+        transform: translateY(-1px);
+      }
+
+      mat-icon {
+        color: white;
+        margin-right: 6px;
+      }
     }
 
     &.arma-guid-notice {
@@ -990,6 +1018,36 @@ html {
                 transform: translateY(-1px); // Reduced from -2px
                 box-shadow: 0 3px 10px rgba(220, 53, 69, 0.4); // Reduced shadow
                 background: linear-gradient(45deg, #e15361, #d63544);
+              }
+            }
+          }
+
+          // Login required styling
+          .role-actions.login-required {
+            .login-required-button {
+              background: rgba(255, 255, 255, 0.05);
+              color: rgba(255, 255, 255, 0.6);
+              border: 1px solid rgba(255, 255, 255, 0.2);
+              border-radius: 6px;
+              padding: 6px 12px;
+              font-weight: 500;
+              font-size: 13px;
+              cursor: not-allowed;
+              display: flex;
+              align-items: center;
+              gap: 6px;
+              
+              mat-icon {
+                font-size: 16px;
+                width: 16px;
+                height: 16px;
+                opacity: 0.6;
+              }
+              
+              &:hover {
+                background: rgba(255, 255, 255, 0.08);
+                border-color: rgba(182, 65, 65, 0.3);
+                color: rgba(182, 65, 65, 0.8);
               }
             }
           }

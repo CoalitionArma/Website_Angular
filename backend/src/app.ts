@@ -1605,6 +1605,64 @@ app.delete('/api/communities/:id', authenticateToken, async (req: Request<{ id: 
     }
 });
 
+// Get event groups by mission name
+app.get('/api/events/groups/:missionName', async (req: Request<{ missionName: string }>, res: Response): Promise<void> => {
+    try {
+        const { missionName } = req.params;
+
+        console.log(`Fetching groups for mission: ${missionName}`);
+
+        // Search for event by mission name (title field in the database)
+        const event = await Event.findOne({
+            where: {
+                title: missionName
+            }
+        });
+
+        if (!event) {
+            res.status(404).json({
+                success: false,
+                error: 'Mission not found',
+                message: `No event found with mission name: ${missionName}`
+            });
+            return;
+        }
+
+        // Parse the groups JSON and return it
+        let groups;
+        try {
+            groups = typeof event.groups === 'string' 
+                ? JSON.parse(event.groups) 
+                : event.groups;
+        } catch (parseError) {
+            console.error('Error parsing groups JSON:', parseError);
+            res.status(500).json({
+                success: false,
+                error: 'Invalid groups data',
+                message: 'Failed to parse groups JSON from database'
+            });
+            return;
+        }
+
+        res.status(200).json({
+            success: true,
+            missionName: event.title,
+            eventId: event.id,
+            groups: groups,
+            dateTime: event.dateTime,
+            message: 'Groups retrieved successfully'
+        });
+
+    } catch (error) {
+        console.error('Error fetching event groups:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch event groups',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
 // Helper function to format file sizes
 function formatFileSize(bytes: number): string {
     if (bytes === 0) return '0 Bytes';

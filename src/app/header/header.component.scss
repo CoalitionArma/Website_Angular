@@ -9,9 +9,25 @@
     #logo {
         display: flex;
         align-items: center;
+        flex-shrink: 0; // Prevent logo from shrinking too much
         
         img {
             max-height: 60px; // Limit logo height for compact header
+            max-width: 350px; // Limit maximum width
+            width: auto; // Maintain aspect ratio
+            height: auto; // Maintain aspect ratio
+            object-fit: contain; // Preserve aspect ratio within bounds
+            
+            // Responsive adjustments
+            @media (max-width: 1024px) {
+                max-height: 50px; // Slightly smaller on tablets
+                max-width: 280px;
+            }
+            
+            @media (max-width: 768px) {
+                max-height: 40px; // Even smaller on mobile (if visible)
+                max-width: 220px;
+            }
         }
     }
 
@@ -71,6 +87,33 @@
         align-items: center;
         padding-left: 8px;
         padding-top: 0; // Remove top padding for alignment
+        
+        .user-avatar {
+            width: 48px; // Fixed width
+            height: 48px; // Fixed height
+            border-radius: 50%; // Make it circular
+            object-fit: cover; // Cover the entire area while maintaining aspect ratio
+            object-position: center; // Center the image within the circular frame
+            background-color: rgba(255, 255, 255, 0.1); // Subtle background in case image fails to load
+            border: 2px solid rgba(255, 255, 255, 0.2); // Subtle border
+            transition: border-color 0.2s ease;
+            
+            &:hover {
+                border-color: rgba(182, 65, 65, 0.5); // Theme color on hover
+            }
+            
+            // Responsive adjustments
+            @media (max-width: 1024px) {
+                width: 44px;
+                height: 44px;
+            }
+            
+            @media (max-width: 768px) {
+                width: 40px;
+                height: 40px;
+                border-width: 1px; // Thinner border on smaller screens
+            }
+        }
     }
 }
 
@@ -133,9 +176,7 @@
     flex-direction: column; // Ensure proper layout when shown
 }
 
-avatar {
-    max-width: fit-content;
-}
+// Avatar styling moved to .avatar .user-avatar section above
 
 .discord-icon {
     transition: color 0.2s ease;

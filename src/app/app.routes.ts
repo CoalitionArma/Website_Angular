@@ -26,7 +26,6 @@ export const routes: Routes = [
     {
         path: 'events', 
         component: EventsComponent,
-        canActivate: [AuthGuard],
         data: {
             title: 'Events'
         },

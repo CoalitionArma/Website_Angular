@@ -13,8 +13,14 @@
     </div>
 
     <div *ngIf="!isLoggedIn" class="login-notice">
-      <mat-icon>info_outline</mat-icon>
-      <span>Log in to create events and slot into roles</span>
+      <div class="login-notice-content">
+        <mat-icon>info_outline</mat-icon>
+        <span>You are viewing events as a guest. Log in to slot into roles and create events.</span>
+      </div>
+      <button mat-raised-button color="primary" (click)="loginWithDiscord()" class="login-notice-button">
+        <mat-icon>login</mat-icon>
+        Login with Discord
+      </button>
     </div>
 
     <div *ngIf="isLoggedIn && !isAdmin" class="login-notice">
@@ -267,7 +273,7 @@
                         </span>
                       </div>
                       
-                      <!-- Role actions only for future events -->
+                      <!-- Role actions for authenticated users -->
                       <div class="role-actions" *ngIf="isLoggedIn">
                         <!-- Admin kick button - only show for admins when role is slotted by someone else -->
                         <button 
@@ -298,6 +304,18 @@
                           (click)="unslotRole(currentEvent.id, side.id, group.id, role.id); $event.stopPropagation()"
                           class="unslot-button">
                           Unslot
+                        </button>
+                      </div>
+                      
+                      <!-- Login prompt for unauthenticated users -->
+                      <div class="role-actions login-required" *ngIf="!isLoggedIn">
+                        <button 
+                          mat-stroked-button 
+                          disabled
+                          class="login-required-button"
+                          title="Login required to slot into roles">
+                          <mat-icon>login</mat-icon>
+                          Login Required
                         </button>
                       </div>
                     </div>
