@@ -9,6 +9,7 @@ export interface DBUser {
     armaguid: string | null;
     isAdmin: boolean;
     callsign: string | null;
+    communityId: number | null;
 }
 
 export interface DBUserResponse extends DBUser {

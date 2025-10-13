@@ -10,12 +10,14 @@ export interface EventSide {
 export interface EventGroup {
     id: string;
     name: string;
+    communityRestriction?: number | null;
     roles: EventRole[];
 }
 
 export interface EventRole {
     id: string;
     name: string;
+    communityRestriction?: number | null;
     slottedUser?: string;
     slottedUserId?: string;
 }
@@ -34,7 +36,11 @@ export interface CreateEventRequest {
         color: string;
         groups: Array<{
             name: string;
-            roles: Array<{ name: string }>;
+            communityRestriction?: number | null;
+            roles: Array<{ 
+                name: string;
+                communityRestriction?: number | null;
+            }>;
         }>;
     }>;
 }
@@ -55,9 +61,11 @@ export interface UpdateEventRequest {
         groups: Array<{
             id?: string; // Optional for edit mode
             name: string;
+            communityRestriction?: number | null;
             roles: Array<{ 
                 id?: string; // Optional for edit mode
                 name: string;
+                communityRestriction?: number | null;
                 slottedUser?: string; // Preserve existing slot data
                 slottedUserId?: string; // Preserve existing slot data
             }>;

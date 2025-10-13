@@ -7,6 +7,7 @@ import path from 'path';
 import fs from 'fs';
 import SQLUsers from './models/userModel.interface';
 import Event from './models/eventModel';
+import Community from './models/a4communitiesModel';
 import sequelize from './db';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { DiscordUserResponse } from './interfaces/userresponse.interface';
@@ -15,6 +16,8 @@ import {
     CreateUserRequest, 
     UpdateUserRequest, 
     UpdateCallsignRequest, 
+    CreateCommunityRequest,
+    UpdateCommunityRequest,
     AuthenticatedRequest 
 } from './interfaces/request.interface';
 import { 
@@ -146,7 +149,7 @@ app.post('/api/users', async (req: Request<{}, {}, CreateUserRequest>, res: Resp
                 email: email,
                 teamspeakid: null,
                 username: displayName,
-                section: 'N/A',
+                section: 'non-member',
                 veterancy: 'N/A',
                 armaguid: null,
                 callsign: null,
@@ -172,20 +175,26 @@ app.post('/api/update/user', authenticateToken, async (req: Request<{}, {}, Upda
         section, 
         veterancy, 
         armaguid,
-        callsign 
+        callsign,
+        communityId 
     } = req.body;
     
     try {
         const user = await SQLUsers.findOne({ where: { discordid } });
 
         if (user) {
+            // Store old community ID to handle playercount changes
+            const oldCommunityId = user.communityId;
+            const newCommunityId = communityId !== undefined ? communityId : user.communityId;
+            
             user.steamid = steamid || null;
             user.email = email;
             user.teamspeakid = teamspeakid || null;
             user.username = username;
-            user.section = section || 'N/A';
+            user.section = section || 'non-member';
             user.veterancy = veterancy || 'N/A';
             user.armaguid = armaguid || null;
+            user.communityId = newCommunityId;
             
             // Allow admin users to update their own callsign
             if (user.isAdmin && callsign !== undefined) {
@@ -195,6 +204,24 @@ app.post('/api/update/user', authenticateToken, async (req: Request<{}, {}, Upda
             }
 
             await user.save();
+            
+            // Handle community playercount changes
+            if (oldCommunityId !== newCommunityId) {
+                // Decrement old community playercount
+                if (oldCommunityId) {
+                    await Community.decrement('playercount', {
+                        where: { id: oldCommunityId }
+                    });
+                }
+                
+                // Increment new community playercount
+                if (newCommunityId) {
+                    await Community.increment('playercount', {
+                        where: { id: newCommunityId }
+                    });
+                }
+            }
+            
             res.status(200).json({ message: 'User updated successfully' });
         } else {
             res.status(404).json({ error: 'User not found' });
@@ -508,9 +535,11 @@ app.post('/api/events/create', authenticateToken, async (req: Request<{}, {}, Cr
             groups: side.groups.map(group => ({
                 id: require('crypto').randomUUID(),
                 name: group.name,
+                communityRestriction: group.communityRestriction || null,
                 roles: group.roles.map(role => ({
                     id: require('crypto').randomUUID(),
                     name: role.name,
+                    communityRestriction: role.communityRestriction || null,
                     slottedUser: undefined,
                     slottedUserId: undefined
                 }))
@@ -616,6 +645,24 @@ app.post('/api/events/slot', authenticateToken, async (req: Request<{}, {}, Slot
             res.status(404).json({
                 success: false,
                 message: 'Role not found'
+            });
+            return;
+        }
+
+        // Check community restrictions for the role
+        if (role.communityRestriction && role.communityRestriction !== user.communityId) {
+            res.status(403).json({
+                success: false,
+                message: 'This role is restricted to a specific community'
+            });
+            return;
+        }
+
+        // Check community restrictions for the group (if role doesn't have restrictions)
+        if (!role.communityRestriction && group.communityRestriction && group.communityRestriction !== user.communityId) {
+            res.status(403).json({
+                success: false,
+                message: 'This group is restricted to a specific community'
             });
             return;
         }
@@ -899,9 +946,11 @@ app.put('/api/events/:eventId', authenticateToken, async (req: Request<{ eventId
             groups: side.groups.map(group => ({
                 id: group.id || require('crypto').randomUUID(), // Keep existing ID or generate new
                 name: group.name,
+                communityRestriction: group.communityRestriction || null,
                 roles: group.roles.map(role => ({
                     id: role.id || require('crypto').randomUUID(), // Keep existing ID or generate new
                     name: role.name,
+                    communityRestriction: role.communityRestriction || null,
                     slottedUser: role.slottedUser || undefined,
                     slottedUserId: role.slottedUserId || undefined
                 }))
@@ -1174,6 +1223,383 @@ app.get('/api/replays', async (req: Request, res: Response): Promise<void> => {
         console.error('Error fetching replay files:', error);
         res.status(500).json({
             error: 'Failed to fetch replay files',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
+// Community Management Endpoints
+
+// Admin helper function
+const checkAdminUser = async (userId: string): Promise<{ isAdmin: boolean; user: any | null }> => {
+    const user = await SQLUsers.findOne({ where: { discordid: userId } });
+    return {
+        isAdmin: user?.isAdmin || false,
+        user: user
+    };
+};
+
+// Get all communities
+app.get('/api/communities', authenticateToken, async (req: Request, res: Response): Promise<void> => {
+    try {
+        const userId = (req.body as any).id; // From JWT token
+        
+        // Check if user is admin
+        const { isAdmin } = await checkAdminUser(userId);
+        if (!isAdmin) {
+            res.status(403).json({ 
+                error: 'Access denied', 
+                message: 'Only administrators can access community management' 
+            });
+            return;
+        }
+
+        // Get communities from database using Sequelize model
+        const communities = await Community.findAll({
+            order: [['name', 'ASC']]
+        });
+
+        res.status(200).json({
+            success: true,
+            communities: communities.map(community => community.toJSON())
+        });
+    } catch (error) {
+        console.error('Error fetching communities:', error);
+        res.status(500).json({
+            error: 'Failed to fetch communities',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
+// Get all users for admin management
+app.get('/api/admin/users', authenticateToken, async (req: Request, res: Response): Promise<void> => {
+    try {
+        const userId = (req.body as any).id; // From JWT token
+        
+        // Check if user is admin
+        const { isAdmin } = await checkAdminUser(userId);
+        if (!isAdmin) {
+            res.status(403).json({ 
+                error: 'Access denied', 
+                message: 'Only administrators can access user management' 
+            });
+            return;
+        }
+
+        // Get users from database
+        const users = await SQLUsers.findAll({
+            order: [['username', 'ASC']]
+        });
+
+        res.status(200).json({
+            success: true,
+            users: users.map(user => user.toJSON())
+        });
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({
+            error: 'Failed to fetch users',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
+// Update user properties (admin only)
+app.put('/api/admin/users/:discordid', authenticateToken, async (req: Request<{ discordid: string }>, res: Response): Promise<void> => {
+    try {
+        const { discordid } = req.params;
+        const { callsign, section, veterancy, communityId, isAdmin } = req.body;
+        const userId = (req.body as any).id; // From JWT token
+        
+        // Check if user is admin
+        const { isAdmin: requesterIsAdmin } = await checkAdminUser(userId);
+        if (!requesterIsAdmin) {
+            res.status(403).json({ 
+                error: 'Access denied', 
+                message: 'Only administrators can update user properties' 
+            });
+            return;
+        }
+
+        // Find the user to update
+        const user = await SQLUsers.findOne({ where: { discordid } });
+        if (!user) {
+            res.status(404).json({
+                error: 'User not found',
+                message: `User with Discord ID ${discordid} not found`
+            });
+            return;
+        }
+
+        // Validate section if provided
+        if (section && !['HQ', 'Company', 'non-member'].includes(section)) {
+            res.status(400).json({
+                error: 'Validation error',
+                message: 'Section must be HQ, Company, or non-member'
+            });
+            return;
+        }
+
+        // Validate veterancy if provided
+        const validRanks = ['Member', 'Non-member', 'Admin'];
+        if (veterancy && !validRanks.includes(veterancy)) {
+            res.status(400).json({
+                error: 'Validation error',
+                message: 'Invalid rank provided. Must be Member, Non-member, or Admin'
+            });
+            return;
+        }
+
+        // Validate communityId if provided
+        if (communityId !== null && communityId !== undefined) {
+            const community = await Community.findByPk(communityId);
+            if (!community) {
+                res.status(400).json({
+                    error: 'Validation error',
+                    message: 'Invalid community ID provided'
+                });
+                return;
+            }
+        }
+
+        // Store old community ID to handle playercount changes
+        const oldCommunityId = user.communityId;
+        
+        // Update user properties
+        const updateData: any = {};
+        if (callsign !== undefined) updateData.callsign = callsign;
+        if (section !== undefined) updateData.section = section;
+        if (veterancy !== undefined) updateData.veterancy = veterancy;
+        if (communityId !== undefined) updateData.communityId = communityId;
+        if (isAdmin !== undefined) updateData.isAdmin = isAdmin;
+
+        await user.update(updateData);
+        
+        // Handle community playercount changes
+        if (communityId !== undefined && oldCommunityId !== communityId) {
+            // Decrement old community playercount
+            if (oldCommunityId) {
+                await Community.decrement('playercount', {
+                    where: { id: oldCommunityId }
+                });
+            }
+            
+            // Increment new community playercount
+            if (communityId) {
+                await Community.increment('playercount', {
+                    where: { id: communityId }
+                });
+            }
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'User updated successfully',
+            user: user.toJSON()
+        });
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(500).json({
+            error: 'Failed to update user',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
+// Get communities list for profile dropdown (available to all authenticated users)
+app.get('/api/communities/list', authenticateToken, async (req: Request, res: Response): Promise<void> => {
+    try {
+        // Get communities from database using Sequelize model
+        const communities = await Community.findAll({
+            attributes: ['id', 'name', 'playercount'], // Include playercount for admin visibility
+            order: [['name', 'ASC']]
+        });
+
+        res.status(200).json({
+            success: true,
+            communities: communities.map(community => community.toJSON())
+        });
+    } catch (error) {
+        console.error('Error fetching communities list:', error);
+        res.status(500).json({
+            error: 'Failed to fetch communities list',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
+// Create a new community
+app.post('/api/communities', authenticateToken, async (req: Request<{}, {}, CreateCommunityRequest>, res: Response): Promise<void> => {
+    try {
+        const { name, playercount = 0 } = req.body;
+        const userId = (req.body as any).id; // From JWT token
+        
+        // Check if user is admin
+        const { isAdmin } = await checkAdminUser(userId);
+        if (!isAdmin) {
+            res.status(403).json({ 
+                error: 'Access denied', 
+                message: 'Only administrators can create communities' 
+            });
+            return;
+        }
+
+        // Validate input
+        if (!name || name.trim().length === 0) {
+            res.status(400).json({
+                error: 'Validation error',
+                message: 'Community name is required'
+            });
+            return;
+        }
+
+        if (name.length > 255) {
+            res.status(400).json({
+                error: 'Validation error',
+                message: 'Community name must be 255 characters or less'
+            });
+            return;
+        }
+
+        // Check if community already exists
+        const existingCommunity = await Community.findOne({ 
+            where: { name: name.trim() } 
+        });
+
+        if (existingCommunity) {
+            res.status(409).json({
+                error: 'Conflict',
+                message: 'A community with this name already exists'
+            });
+            return;
+        }
+
+        // Create the community using Sequelize model
+        const createdCommunity = await Community.create({
+            name: name.trim(),
+            playercount: Math.max(0, playercount || 0),
+            events_attended: 0
+        });
+
+        res.status(201).json({
+            success: true,
+            community: createdCommunity.toJSON(),
+            message: 'Community created successfully'
+        });
+    } catch (error) {
+        console.error('Error creating community:', error);
+        res.status(500).json({
+            error: 'Failed to create community',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
+// Update community player count
+app.put('/api/communities/:id', authenticateToken, async (req: Request<{ id: string }, {}, UpdateCommunityRequest>, res: Response): Promise<void> => {
+    try {
+        const { id } = req.params;
+        const { playercount } = req.body;
+        const userId = (req.body as any).id; // From JWT token
+        
+        // Check if user is admin
+        const { isAdmin } = await checkAdminUser(userId);
+        if (!isAdmin) {
+            res.status(403).json({ 
+                error: 'Access denied', 
+                message: 'Only administrators can update communities' 
+            });
+            return;
+        }
+
+        // Validate input
+        if (playercount === undefined || playercount === null) {
+            res.status(400).json({
+                error: 'Validation error',
+                message: 'Player count is required'
+            });
+            return;
+        }
+
+        const parsedPlayerCount = typeof playercount === 'string' ? parseInt(playercount) : playercount;
+        if (isNaN(parsedPlayerCount) || parsedPlayerCount < 0) {
+            res.status(400).json({
+                error: 'Validation error',
+                message: 'Player count must be a non-negative number'
+            });
+            return;
+        }
+
+        // Check if community exists
+        const existingCommunity = await Community.findByPk(id);
+
+        if (!existingCommunity) {
+            res.status(404).json({
+                error: 'Not found',
+                message: 'Community not found'
+            });
+            return;
+        }
+
+        // Update the community
+        existingCommunity.playercount = parsedPlayerCount;
+        await existingCommunity.save();
+
+        res.status(200).json({
+            success: true,
+            community: existingCommunity.toJSON(),
+            message: 'Community updated successfully'
+        });
+    } catch (error) {
+        console.error('Error updating community:', error);
+        res.status(500).json({
+            error: 'Failed to update community',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
+// Delete a community
+app.delete('/api/communities/:id', authenticateToken, async (req: Request<{ id: string }>, res: Response): Promise<void> => {
+    try {
+        const { id } = req.params;
+        const userId = (req.body as any).id; // From JWT token
+        
+        // Check if user is admin
+        const { isAdmin } = await checkAdminUser(userId);
+        if (!isAdmin) {
+            res.status(403).json({ 
+                error: 'Access denied', 
+                message: 'Only administrators can delete communities' 
+            });
+            return;
+        }
+
+        // Check if community exists
+        const existingCommunity = await Community.findByPk(id);
+
+        if (!existingCommunity) {
+            res.status(404).json({
+                error: 'Not found',
+                message: 'Community not found'
+            });
+            return;
+        }
+
+        const communityName = existingCommunity.name;
+
+        // Delete the community
+        await existingCommunity.destroy();
+
+        res.status(200).json({
+            success: true,
+            message: `Community "${communityName}" deleted successfully`
+        });
+    } catch (error) {
+        console.error('Error deleting community:', error);
+        res.status(500).json({
+            error: 'Failed to delete community',
             details: error instanceof Error ? error.message : 'Unknown error'
         });
     }

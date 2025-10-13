@@ -1,0 +1,148 @@
+<div class="community-management">
+  <div class="header">
+    <h2>Community Management</h2>
+    <p>Manage communities that commonly attend Coalition events</p>
+    
+    <!-- Summary Stats -->
+    <div class="stats-summary">
+      <div class="stat-item">
+        <span class="stat-number">{{ communities.length }}</span>
+        <span class="stat-label">Total Communities</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{{ getTotalPlayers() }}</span>
+        <span class="stat-label">Total Players</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{{ getTotalEventsAttended() }}</span>
+        <span class="stat-label">Events Attended</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  @if (error) {
+    <div class="error-message">
+      {{ error }}
+      <button (click)="error = ''" class="close-error">×</button>
+    </div>
+  }
+
+  <!-- Loading Indicator -->
+  @if (loading) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <span>Loading...</span>
+    </div>
+  }
+
+  <!-- Add Community Button -->
+  <div class="actions">
+    <button class="add-btn" (click)="toggleForm()" [disabled]="loading">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+      </svg>
+      {{ showForm ? 'Cancel' : 'Add Community' }}
+    </button>
+  </div>
+
+  <!-- Add Community Form -->
+  @if (showForm) {
+    <div class="add-form">
+      <h3>Add New Community</h3>
+      <form (ngSubmit)="addCommunity()" #communityForm="ngForm">
+        <div class="form-group">
+          <label for="communityName">Community Name *</label>
+          <input 
+            type="text" 
+            id="communityName"
+            [(ngModel)]="newCommunity.name"
+            name="communityName"
+            maxlength="255"
+            required
+            placeholder="Enter community name"
+            class="form-input">
+        </div>
+        
+        <div class="form-group">
+          <label for="playerCount">Player Count</label>
+          <input 
+            type="number" 
+            id="playerCount"
+            [(ngModel)]="newCommunity.playercount"
+            name="playerCount"
+            min="0"
+            placeholder="0"
+            class="form-input">
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" [disabled]="!communityForm.form.valid || loading" class="submit-btn">
+            Add Community
+          </button>
+          <button type="button" (click)="toggleForm()" class="cancel-btn">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- Communities List -->
+  @if (!loading && communities.length > 0) {
+    <div class="communities-list">
+      <h3>Communities ({{ communities.length }})</h3>
+      
+      <div class="community-table">
+        <div class="table-header">
+          <div class="col-name">Community Name</div>
+          <div class="col-players">Players</div>
+          <div class="col-events">Events Attended</div>
+          <div class="col-actions">Actions</div>
+        </div>
+        
+        @for (community of communities; track community.id) {
+          <div class="community-row">
+            <div class="col-name">
+              <span class="community-name">{{ community.name }}</span>
+            </div>
+            <div class="col-players">
+              <input 
+                type="number" 
+                [value]="community.playercount"
+                (blur)="updatePlayerCount(community, $event)"
+                min="0"
+                class="player-count-input">
+            </div>
+            <div class="col-events">
+              <span class="events-count">{{ community.events_attended }}</span>
+            </div>
+            <div class="col-actions">
+              <button 
+                (click)="deleteCommunity(community)"
+                class="delete-btn"
+                [disabled]="loading"
+                title="Delete community">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-2.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  @if (!loading && communities.length === 0) {
+    <div class="empty-state">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor" class="empty-icon">
+        <path d="M16 4c4.42 0 8 3.58 8 8s-3.58 8-8 8H8c-4.42 0-8-3.58-8-8s3.58-8 8-8h8m0-2H8C3.58 2 0 5.58 0 10s3.58 8 8 8h8c4.42 0 8-3.58 8-8s-3.58-8-8-8z"/>
+        <circle cx="8" cy="12" r="2"/>
+        <circle cx="16" cy="12" r="2"/>
+      </svg>
+      <h3>No Communities Found</h3>
+      <p>Start by adding your first community to track their participation in events.</p>
+    </div>
+  }
+</div>

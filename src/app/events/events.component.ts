@@ -49,6 +49,8 @@ export class EventsComponent implements OnInit, OnDestroy {
   isLoading = false;
   highlightedRoleId: string | null = null;
   highlightedGroupId: string | null = null;
+  communitiesList: any[] = [];
+  loadingCommunities = false;
   
   // Group collapse state - stores which groups are expanded
   expandedGroups: Set<string> = new Set();
@@ -83,6 +85,7 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadEvents();
+    this.loadCommunities();
     
     // Subscribe to events updates
     this.eventsSubscription = this.eventsService.events$.subscribe(events => {
@@ -271,6 +274,26 @@ export class EventsComponent implements OnInit, OnDestroy {
     });
   }
 
+  loadCommunities(): void {
+    this.loadingCommunities = true;
+    
+    this.userService.getCommunitiesList().subscribe({
+      next: (response: any) => {
+        // Extract the communities array from the response
+        const communities = response?.communities || response;
+        this.communitiesList = Array.isArray(communities) ? communities : [];
+        this.loadingCommunities = false;
+      },
+      error: (error: any) => {
+        this.loadingCommunities = false;
+        this.communitiesList = []; // Ensure it's always an array
+        console.error('Error loading communities - full error:', error);
+        console.error('Error status:', error.status);
+        console.error('Error message:', error.message);
+      }
+    });
+  }
+
   openCreateEventDialog(): void {
     if (!this.userService.loggedIn) {
       this.showToast('You must be logged in to create events');
@@ -350,6 +373,8 @@ export class EventsComponent implements OnInit, OnDestroy {
       next: (response) => {
         if (response.success) {
           this.showToast('Event updated successfully!');
+          // Force reload events to ensure fresh data
+          this.loadEvents();
         } else {
           this.showToast(response.message || 'Failed to update event');
         }
@@ -377,6 +402,23 @@ export class EventsComponent implements OnInit, OnDestroy {
     if (event && event.slotUnlockTime && new Date() < new Date(event.slotUnlockTime) && !this.isAdmin) {
       this.showToast('Slot signups are not yet available for this event', 'Close', 3000);
       return;
+    }
+
+    // Check community restrictions
+    if (event) {
+      const side = event.sides.find(s => s.id === sideId);
+      const group = side?.groups.find(g => g.id === groupId);
+      const role = group?.roles.find(r => r.id === roleId);
+
+      if (role?.communityRestriction && role.communityRestriction !== this.userService.dbUser?.communityId) {
+        this.showToast('This role is restricted to a specific community', 'Close', 3000);
+        return;
+      }
+
+      if (!role?.communityRestriction && group?.communityRestriction && group.communityRestriction !== this.userService.dbUser?.communityId) {
+        this.showToast('This group is restricted to a specific community', 'Close', 3000);
+        return;
+      }
     }
 
     const slotData: SlotRoleRequest = {
@@ -481,6 +523,16 @@ export class EventsComponent implements OnInit, OnDestroy {
     const role = group.roles.find(r => r.id === roleId);
     if (!role) return false;
 
+    // Check community restrictions for the role
+    if (role.communityRestriction && role.communityRestriction !== this.userService.dbUser.communityId) {
+      return false;
+    }
+
+    // Check community restrictions for the group (if role doesn't have restrictions)
+    if (!role.communityRestriction && group.communityRestriction && group.communityRestriction !== this.userService.dbUser.communityId) {
+      return false;
+    }
+
     // User can slot if role is open or if they are already slotted in it
     return !role.slottedUserId || role.slottedUserId === this.userService.dbUser.discordid;
   }
@@ -582,6 +634,23 @@ export class EventsComponent implements OnInit, OnDestroy {
       return 'You must add your ARMA GUID to your profile before slotting';
     }
 
+    const side = event.sides.find(s => s.id === sideId);
+    const group = side?.groups.find(g => g.id === groupId);
+    const role = group?.roles.find(r => r.id === roleId);
+
+    // Check community restrictions
+    if (role?.communityRestriction && role.communityRestriction !== this.userService.dbUser?.communityId) {
+      const community = Array.isArray(this.communitiesList) ? this.communitiesList.find(c => c.id === role.communityRestriction) : null;
+      const communityName = community?.name || 'a specific community';
+      return `This role is restricted to ${communityName}`;
+    }
+
+    if (!role?.communityRestriction && group?.communityRestriction && group.communityRestriction !== this.userService.dbUser?.communityId) {
+      const community = Array.isArray(this.communitiesList) ? this.communitiesList.find(c => c.id === group.communityRestriction) : null;
+      const communityName = community?.name || 'a specific community';
+      return `This group is restricted to ${communityName}`;
+    }
+
     if (event.slotUnlockTime && new Date() < new Date(event.slotUnlockTime)) {
       if (this.isAdmin) {
         return 'Admin: Click to slot (slots are locked for regular users until: ' + this.formatDateTime(event.slotUnlockTime) + ')';
@@ -589,15 +658,37 @@ export class EventsComponent implements OnInit, OnDestroy {
       return 'Slots are locked until: ' + this.formatDateTime(event.slotUnlockTime);
     }
 
-    const side = event.sides.find(s => s.id === sideId);
-    const group = side?.groups.find(g => g.id === groupId);
-    const role = group?.roles.find(r => r.id === roleId);
-
     if (role?.slottedUserId && role.slottedUserId !== this.userService.dbUser?.discordid) {
       return `Role is occupied by ${role.slottedUser || 'another user'}`;
     }
 
     return 'Click to slot into this role';
+  }
+
+  isRoleRestrictedForUser(role: any, group: any): boolean {
+    if (!this.userService.dbUser) return false;
+
+    // Check role-level restrictions first
+    if (role.communityRestriction && role.communityRestriction !== this.userService.dbUser.communityId) {
+      return true;
+    }
+
+    // Check group-level restrictions if role doesn't have restrictions
+    if (!role.communityRestriction && group.communityRestriction && group.communityRestriction !== this.userService.dbUser.communityId) {
+      return true;
+    }
+
+    return false;
+  }
+
+  isGroupRestrictedForUser(group: any): boolean {
+    if (!this.userService.dbUser || !group.communityRestriction) return false;
+    return group.communityRestriction !== this.userService.dbUser.communityId;
+  }
+
+  getRestrictionCommunityName(communityId: number): string {
+    const community = Array.isArray(this.communitiesList) ? this.communitiesList.find(c => c.id === communityId) : null;
+    return community?.name || 'Unknown Community';
   }
 
   formatDateTime(date: Date | string): string {

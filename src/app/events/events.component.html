@@ -213,6 +213,14 @@
                         <mat-icon>{{ isGroupExpanded(group.id) ? 'expand_less' : 'expand_more' }}</mat-icon>
                       </button>
                       {{ group.name }}
+                      <!-- Group community restriction indicator -->
+                      <span 
+                        *ngIf="group.communityRestriction" 
+                        class="group-restriction-badge"
+                        [title]="'Group restricted to ' + getRestrictionCommunityName(group.communityRestriction)">
+                        <mat-icon class="restriction-icon">groups</mat-icon>
+                        <span class="restriction-text">Reserved: {{ getRestrictionCommunityName(group.communityRestriction) }}</span>
+                      </span>
                       <span class="group-role-count" [class]="getGroupSlotClass(group)">({{ getGroupSlotSummary(group) }})</span>
                       <button 
                         mat-icon-button
@@ -227,11 +235,25 @@
                     <div 
                       *ngFor="let role of group.roles" 
                       class="role-item"
+                      [class.restricted]="isRoleRestrictedForUser(role, group)"
                       [id]="'role-' + role.id"
                       [class.highlighted]="highlightedRoleId === role.id">
                       <div class="role-info">
                         <div class="role-name-container">
                           <span class="role-name">{{ role.name }}
+                            <!-- Community restriction indicator -->
+                            <mat-icon 
+                              *ngIf="role.communityRestriction" 
+                              class="restriction-icon"
+                              [title]="'Restricted to ' + getRestrictionCommunityName(role.communityRestriction)">
+                              group
+                            </mat-icon>
+                            <mat-icon 
+                              *ngIf="!role.communityRestriction && group.communityRestriction" 
+                              class="restriction-icon group-restriction"
+                              [title]="'Group restricted to ' + getRestrictionCommunityName(group.communityRestriction)">
+                              groups
+                            </mat-icon>
                             <button 
                               mat-icon-button
                               class="copy-link-button"

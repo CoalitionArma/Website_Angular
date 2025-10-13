@@ -19,11 +19,21 @@ export interface UpdateUserRequest {
     armaguid?: string;
     callsign?: string;
     isAdmin?: boolean;
+    communityId?: number | null;
 }
 
 export interface UpdateCallsignRequest {
     targetUserId: string;
     callsign: string;
+}
+
+export interface CreateCommunityRequest {
+    name: string;
+    playercount?: number;
+}
+
+export interface UpdateCommunityRequest {
+    playercount: number;
 }
 
 export interface AuthenticatedRequest extends Request {

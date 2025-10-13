@@ -151,3 +151,194 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mission-stats-dialog-panel .mat-mdc-dialog-actions .mdc-button.mat-primary:hover {
   background-color: #c62828; /* Darker red for hover */
 }
+
+/* Global Material Select Dropdown Panel Styling */
+.mat-mdc-select-panel {
+  background-color: rgba(66, 66, 66, 0.95) !important;
+  backdrop-filter: blur(10px) !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+  max-height: 300px !important;
+  
+  .mat-mdc-option {
+    background-color: transparent !important;
+    color: #ffffff !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding: 12px 16px !important;
+    min-height: 48px !important;
+    
+    &:last-child {
+      border-bottom: none !important;
+    }
+    
+    &:hover {
+      background-color: rgba(183, 28, 28, 0.2) !important;
+    }
+    
+    &.mat-mdc-option-active {
+      background-color: rgba(183, 28, 28, 0.3) !important;
+    }
+    
+    &.mdc-list-item--selected {
+      background-color: rgba(183, 28, 28, 0.4) !important;
+      
+      .mdc-list-item__primary-text {
+        color: #ffffff !important;
+        font-weight: 600 !important;
+      }
+    }
+    
+    .mdc-list-item__primary-text {
+      color: #ffffff !important;
+    }
+  }
+}
+
+/* Material Select Panel Wrapper (for better backdrop handling) */
+.cdk-overlay-pane .mat-mdc-select-panel {
+  background-color: rgba(66, 66, 66, 0.98) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Material Select Arrow styling */
+.mat-mdc-select .mat-mdc-select-arrow {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.mat-mdc-select.mat-focused .mat-mdc-select-arrow {
+  color: #b71c1c !important;
+}
+
+/* Material Select Text Color (Global) */
+.mat-mdc-select-value {
+  color: #ffffff !important;
+}
+
+.mat-mdc-select-value-text {
+  color: #ffffff !important;
+}
+
+.mat-mdc-select-placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Material Select Trigger (the clickable area) */
+.mat-mdc-select-trigger {
+  color: #ffffff !important;
+}
+
+/* Force white text in all select contexts (except dialog) */
+.mat-mdc-form-field:not(.edit-user-dialog .mat-mdc-form-field) .mat-mdc-select {
+  color: #ffffff !important;
+}
+
+.mat-mdc-form-field:not(.edit-user-dialog .mat-mdc-form-field) .mat-mdc-select .mat-mdc-select-value {
+  color: #ffffff !important;
+}
+
+.mat-mdc-form-field:not(.edit-user-dialog .mat-mdc-form-field) .mat-mdc-select .mat-mdc-select-value-text {
+  color: #ffffff !important;
+}
+
+/* Ensure MDC components use white text (except in dialog) */
+.mdc-select__selected-text:not(.edit-user-dialog .mdc-select__selected-text) {
+  color: #ffffff !important;
+}
+
+/* Enhanced Admin Dialog Styling */
+.edit-user-dialog-panel .mat-mdc-dialog-container {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 16px !important;
+  overflow: hidden;
+}
+
+.edit-user-dialog-panel .mat-mdc-dialog-title {
+  background: linear-gradient(135deg, #7b1fa2 0%, #9c27b0 100%);
+  color: white !important;
+  margin: 0 !important;
+  padding: 20px 24px !important;
+  border-radius: 0 !important;
+}
+
+.edit-user-dialog-panel .mat-mdc-dialog-content {
+  padding: 24px !important;
+  background: #ffffff;
+}
+
+.edit-user-dialog-panel .mat-mdc-dialog-actions {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  margin: 0 !important;
+  padding: 16px 24px !important;
+}
+
+/* Fix Material Form Field borders in edit dialog */
+.edit-user-dialog-panel {
+  .mat-mdc-dialog-container {
+    background: linear-gradient(135deg, rgba(66, 66, 66, 0.95) 0%, rgba(48, 48, 48, 0.95) 100%) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+}
+
+/* Global dialog styling override for edit user dialog */
+.cdk-overlay-container .edit-user-dialog-panel {
+  .mat-mdc-dialog-container,
+  .cdk-dialog-container {
+    background: linear-gradient(135deg, rgba(66, 66, 66, 0.95) 0%, rgba(48, 48, 48, 0.95) 100%) !important;
+    color: #ffffff !important;
+  }
+  
+  .mat-mdc-dialog-content {
+    color: #ffffff !important;
+    background: transparent !important;
+  }
+  
+  .mat-mdc-dialog-title {
+    color: #ffffff !important;
+    background: transparent !important;
+  }
+}
+
+/* Most specific override for Material Dialog */
+.cdk-overlay-pane.edit-user-dialog-panel {
+  .mat-mdc-dialog-container {
+    background: linear-gradient(135deg, rgba(66, 66, 66, 0.95) 0%, rgba(48, 48, 48, 0.95) 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 16px !important;
+  }
+}
+
+/* Override Material Design CSS Variables */
+.edit-user-dialog-panel .mat-mdc-dialog-container {
+  --mdc-dialog-container-color: transparent !important;
+  --mat-dialog-container-background-color: transparent !important;
+  --mat-app-background: transparent !important;
+  background: linear-gradient(135deg, rgba(66, 66, 66, 0.95) 0%, rgba(48, 48, 48, 0.95) 100%) !important;
+}
+
+/* Ultra specific targeting */
+body .cdk-overlay-container .cdk-overlay-pane.edit-user-dialog-panel .mat-mdc-dialog-container {
+  background: linear-gradient(135deg, rgba(66, 66, 66, 0.95) 0%, rgba(48, 48, 48, 0.95) 100%) !important;
+  color: #ffffff !important;
+}
+
+/* Fix input text color in dialog */
+.edit-user-dialog-panel .mat-mdc-input-element {
+  color: #333 !important;
+}
+
+/* Fix select text color in dialog */
+.edit-user-dialog-panel .mat-mdc-select-value-text {
+  color: #333 !important;
+}
+
+/* Fix floating label color in dialog */
+.edit-user-dialog-panel .mdc-floating-label {
+  color: #666 !important;
+}
+
+.edit-user-dialog-panel .mdc-floating-label--float-above {
+  color: #7b1fa2 !important;
+}

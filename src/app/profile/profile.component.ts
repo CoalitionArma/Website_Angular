@@ -7,6 +7,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { ErrorStateMatcher } from '@angular/material/core';
 import {MAT_SNACK_BAR_DATA, MatSnackBar, MatSnackBarAction, MatSnackBarActions, MatSnackBarLabel, MatSnackBarModule, MatSnackBarRef} from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
@@ -36,6 +38,8 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
     MatIconModule,
     MatExpansionModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
+    MatOptionModule,
     ReactiveFormsModule, 
     MatSnackBarModule, 
     MatButtonModule, 
@@ -63,6 +67,11 @@ export class ProfileComponent implements OnInit {
 
   armaGUIDRegex = /^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$/;
   steamid64Regex = /^[0-9]{17}$/;
+  
+  // Communities list for dropdown
+  communitiesList: any[] = [];
+  communitiesLoading = false;
+  
   userInfoForm = this.fb.group({
     email: ['', Validators.required],
     armaID: ['', [
@@ -71,6 +80,7 @@ export class ProfileComponent implements OnInit {
     ]],
     steamID: ['', Validators.pattern(this.steamid64Regex)],
     callsign: [''], // Admin-only field for callsign management
+    communityId: [null as number | null], // Community selection
   });
 
   saveFailed = false
@@ -79,7 +89,6 @@ export class ProfileComponent implements OnInit {
   saving = false
   formLoading = true
   generalInfoExpanded = true // Controls expansion panel state
-  adminExpanded = true // Controls admin panel state
 
   ngOnInit(): void {
     // Debug: Check what's in localStorage when component initializes
@@ -92,6 +101,9 @@ export class ProfileComponent implements OnInit {
     
     // Initialize form with user data when available
     this.initializeForm();
+    
+    // Load communities list
+    this.loadCommunities();
     
     // Load user stats if user is logged in and we have a user ID
     if (this.userService.loggedIn && this.userService.dbUser?.discordid) {
@@ -133,6 +145,7 @@ export class ProfileComponent implements OnInit {
       armaID: this.userService.dbUser?.armaguid || '',
       steamID: this.userService.dbUser?.steamid || '',
       callsign: this.userService.dbUser?.callsign || '',
+      communityId: this.userService.dbUser?.communityId || null,
     });
     
     // Mark form as pristine after setting initial values
@@ -142,6 +155,21 @@ export class ProfileComponent implements OnInit {
     if (this.userService.dbUser) {
       this.formLoading = false;
     }
+  }
+
+  private loadCommunities(): void {
+    this.communitiesLoading = true;
+    this.userService.getCommunitiesList().subscribe({
+      next: (response: any) => {
+        this.communitiesList = response.communities || [];
+        this.communitiesLoading = false;
+      },
+      error: (error: any) => {
+        console.error('Failed to load communities:', error);
+        this.communitiesList = [];
+        this.communitiesLoading = false;
+      }
+    });
   }
 
   saveChanges() {
@@ -314,6 +342,7 @@ export class ProfileComponent implements OnInit {
       armaID: this.userService.dbUser?.armaguid || '',
       steamID: this.userService.dbUser?.steamid || '',
       callsign: this.userService.dbUser?.callsign || '',
+      communityId: this.userService.dbUser?.communityId || null,
     });
     this.userInfoForm.markAsPristine();
     this.saved = false;
@@ -362,6 +391,15 @@ export class ProfileComponent implements OnInit {
     this.saved = false;
     this.saveFailed = false;
     this.saveFailedReason = '';
+  }
+
+  getCommunityName(): string | null {
+    if (!this.userService.dbUser?.communityId || this.communitiesList.length === 0) {
+      return null;
+    }
+    
+    const community = this.communitiesList.find(c => c.id === this.userService.dbUser?.communityId);
+    return community ? community.name : null;
   }
 }
 

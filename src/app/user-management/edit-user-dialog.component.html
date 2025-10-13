@@ -1,0 +1,133 @@
+<div class="edit-user-dialog">
+  <h2 mat-dialog-title class="dialog-title">
+    <mat-icon>edit</mat-icon>
+    Edit User - {{ data.user.username }}
+  </h2>
+
+  <mat-dialog-content class="dialog-content">
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error-message">
+      <mat-icon>error</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div *ngIf="loading" class="loading-overlay">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span class="loading-text">Loading communities...</span>
+    </div>
+
+    <form [formGroup]="editForm" class="edit-form">
+      <div class="form-grid">
+        <!-- Callsign Field -->
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Callsign</mat-label>
+          <mat-icon matPrefix>military_tech</mat-icon>
+          <input 
+            matInput 
+            formControlName="callsign" 
+            placeholder="Enter callsign..."
+            maxlength="100">
+          <mat-hint>User's display callsign</mat-hint>
+          <mat-error *ngIf="editForm.get('callsign')?.hasError('maxlength')">
+            Callsign must be 100 characters or less
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Section Field -->
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Section</mat-label>
+          <mat-icon matPrefix>group</mat-icon>
+          <mat-select formControlName="section" placeholder="Select section">
+            <mat-option value="HQ">HQ</mat-option>
+            <mat-option value="Company">Company</mat-option>
+            <mat-option value="non-member">Non-Member</mat-option>
+          </mat-select>
+          <mat-hint>User's organizational section</mat-hint>
+        </mat-form-field>
+
+        <!-- Rank Field -->
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Rank</mat-label>
+          <mat-icon matPrefix>workspace_premium</mat-icon>
+          <mat-select formControlName="veterancy" placeholder="Select rank">
+            <mat-option value="Member">Member</mat-option>
+            <mat-option value="Non-member">Non-member</mat-option>
+            <mat-option value="Admin">Admin</mat-option>
+          </mat-select>
+          <mat-hint>User's membership status</mat-hint>
+        </mat-form-field>
+
+        <!-- Community Field -->
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Community</mat-label>
+          <mat-icon matPrefix>groups</mat-icon>
+          <mat-select formControlName="communityId" placeholder="Select community">
+            <mat-option [value]="null">No Community</mat-option>
+            <mat-option *ngFor="let community of communitiesList" [value]="community.id">
+              {{ community.name }}
+            </mat-option>
+          </mat-select>
+          <mat-hint>User's primary community affiliation</mat-hint>
+        </mat-form-field>
+
+        <!-- Admin Status Field -->
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Admin Status</mat-label>
+          <mat-icon matPrefix>admin_panel_settings</mat-icon>
+          <mat-select formControlName="isAdmin" placeholder="Select admin status">
+            <mat-option [value]="false">Regular User</mat-option>
+            <mat-option [value]="true">Administrator</mat-option>
+          </mat-select>
+          <mat-hint>User's administrative privileges</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <!-- User Info Display -->
+      <div class="user-info">
+        <h3>User Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Email:</span>
+            <span class="value">{{ data.user.email || 'Not provided' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Discord ID:</span>
+            <span class="value">{{ data.user.discordid || 'Not provided' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Steam ID:</span>
+            <span class="value">{{ data.user.steamid || 'Not provided' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">ARMA GUID:</span>
+            <span class="value">{{ data.user.armaguid || 'Not provided' }}</span>
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-actions">
+    <button 
+      mat-stroked-button 
+      color="warn" 
+      (click)="onCancel()"
+      [disabled]="saving"
+      class="cancel-btn">
+      <mat-icon>cancel</mat-icon>
+      Cancel
+    </button>
+    
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="onSave()"
+      [disabled]="saving || editForm.invalid || !hasChanges()"
+      class="save-btn">
+      <mat-icon *ngIf="saving" class="spinning-icon">refresh</mat-icon>
+      <mat-icon *ngIf="!saving">save</mat-icon>
+      {{ saving ? 'Saving...' : 'Save Changes' }}
+    </button>
+  </mat-dialog-actions>
+</div>

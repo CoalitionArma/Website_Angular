@@ -12,6 +12,7 @@ class SQLUsers extends Model {
     public armaguid!: string | null;
     public callsign!: string | null;
     public isAdmin!: boolean;
+    public communityId!: number | null;
 }
 
 SQLUsers.init({
@@ -55,6 +56,16 @@ SQLUsers.init({
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
+    },
+    communityId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+            model: 'a4communities',
+            key: 'id'
+        },
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE'
     }
 }, {
     sequelize,

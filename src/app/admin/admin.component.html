@@ -1,0 +1,119 @@
+<div class="admin-container">
+  @if (selectedView === '') {
+    <div class="admin-header">
+      <h1 class="admin-title">Administration Panel</h1>
+      <p class="admin-subtitle">Welcome to the Coalition administration dashboard</p>
+    </div>
+
+    @if (currentUser?.isAdmin) {
+      <div class="admin-content">
+        <div class="admin-card" (click)="showCommunityManagement()">
+          <h2>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="card-icon">
+              <path d="M16 4c4.42 0 8 3.58 8 8s-3.58 8-8 8H8c-4.42 0-8-3.58-8-8s3.58-8 8-8h8m0-2H8C3.58 2 0 5.58 0 10s3.58 8 8 8h8c4.42 0 8-3.58 8-8s-3.58-8-8-8z"/>
+              <circle cx="8" cy="12" r="2"/>
+              <circle cx="16" cy="12" r="2"/>
+            </svg>
+            Community Management
+          </h2>
+          <p>Manage communities that attend Coalition events. Add, remove, and track participation data.</p>
+          <button class="admin-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+            </svg>
+            Manage Communities
+          </button>
+        </div>
+
+        <div class="admin-card" (click)="showUserManagement()">
+          <h2>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="card-icon">
+              <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 3.5C14.15 3.05 13.85 2.5 13.85 2.5L12 1L10.15 2.5C10.15 2.5 9.85 3.05 9 3.5L3 7V9L9 5.5V13.5L7 14.5V16.5L9 15.5L12 17L15 15.5L17 16.5V14.5L15 13.5V5.5L21 9Z"/>
+            </svg>
+            User Management
+          </h2>
+          <p>Manage user accounts, callsigns, and permissions. View and edit member information.</p>
+          <button class="admin-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+            </svg>
+            Manage Users
+          </button>
+        </div>
+
+        <div class="admin-card">
+          <h2>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="card-icon">
+              <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z"/>
+            </svg>
+            Mission Management
+          </h2>
+          <p>Add, edit, and organize missions for the community.</p>
+          <button class="admin-btn disabled" disabled>Coming Soon</button>
+        </div>
+
+        <div class="admin-card">
+          <h2>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="card-icon">
+              <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-2 .89-2 2v1c0 1.11.89 2 2 2h1v9c0 1.11.89 2 2 2h10c1.11 0 2-.89 2-2v-9h1c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-1.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5S13.5 6.83 13.5 6s.67-1.5 1.5-1.5zM8.5 6c0-.83.67-1.5 1.5-1.5S11.5 5.17 11.5 6s-.67 1.5-1.5 1.5S8.5 6.83 8.5 6zM7 20v-9h10v9H7z"/>
+            </svg>
+            Event Management
+          </h2>
+          <p>Create and manage community events and operations.</p>
+          <button class="admin-btn disabled" disabled>Coming Soon</button>
+        </div>
+
+        <div class="admin-card">
+          <h2>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="card-icon">
+              <path d="M12 1L21 5V11C21 16.55 17.16 21.74 12 23C6.84 21.74 3 16.55 3 11V5L12 1ZM12 6C11.4 6 11 6.4 11 7V13C11 13.6 11.4 14 12 14S13 13.6 13 13V7C13 6.4 12.6 6 12 6ZM12 16C11.4 16 11 16.4 11 17S11.4 18 12 18 13 17.6 13 17 12.6 16 12 16Z"/>
+            </svg>
+            System Settings
+          </h2>
+          <p>Configure server settings and application parameters.</p>
+          <button class="admin-btn disabled" disabled>Coming Soon</button>
+        </div>
+
+        <div class="admin-card">
+          <h2>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="card-icon">
+              <path d="M3 13H11V3H3V13ZM3 21H11V15H3V21ZM13 21H21V11H13V21ZM13 3V9H21V3H13Z"/>
+            </svg>
+            Analytics
+          </h2>
+          <p>View community statistics and usage analytics.</p>
+          <button class="admin-btn disabled" disabled>Coming Soon</button>
+        </div>
+      </div>
+    } @else {
+      <div class="unauthorized">
+        <h2>Access Denied</h2>
+        <p>You do not have permission to access this area.</p>
+      </div>
+    }
+  }
+
+  @if (selectedView === 'community') {
+    <div class="admin-header">
+      <button class="back-btn" (click)="showDashboard()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+        </svg>
+        Back to Dashboard
+      </button>
+    </div>
+    <app-community-management></app-community-management>
+  }
+
+  @if (selectedView === 'users') {
+    <div class="admin-header">
+      <button class="back-btn" (click)="showDashboard()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+        </svg>
+        Back to Dashboard
+      </button>
+    </div>
+    <app-user-management></app-user-management>
+  }
+</div>

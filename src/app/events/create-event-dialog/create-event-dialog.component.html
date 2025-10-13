@@ -149,6 +149,15 @@
                             <mat-label>Group Name</mat-label>
                             <input matInput formControlName="name" placeholder="e.g., Alpha Squad, Bravo Team">
                           </mat-form-field>
+                          <mat-form-field appearance="fill" class="community-restriction-field">
+                            <mat-label>Community Restriction</mat-label>
+                            <mat-select formControlName="communityRestriction">
+                              <mat-option [value]="null">No Restriction</mat-option>
+                              <mat-option *ngFor="let community of communitiesList" [value]="community.id">
+                                {{community.name}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
                         </div>
                         <button type="button" mat-icon-button color="warn" (click)="removeGroup(sideIndex, groupIndex)">
                           <mat-icon>delete</mat-icon>
@@ -173,6 +182,15 @@
                             <mat-form-field appearance="fill" class="role-name-field">
                               <mat-label>Role Name</mat-label>
                               <input matInput formControlName="name" placeholder="e.g., Squad Leader, Medic, Rifleman">
+                            </mat-form-field>
+                            <mat-form-field appearance="fill" class="community-restriction-field">
+                              <mat-label>Community Restriction</mat-label>
+                              <mat-select formControlName="communityRestriction">
+                                <mat-option [value]="null">No Restriction</mat-option>
+                                <mat-option *ngFor="let community of communitiesList" [value]="community.id">
+                                  {{community.name}}
+                                </mat-option>
+                              </mat-select>
                             </mat-form-field>
                             <button type="button" mat-icon-button color="warn" (click)="removeRole(sideIndex, groupIndex, roleIndex)">
                               <mat-icon>delete</mat-icon>

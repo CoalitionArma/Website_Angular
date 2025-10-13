@@ -645,10 +645,13 @@
 .group-name-container {
   flex: 1;
   width: 100%;
+  display: flex;
+  gap: $spacing-md;
+  align-items: center;
 }
 
 .group-name-field {
-  flex: 1;
+  flex: 2;
   overflow: visible;
   
   ::ng-deep {
@@ -697,6 +700,61 @@
   } 
 }
 
+.community-restriction-field {
+  flex: 1;
+  overflow: visible;
+  
+  ::ng-deep {
+    .mat-mdc-form-field {
+      background: rgba(50, 50, 50, 0.6);
+      border-radius: $border-radius-md;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      height: 56px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .mat-mdc-select-trigger {
+      background: rgba(255, 255, 255, 0.08) !important;
+      border-radius: 4px;
+      padding: 8px 12px !important;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.2s ease;
+    }
+    
+    .mat-mdc-select-trigger:focus {
+      background: rgba(255, 255, 255, 0.12) !important;
+      border-color: rgba(182, 65, 65, 0.5);
+      box-shadow: 0 0 0 2px rgba(182, 65, 65, 0.2);
+    }
+    
+    .mat-mdc-select-value {
+      color: #ffffff !important;
+    }
+    
+    .mat-mdc-select-arrow {
+      color: #ffffff !important;
+    }
+    
+    // Move labels with more padding from inputs for community restriction fields
+    .mdc-floating-label,
+    .mat-mdc-floating-label {
+      transform: translateY(-50%) !important;
+      top: 20px !important;
+      transition: none !important;
+      animation: none !important;
+    }
+    
+    .mdc-floating-label--float-above,
+    .mat-mdc-floating-label.mdc-floating-label--float-above {
+      transform: translateY(-120%) scale(0.75) !important;
+      top: 6px !important;
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+}
+
 // Roles section
 .roles-section {
   margin-top: 8px;
@@ -742,6 +800,12 @@
   margin-bottom: $spacing-sm;
   
   .role-name-field {
+    flex: 2;
+    display: flex;
+    align-items: center;
+  }
+  
+  .community-restriction-field {
     flex: 1;
     display: flex;
     align-items: center;
@@ -767,8 +831,8 @@
   }
 }
 
-.role-name-field {
-  flex: 1;
+.role-name-field,
+.role-item .community-restriction-field {
   overflow: visible;
   
   ::ng-deep {
@@ -793,6 +857,29 @@
       background: rgba(255, 255, 255, 0.1) !important;
       border-color: rgba(182, 65, 65, 0.4);
       box-shadow: 0 0 0 2px rgba(182, 65, 65, 0.15);
+    }
+    
+    // Select field specific styling
+    .mat-mdc-select-trigger {
+      background: rgba(255, 255, 255, 0.06) !important;
+      border-radius: 4px;
+      padding: 8px 12px !important;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: all 0.2s ease;
+    }
+    
+    .mat-mdc-select-trigger:focus {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border-color: rgba(182, 65, 65, 0.4);
+      box-shadow: 0 0 0 2px rgba(182, 65, 65, 0.15);
+    }
+    
+    .mat-mdc-select-value {
+      color: #ffffff !important;
+    }
+    
+    .mat-mdc-select-arrow {
+      color: #ffffff !important;
     }
     
     // Move labels with more padding from inputs for role fields
