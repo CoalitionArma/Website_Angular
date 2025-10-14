@@ -698,23 +698,33 @@ app.post('/api/events/slot', authenticateToken, async (req: Request<{}, {}, Slot
         // Update the event
         await event.update({ groups: JSON.stringify(sides) });
 
+        let discordMessage = '';
+
         // Assign Discord role (don't block the response if it fails)
         if (user.discordid) {
             try {
-                const roleAssigned = await discordRoleService.assignEventBasedRole(
-                    user.discordid, 
-                    event,
-                    sideId,
-                    role.name
-                );
+                // First check if user is in the Discord server
+                const isInServer = await discordRoleService.isUserInDiscordServer(user.discordid);
                 
-                if (roleAssigned) {
-                    console.log(`✅ Discord role assigned to ${user.username} for event ${eventId}`);
+                if (!isInServer) {
+                    discordMessage = ' Please join our Discord server to receive your role assignment.';
+                    console.log(`ℹ️ User ${user.username} is not in Discord server, skipping role assignment`);
                 } else {
-                    console.warn(`⚠️ Failed to assign Discord role to ${user.username} for event ${eventId}`);
+                    const roleAssigned = await discordRoleService.assignEventBasedRole(
+                        user.discordid, 
+                        event,
+                        sideId,
+                        role.name
+                    );
+                    
+                    if (roleAssigned) {
+                        console.log(`✅ Discord role assigned to ${user.username} for event ${eventId}`);
+                    } else {
+                        console.warn(`⚠️ Failed to assign Discord role to ${user.username} for event ${eventId}`);
+                    }
                 }
             } catch (error) {
-                console.error(`❌ Error assigning Discord role to ${user.username}:`, error);
+                console.error(`❌ Error checking Discord status for ${user.username}:`, error);
             }
         } else {
             console.log(`ℹ️ No Discord ID found for user ${user.username}, skipping role assignment`);
@@ -732,7 +742,7 @@ app.post('/api/events/slot', authenticateToken, async (req: Request<{}, {}, Slot
         res.status(200).json({
             success: true,
             event: responseEvent,
-            message: 'Successfully slotted into role'
+            message: `Successfully slotted into role${discordMessage}`
         });
     } catch (error) {
         console.error('Error slotting role:', error);

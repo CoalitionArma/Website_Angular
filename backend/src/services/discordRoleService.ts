@@ -214,6 +214,38 @@ class DiscordRoleService {
       return false;
     }
   }
+
+  /**
+   * Check if a user is a member of the Discord server
+   */
+  async isUserInDiscordServer(discordId: string): Promise<boolean> {
+    try {
+      const response = await axios.get(
+        `${this.discordBotUrl}/api/discord/check-member/${discordId}`,
+        {
+          timeout: this.timeout,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      return response.data.isMember === true;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.code === 'ECONNREFUSED') {
+          console.warn('⚠️ Discord bot is not running or unreachable');
+        } else if (error.code === 'ECONNABORTED') {
+          console.warn('⚠️ Discord bot request timed out');
+        } else {
+          console.error('❌ Discord member check error:', error.response?.data || error.message);
+        }
+      } else {
+        console.error('❌ Unexpected error during Discord member check:', error);
+      }
+      return false; // Assume not in server if we can't check
+    }
+  }
 }
 
 // Export a singleton instance
