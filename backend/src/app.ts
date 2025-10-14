@@ -47,12 +47,6 @@ const allowedOrigins: string[] = [
     'https://coalitiongroup.net'
 ];
 
-app.use((req: Request, res: Response, next: NextFunction): void => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    next();
-});
-
 // JWT Configuration
 const JWT_SECRET: string = process.env.JWT_SECRET as string;
 
