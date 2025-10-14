@@ -595,6 +595,15 @@ app.post('/api/events/slot', authenticateToken, async (req: Request<{}, {}, Slot
             return;
         }
 
+        // Check if user has an ARMA GUID
+        if (!user.armaguid) {
+            res.status(400).json({
+                success: false,
+                message: 'You must set your ARMA GUID in your profile before slotting into roles'
+            });
+            return;
+        }
+
         // Find the event
         const event = await Event.findByPk(eventId);
         if (!event) {
@@ -665,7 +674,7 @@ app.post('/api/events/slot', authenticateToken, async (req: Request<{}, {}, Slot
         }
 
         // Check if role is already slotted by someone else
-        if (role.slottedUserId && role.slottedUserId !== userId) {
+        if (role.slottedUserId && role.slottedUserId !== user.armaguid) {
             res.status(400).json({
                 success: false,
                 message: 'Role is already taken by another user'
@@ -678,10 +687,11 @@ app.post('/api/events/slot', authenticateToken, async (req: Request<{}, {}, Slot
         for (const s of sides) {
             for (const g of s.groups) {
                 for (const r of g.roles) {
-                    if (r.slottedUserId === userId && r.id !== roleId) {
+                    if (r.slottedUserId === user.armaguid && r.id !== roleId) {
                         // Unslot user from the previous role
                         r.slottedUser = undefined;
                         r.slottedUserId = undefined;
+                        r.slottedUserDiscordId = undefined;
                         userAlreadySlotted = true;
                         break;
                     }
@@ -693,7 +703,8 @@ app.post('/api/events/slot', authenticateToken, async (req: Request<{}, {}, Slot
 
         // Slot the user into the role
         role.slottedUser = user.username;
-        role.slottedUserId = userId;
+        role.slottedUserId = user.armaguid; // Now using ARMA GUID as primary ID
+        role.slottedUserDiscordId = userId; // Store Discord ID for Discord role assignment
 
         // Update the event
         await event.update({ groups: JSON.stringify(sides) });
@@ -701,17 +712,17 @@ app.post('/api/events/slot', authenticateToken, async (req: Request<{}, {}, Slot
         let discordMessage = '';
 
         // Assign Discord role (don't block the response if it fails)
-        if (user.discordid) {
+        if (role.slottedUserDiscordId) {
             try {
                 // First check if user is in the Discord server
-                const isInServer = await discordRoleService.isUserInDiscordServer(user.discordid);
+                const isInServer = await discordRoleService.isUserInDiscordServer(role.slottedUserDiscordId);
                 
                 if (!isInServer) {
                     discordMessage = ' Please join our Discord server to receive your role assignment.';
                     console.log(`ℹ️ User ${user.username} is not in Discord server, skipping role assignment`);
                 } else {
                     const roleAssigned = await discordRoleService.assignEventBasedRole(
-                        user.discordid, 
+                        role.slottedUserDiscordId, 
                         event,
                         sideId,
                         role.name
@@ -802,7 +813,16 @@ app.post('/api/events/unslot', authenticateToken, async (req: Request<{}, {}, Sl
         }
 
         // Check if the user is actually slotted in this role
-        if (role.slottedUserId !== userId) {
+        const user = await SQLUsers.findOne({ where: { discordid: userId } });
+        if (!user || !user.armaguid) {
+            res.status(400).json({
+                success: false,
+                message: 'User not found or ARMA GUID not set'
+            });
+            return;
+        }
+
+        if (role.slottedUserId !== user.armaguid) {
             res.status(400).json({
                 success: false,
                 message: 'You are not slotted in this role'
@@ -810,30 +830,33 @@ app.post('/api/events/unslot', authenticateToken, async (req: Request<{}, {}, Sl
             return;
         }
 
+        // Store Discord ID for role removal
+        const discordIdForRoleRemoval = role.slottedUserDiscordId;
+
         // Unslot the user
         role.slottedUser = undefined;
         role.slottedUserId = undefined;
+        role.slottedUserDiscordId = undefined;
 
         // Update the event
         await event.update({ groups: JSON.stringify(sides) });
 
         // Remove Discord role (don't block the response if it fails)
-        const user = await SQLUsers.findOne({ where: { discordid: userId } });
-        if (user && user.discordid) {
+        if (discordIdForRoleRemoval) {
             try {
                 const rolesRemoved = await discordRoleService.removeAllEventRoles(
-                    user.discordid, 
+                    discordIdForRoleRemoval, 
                     event,
                     sideId
                 );
                 
                 if (rolesRemoved) {
-                    console.log(`✅ All Discord roles removed from ${user.username} for event ${eventId}`);
+                    console.log(`✅ All Discord roles removed from user for event ${eventId}`);
                 } else {
-                    console.warn(`⚠️ Failed to remove some Discord roles from ${user.username} for event ${eventId}`);
+                    console.warn(`⚠️ Failed to remove some Discord roles from user for event ${eventId}`);
                 }
             } catch (error) {
-                console.error(`❌ Error removing Discord roles from ${user.username}:`, error);
+                console.error(`❌ Error removing Discord roles from user:`, error);
             }
         } else {
             console.log(`ℹ️ No Discord ID found for user, skipping role removal`);
@@ -934,6 +957,7 @@ app.post('/api/events/admin/kick', authenticateToken, async (req: Request<{}, {}
         // Kick the user from the role
         role.slottedUser = undefined;
         role.slottedUserId = undefined;
+        role.slottedUserDiscordId = undefined;
 
         // Update the event
         await event.update({ groups: JSON.stringify(sides) });
@@ -1005,7 +1029,8 @@ app.put('/api/events/:eventId', authenticateToken, async (req: Request<{ eventId
                     name: role.name,
                     communityRestriction: role.communityRestriction || null,
                     slottedUser: role.slottedUser || undefined,
-                    slottedUserId: role.slottedUserId || undefined
+                    slottedUserId: role.slottedUserId || undefined,
+                    slottedUserDiscordId: role.slottedUserDiscordId || undefined
                 }))
             }))
         }));

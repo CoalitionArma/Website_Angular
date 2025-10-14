@@ -542,7 +542,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     }
 
     // User can slot if role is open or if they are already slotted in it
-    return !role.slottedUserId || role.slottedUserId === this.userService.dbUser.discordid;
+    return !role.slottedUserId || role.slottedUserId === this.userService.dbUser.armaguid;
   }
 
   areSlotsLocked(event: Event): boolean {
@@ -594,7 +594,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     const role = group.roles.find(r => r.id === roleId);
     if (!role) return false;
 
-    return role.slottedUserId === this.userService.dbUser.discordid;
+    return role.slottedUserId === this.userService.dbUser.armaguid;
   }
 
   deleteEvent(eventId: string): void {
@@ -666,7 +666,7 @@ export class EventsComponent implements OnInit, OnDestroy {
       return 'Slots are locked until: ' + this.formatDateTime(event.slotUnlockTime);
     }
 
-    if (role?.slottedUserId && role.slottedUserId !== this.userService.dbUser?.discordid) {
+    if (role?.slottedUserId && role.slottedUserId !== this.userService.dbUser?.armaguid) {
       return `Role is occupied by ${role.slottedUser || 'another user'}`;
     }
 
