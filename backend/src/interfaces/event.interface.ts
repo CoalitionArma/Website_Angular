@@ -21,8 +21,8 @@ export interface EventRole {
     name: string;
     communityRestriction?: number | null;
     slottedUser?: string;
-    slottedUserId?: string; // Now stores ARMA GUID instead of Discord ID
-    slottedUserDiscordId?: string; // Discord ID for Discord role assignment
+    slottedUserId?: string; // Discord ID (primary identifier for authority)
+    slottedUserArmaGuid?: string; // ARMA GUID (for reference/display)
 }
 
 export interface CreateEventRequest {
@@ -74,8 +74,8 @@ export interface UpdateEventRequest {
                 name: string;
                 communityRestriction?: number | null;
                 slottedUser?: string; // Preserve existing slot data
-                slottedUserId?: string; // Preserve existing ARMA GUID data (now primary ID)
-                slottedUserDiscordId?: string; // Preserve existing Discord ID data
+                slottedUserId?: string; // Preserve existing Discord ID data (primary authority)
+                slottedUserArmaGuid?: string; // Preserve existing ARMA GUID data
             }>;
         }>;
     }>;

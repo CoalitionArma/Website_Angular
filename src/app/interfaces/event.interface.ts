@@ -4,8 +4,8 @@ export interface EventRole {
   id: string;
   name: string;
   slottedUser?: string; // Discord username of slotted user, undefined if OPEN
-  slottedUserId?: string; // ARMA GUID of slotted user (primary identifier)
-  slottedUserDiscordId?: string; // Discord ID of slotted user (for Discord role assignment)
+  slottedUserId?: string; // Discord ID of slotted user (primary identifier for authority)
+  slottedUserArmaGuid?: string; // ARMA GUID of slotted user (for ARMA server integration)
   communityRestriction?: number; // Community ID that can slot this role (null = no restriction)
 }
 
