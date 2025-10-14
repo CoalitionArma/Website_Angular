@@ -276,14 +276,16 @@ export class EventsComponent implements OnInit, OnDestroy {
   }
 
   loadCommunities(): void {
+    // Only load communities if user is logged in
+    if (!this.userService.loggedIn) {
+      this.communitiesList = [];
+      this.loadingCommunities = false;
+      return;
+    }
+    
     this.loadingCommunities = true;
     
-    // Use public endpoint if not logged in, authenticated endpoint if logged in
-    const communitiesRequest = this.userService.loggedIn 
-      ? this.userService.getCommunitiesList()
-      : this.userService.getPublicCommunitiesList();
-    
-    communitiesRequest.subscribe({
+    this.userService.getCommunitiesList().subscribe({
       next: (response: any) => {
         // Extract the communities array from the response
         const communities = response?.communities || response;
@@ -693,6 +695,12 @@ export class EventsComponent implements OnInit, OnDestroy {
   }
 
   getRestrictionCommunityName(communityId: number): string {
+    // If user is not logged in, show generic text
+    if (!this.isLoggedIn) {
+      return '';
+    }
+    
+    // If user is logged in, try to get the actual community name
     const community = Array.isArray(this.communitiesList) ? this.communitiesList.find(c => c.id === communityId) : null;
     return community?.name || 'Unknown Community';
   }

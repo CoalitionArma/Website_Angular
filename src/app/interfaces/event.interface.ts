@@ -20,6 +20,8 @@ export interface EventSide {
   name: string;
   color?: string; // Optional color for the side (e.g., "#4a7c59" for coalition, "#b64141" for opposition)
   groups: EventGroup[];
+  discordRoleId?: string; // Discord role ID for this side
+  discordLeaderRoleId?: string; // Discord leader role ID for this side
 }
 
 export interface Event {

@@ -501,6 +501,132 @@
   }
 }
 
+.discord-roles-row {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  margin-top: $spacing-md;
+  padding: $spacing-md;
+  background: rgba(91, 134, 229, 0.08);
+  border-radius: 8px;
+  border: 1px solid rgba(91, 134, 229, 0.2);
+  position: relative;
+  
+  // Discord section header
+  .discord-section-header {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-sm;
+    
+    .discord-icon {
+      color: #5b86e5;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+    
+    .discord-section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+  
+  // Container for the actual form fields
+  .discord-fields-container {
+    display: flex;
+    gap: $spacing-md;
+    align-items: flex-start;
+  }
+  
+  .discord-role-field {
+    flex: 1;
+    overflow: visible;
+    
+    ::ng-deep {
+      .mat-mdc-form-field {
+        .mdc-text-field--filled {
+          background-color: rgba(255, 255, 255, 0.08) !important;
+          border-radius: 6px !important;
+          border: 1px solid rgba(91, 134, 229, 0.25) !important;
+          transition: all 0.3s ease !important;
+          
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.12) !important;
+            border-color: rgba(91, 134, 229, 0.4) !important;
+          }
+          
+          &.mdc-text-field--focused {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border-color: #5b86e5 !important;
+            box-shadow: 0 0 0 2px rgba(91, 134, 229, 0.3) !important;
+          }
+        }
+        
+        .mdc-text-field__input,
+        .mat-mdc-input-element {
+          color: #ffffff !important;
+          font-family: 'Roboto Mono', monospace !important;
+          font-size: 13px !important;
+          letter-spacing: 0.5px !important;
+          padding: 12px 16px !important;
+          
+          &::placeholder {
+            color: rgba(255, 255, 255, 0.4) !important;
+            font-style: italic !important;
+          }
+        }
+        
+        .mat-mdc-form-field-label,
+        .mdc-floating-label {
+          color: rgba(255, 255, 255, 0.8) !important;
+          font-weight: 500 !important;
+          
+          &.mdc-floating-label--float-above {
+            color: #5b86e5 !important;
+          }
+        }
+      }
+      
+      .mat-mdc-form-field-hint {
+        font-size: 11px !important;
+        color: rgba(255, 255, 255, 0.65) !important;
+        margin-top: 4px !important;
+        line-height: 1.4 !important;
+        font-style: italic !important;
+      }
+      
+      .mat-mdc-form-field-error {
+        color: #ff6b6b !important;
+        font-size: 11px !important;
+      }
+    }
+  }
+  
+  // Discord branding accent
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, #5b86e5, #8db4f5);
+    border-radius: 2px 0 0 2px;
+  }
+  
+  // Responsive design
+  @media (max-width: 768px) {
+    .discord-fields-container {
+      flex-direction: column;
+      gap: $spacing-sm;
+    }
+  }
+}
+
 // Add Side button container
 .add-side-container {
   display: flex;

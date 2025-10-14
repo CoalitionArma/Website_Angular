@@ -225,7 +225,9 @@
                         class="group-restriction-badge"
                         [title]="'Group restricted to ' + getRestrictionCommunityName(group.communityRestriction)">
                         <mat-icon class="restriction-icon">groups</mat-icon>
-                        <span class="restriction-text">Reserved: {{ getRestrictionCommunityName(group.communityRestriction) }}</span>
+                        <span class="restriction-text">
+                          {{ isLoggedIn ? 'Reserved: ' + getRestrictionCommunityName(group.communityRestriction) : 'Reserved' }}
+                        </span>
                       </span>
                       <span class="group-role-count" [class]="getGroupSlotClass(group)">({{ getGroupSlotSummary(group) }})</span>
                       <button 

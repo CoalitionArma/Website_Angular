@@ -28,6 +28,7 @@ import {
     UpdateEventRequest,
     SlotRoleRequest 
 } from './interfaces/event.interface';
+import discordRoleService from './services/discordRoleService';
 
 // Load the appropriate .env file based on NODE_ENV
 // Set default to development if NODE_ENV is not set
@@ -532,6 +533,8 @@ app.post('/api/events/create', authenticateToken, async (req: Request<{}, {}, Cr
             id: require('crypto').randomUUID(),
             name: side.name,
             color: side.color,
+            discordRoleId: side.discordRoleId || undefined,
+            discordLeaderRoleId: side.discordLeaderRoleId || undefined,
             groups: side.groups.map(group => ({
                 id: require('crypto').randomUUID(),
                 name: group.name,
@@ -701,6 +704,28 @@ app.post('/api/events/slot', authenticateToken, async (req: Request<{}, {}, Slot
         // Update the event
         await event.update({ groups: JSON.stringify(sides) });
 
+        // Assign Discord role (don't block the response if it fails)
+        if (user.discordid) {
+            try {
+                const roleAssigned = await discordRoleService.assignEventBasedRole(
+                    user.discordid, 
+                    event,
+                    sideId,
+                    role.name
+                );
+                
+                if (roleAssigned) {
+                    console.log(`✅ Discord role assigned to ${user.username} for event ${eventId}`);
+                } else {
+                    console.warn(`⚠️ Failed to assign Discord role to ${user.username} for event ${eventId}`);
+                }
+            } catch (error) {
+                console.error(`❌ Error assigning Discord role to ${user.username}:`, error);
+            }
+        } else {
+            console.log(`ℹ️ No Discord ID found for user ${user.username}, skipping role assignment`);
+        }
+
         // Return the updated event
         const eventData = event.toJSON();
         const responseEvent = {
@@ -787,6 +812,29 @@ app.post('/api/events/unslot', authenticateToken, async (req: Request<{}, {}, Sl
 
         // Update the event
         await event.update({ groups: JSON.stringify(sides) });
+
+        // Remove Discord role (don't block the response if it fails)
+        const user = await SQLUsers.findOne({ where: { discordid: userId } });
+        if (user && user.discordid) {
+            try {
+                const roleRemoved = await discordRoleService.removeEventBasedRole(
+                    user.discordid, 
+                    event,
+                    sideId,
+                    role.name
+                );
+                
+                if (roleRemoved) {
+                    console.log(`✅ Discord role removed from ${user.username} for event ${eventId}`);
+                } else {
+                    console.warn(`⚠️ Failed to remove Discord role from ${user.username} for event ${eventId}`);
+                }
+            } catch (error) {
+                console.error(`❌ Error removing Discord role from ${user.username}:`, error);
+            }
+        } else {
+            console.log(`ℹ️ No Discord ID found for user, skipping role removal`);
+        }
 
         // Return the updated event
         const eventData = event.toJSON();
@@ -943,6 +991,8 @@ app.put('/api/events/:eventId', authenticateToken, async (req: Request<{ eventId
             id: side.id || require('crypto').randomUUID(), // Keep existing ID or generate new
             name: side.name,
             color: side.color,
+            discordRoleId: side.discordRoleId || undefined,
+            discordLeaderRoleId: side.discordLeaderRoleId || undefined,
             groups: side.groups.map(group => ({
                 id: group.id || require('crypto').randomUUID(), // Keep existing ID or generate new
                 name: group.name,
@@ -1422,29 +1472,6 @@ app.get('/api/communities/list', authenticateToken, async (req: Request, res: Re
         });
     } catch (error) {
         console.error('Error fetching communities list:', error);
-        res.status(500).json({
-            error: 'Failed to fetch communities list',
-            details: error instanceof Error ? error.message : 'Unknown error'
-        });
-    }
-});
-
-// Get public communities list (no authentication required) - for event restrictions display
-app.get('/api/communities/public', async (req: Request, res: Response): Promise<void> => {
-    try {
-        // Get communities from database using Sequelize model
-        // Only return basic information needed for public display
-        const communities = await Community.findAll({
-            attributes: ['id', 'name'], // Only include id and name for public access
-            order: [['name', 'ASC']]
-        });
-
-        res.status(200).json({
-            success: true,
-            communities: communities.map(community => community.toJSON())
-        });
-    } catch (error) {
-        console.error('Error fetching public communities list:', error);
         res.status(500).json({
             error: 'Failed to fetch communities list',
             details: error instanceof Error ? error.message : 'Unknown error'

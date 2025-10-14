@@ -5,6 +5,8 @@ export interface EventSide {
     name: string;
     color: string;
     groups: EventGroup[];
+    discordRoleId?: string; // Discord role ID for this side
+    discordLeaderRoleId?: string; // Discord leader role ID for this side
 }
 
 export interface EventGroup {
@@ -34,6 +36,8 @@ export interface CreateEventRequest {
     sides: Array<{
         name: string;
         color: string;
+        discordRoleId?: string; // Discord role ID for this side
+        discordLeaderRoleId?: string; // Discord leader role ID for this side
         groups: Array<{
             name: string;
             communityRestriction?: number | null;
@@ -58,6 +62,8 @@ export interface UpdateEventRequest {
         id?: string; // Optional for edit mode
         name: string;
         color: string;
+        discordRoleId?: string; // Discord role ID for this side
+        discordLeaderRoleId?: string; // Discord leader role ID for this side
         groups: Array<{
             id?: string; // Optional for edit mode
             name: string;

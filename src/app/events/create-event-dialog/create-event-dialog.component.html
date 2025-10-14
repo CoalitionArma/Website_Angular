@@ -108,6 +108,18 @@
                       <input matInput type="color" formControlName="color">
                     </mat-form-field>
                   </div>
+                  <div class="discord-roles-row">
+                    <mat-form-field appearance="fill" class="discord-role-field">
+                      <mat-label>Discord Role ID (Optional)</mat-label>
+                      <input matInput formControlName="discordRoleId" placeholder="e.g., 1234567890123456789">
+                      <mat-hint>Discord role assigned to all participants in this side</mat-hint>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="discord-role-field">
+                      <mat-label>Discord Leader Role ID (Optional)</mat-label>
+                      <input matInput formControlName="discordLeaderRoleId" placeholder="e.g., 1234567890123456789">
+                      <mat-hint>Discord role assigned to leadership positions in this side</mat-hint>
+                    </mat-form-field>
+                  </div>
                 </div>
                 <button type="button" mat-icon-button color="warn" (click)="removeSide(sideIndex)" [disabled]="sides.length <= 1">
                   <mat-icon>delete</mat-icon>
