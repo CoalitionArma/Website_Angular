@@ -821,20 +821,19 @@ app.post('/api/events/unslot', authenticateToken, async (req: Request<{}, {}, Sl
         const user = await SQLUsers.findOne({ where: { discordid: userId } });
         if (user && user.discordid) {
             try {
-                const roleRemoved = await discordRoleService.removeEventBasedRole(
+                const rolesRemoved = await discordRoleService.removeAllEventRoles(
                     user.discordid, 
                     event,
-                    sideId,
-                    role.name
+                    sideId
                 );
                 
-                if (roleRemoved) {
-                    console.log(`✅ Discord role removed from ${user.username} for event ${eventId}`);
+                if (rolesRemoved) {
+                    console.log(`✅ All Discord roles removed from ${user.username} for event ${eventId}`);
                 } else {
-                    console.warn(`⚠️ Failed to remove Discord role from ${user.username} for event ${eventId}`);
+                    console.warn(`⚠️ Failed to remove some Discord roles from ${user.username} for event ${eventId}`);
                 }
             } catch (error) {
-                console.error(`❌ Error removing Discord role from ${user.username}:`, error);
+                console.error(`❌ Error removing Discord roles from ${user.username}:`, error);
             }
         } else {
             console.log(`ℹ️ No Discord ID found for user, skipping role removal`);

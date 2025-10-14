@@ -189,6 +189,50 @@ class DiscordRoleService {
   }
 
   /**
+   * Remove all Discord roles for a user when they unslot from an event
+   * This removes both the side role and leader role (if configured)
+   */
+  async removeAllEventRoles(discordId: string, eventData: any, sideId: string): Promise<boolean> {
+    // Find the side in the event data
+    const sides = Array.isArray(eventData.sides) ? eventData.sides : JSON.parse(eventData.groups || '[]');
+    const side = sides.find((s: any) => s.id === sideId);
+    
+    if (!side) {
+      console.warn(`⚠️ Side ${sideId} not found in event`);
+      return false;
+    }
+
+    let allRemoved = true;
+
+    // Remove side role if configured
+    if (side.discordRoleId) {
+      console.log(`👥 Removing side role for side "${side.name}": ${side.discordRoleId}`);
+      const sideRoleRemoved = await this.removeRole(discordId, side.discordRoleId);
+      if (!sideRoleRemoved) {
+        console.warn(`⚠️ Failed to remove side role ${side.discordRoleId}`);
+        allRemoved = false;
+      }
+    }
+
+    // Remove leader role if configured
+    if (side.discordLeaderRoleId) {
+      console.log(`🎖️ Removing leadership role for side "${side.name}": ${side.discordLeaderRoleId}`);
+      const leaderRoleRemoved = await this.removeRole(discordId, side.discordLeaderRoleId);
+      if (!leaderRoleRemoved) {
+        console.warn(`⚠️ Failed to remove leader role ${side.discordLeaderRoleId}`);
+        allRemoved = false;
+      }
+    }
+
+    if (!side.discordRoleId && !side.discordLeaderRoleId) {
+      console.log(`ℹ️ No Discord roles configured for side "${side.name}" - skipping role removal`);
+      return true; // Return true to indicate successful "no-op"
+    }
+
+    return allRemoved;
+  }
+
+  /**
    * Determine if a role name indicates a leadership position
    */
   private isLeadershipRole(roleName: string): boolean {
