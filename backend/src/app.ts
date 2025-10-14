@@ -750,9 +750,6 @@ app.post('/api/events/slot', authenticateToken, async (req: Request<{}, {}, Slot
         };
         delete responseEvent.groups;
 
-        // Debug: Log the role data being returned
-        console.log(`🔍 Response Debug - Role data:`, JSON.stringify(responseEvent.sides.find((s: any) => s.id === sideId)?.groups.find((g: any) => g.id === groupId)?.roles.find((r: any) => r.id === roleId), null, 2));
-
         res.status(200).json({
             success: true,
             event: responseEvent,
@@ -824,8 +821,6 @@ app.post('/api/events/unslot', authenticateToken, async (req: Request<{}, {}, Sl
             });
             return;
         }
-
-        console.log(`Unslot check - Role slottedUserId: ${role.slottedUserId}, User Discord ID: ${userId}`);
 
         if (!role.slottedUserId || role.slottedUserId !== userId) {
             res.status(400).json({
