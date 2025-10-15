@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, OnInit } from '@angular/core';
+import { Component, HostBinding, Input, OnInit, OnDestroy } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { cilHamburgerMenu } from '@coreui/icons';
 import { IconDirective } from '@coreui/icons-angular';
@@ -14,7 +14,7 @@ import { environment } from '../../environments/environment';
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   constructor(public userService: UserService, private router: Router) {}
 
   icons = { cilHamburgerMenu }
@@ -47,7 +47,18 @@ export class HeaderComponent implements OnInit {
   profileDropdownVisible = false;
 
   mobileMenuClicked() {
-    this.mobileMenuVisible = !this.mobileMenuVisible
+    this.mobileMenuVisible = !this.mobileMenuVisible;
+    
+    // Prevent body scrolling when mobile menu is open (iOS fix)
+    if (this.mobileMenuVisible) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    }
   }
 
   toggleProfileDropdown() {
@@ -56,6 +67,14 @@ export class HeaderComponent implements OnInit {
 
   closeProfileDropdown() {
     this.profileDropdownVisible = false;
+  }
+
+  closeMobileMenu() {
+    this.mobileMenuVisible = false;
+    // Restore body scrolling
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.width = '';
   }
 
   loginWithDiscord() {
@@ -67,5 +86,12 @@ export class HeaderComponent implements OnInit {
   logout() {
     this.userService.logout();
     this.router.navigate(['/']);
+  }
+
+  ngOnDestroy() {
+    // Clean up body styles when component is destroyed
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.width = '';
   }
 }
