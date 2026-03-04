@@ -1,5 +1,12 @@
 -- Stored procedure to get user statistics from coalition.a4stats table
--- This procedure takes an ARMA GUID and returns the user's ARMA 4 statistics
+-- joined with reforgerjs.playerstats for vanilla engine-tracked stats.
+-- This procedure takes an ARMA GUID and returns the combined player statistics.
+-- 
+-- Data sources:
+--   coalition.a4stats       - Coalition-specific stats (kills, attendance, role stats, FF events)
+--   reforgerjs.playerstats  - Vanilla engine stats (shots, distance, medical, XP, bans, etc.)
+--                             Written by the Reforger.js bot from .playersave profile files.
+-- Link key: coalition.a4stats.guid = reforgerjs.playerstats.playerUID
 
 DELIMITER $$
 
@@ -15,47 +22,101 @@ BEGIN
         RESIGNAL;
     END;
 
-    -- Get user statistics from a4stats table
-    -- Using actual column names from the a4stats table
     SELECT 
-        id,
-        steamid,
-        name,
-        guid,
-        tvt_kills as kills,
-        tvt_deaths as deaths,
-        CASE 
-            WHEN tvt_deaths = 0 THEN tvt_kills 
-            ELSE ROUND(tvt_kills / tvt_deaths, 2) 
-        END as kd_ratio,
-        tvt_kdr,
-        ai_kills,
-        ai_deaths,
-        coop_kdr,
-        shots_fired,
-        CASE 
-            WHEN shots_fired = 0 THEN 0 
-            ELSE ROUND((tvt_kills / shots_fired) * 100, 2) 
-        END as accuracy_percentage,
-        ff_events as friendly_fire_events,
-        grenades_thrown,
-        civs_killed as civilians_killed,
-        leaves as disconnections,
-        connections,
-        -- Add ranking data to the same result set
-        (SELECT COUNT(*) FROM coalition.a4stats) as total_players,
+        -- Identity
+        a.id,
+        a.steamid,
+        a.name,
+        a.guid,
+
+        -- Kill / death stats (coalition-tracked, faction-aware)
+        a.tvt_kills AS kills,
+        a.tvt_deaths AS deaths,
+        CASE
+            WHEN a.tvt_deaths = 0 THEN a.tvt_kills
+            ELSE ROUND(a.tvt_kills / a.tvt_deaths, 2)
+        END AS kd_ratio,
+        a.tvt_kdr,
+
+        -- AI combat (vanilla engine — reforgerjs.playerstats)
+        ps.ai_kills,
+        ps.ai_roadkills,
+        ps.friendly_ai_kills,
+        ps.friendly_ai_roadkills,
+        CASE
+            WHEN COALESCE(ps.deaths, 0) = 0 THEN COALESCE(ps.ai_kills, 0)
+            ELSE ROUND(COALESCE(ps.ai_kills, 0) / ps.deaths, 2)
+        END AS coop_kdr,
+
+        -- Marksmanship (vanilla engine — reforgerjs.playerstats)
+        ps.shots AS shots_fired,
+        CASE
+            WHEN COALESCE(ps.shots, 0) = 0 THEN 0
+            ELSE ROUND((a.tvt_kills / ps.shots) * 100, 2)
+        END AS accuracy_percentage,
+        ps.grenades_thrown,
+
+        -- Movement (vanilla engine)
+        ps.distance_walked,
+        ps.distance_driven,
+        ps.distance_as_occupant,
+
+        -- Medical (vanilla engine — sum of all medical actions on friendlies)
+        ps.bandage_friendlies,
+        ps.bandage_self,
+        ps.saline_friendlies,
+        ps.saline_self,
+        ps.morphine_friendlies,
+        ps.morphine_self,
+        ps.tourniquet_friendlies,
+        ps.tourniquet_self,
         (
-            SELECT COUNT(*) + 1 
-            FROM coalition.a4stats s2 
+            COALESCE(ps.bandage_friendlies, 0) +
+            COALESCE(ps.saline_friendlies,  0) +
+            COALESCE(ps.morphine_friendlies, 0) +
+            COALESCE(ps.tourniquet_friendlies, 0)
+        ) AS healing_done,
+
+        -- Session / experience (vanilla engine)
+        ps.session_duration,
+        ps.level,
+        ps.level_experience,
+
+        -- Vehicles (vanilla engine)
+        ps.roadkills,
+        ps.players_died_in_vehicle,
+        ps.points_as_driver_of_players,
+
+        -- Conduct (coalition-tracked)
+        a.ff_events AS friendly_fire_events,
+        a.civs_killed AS civilians_killed,
+        a.leaves AS disconnections,
+        a.connections,
+        a.missions_attended,
+
+        -- Ban tracking (vanilla engine)
+        ps.warcrimes,
+        ps.kick_streak,
+        ps.kick_session_duration,
+        ps.lightban_streak,
+        ps.lightban_session_duration,
+        ps.heavyban_streak,
+        ps.heavyban_kick_session_duration,
+
+        -- Ranking (coalition.a4stats only)
+        -- Only players with more than 5 connections are included in the ranked pool.
+        -- rank_position counts how many ranked players have a higher tvt_kdr than this player.
+        (SELECT COUNT(*) FROM coalition.a4stats WHERE connections > 5) AS total_players,
+        (
+            SELECT COUNT(*) + 1
+            FROM coalition.a4stats s2
             WHERE s2.connections > 5
-            AND s2.tvt_kdr > (
-                SELECT tvt_kdr 
-                FROM coalition.a4stats s3
-                WHERE s3.guid = p_arma_guid
-            )
-        ) as rank_position
-    FROM coalition.a4stats 
-    WHERE guid = p_arma_guid;
+            AND s2.tvt_kdr > a.tvt_kdr
+        ) AS rank_position
+
+    FROM coalition.a4stats a
+    LEFT JOIN reforgerjs.playerstats ps ON ps.playerUID = a.guid
+    WHERE a.guid = p_arma_guid;
 
 END$$
 

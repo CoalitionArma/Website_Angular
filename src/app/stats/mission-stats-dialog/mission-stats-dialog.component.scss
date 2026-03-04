@@ -293,6 +293,204 @@ $transition-speed: 0.3s;
     }
   }
 
+  // ORBAT tab container
+  .orbat-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    &.summary-scrollable {
+      overflow-y: auto;
+      height: 100%;
+      padding-right: 8px;
+      max-height: 100%;
+    }
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  // ORBAT summary section — side sections
+  .orbat-side-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .orbat-side-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 4px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.12);
+
+    .side-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .side-blufor  { background-color: #0078d7; box-shadow: 0 0 5px #0078d7; }
+    .side-opfor   { background-color: #e81123; box-shadow: 0 0 5px #e81123; }
+    .side-indfor  { background-color: #107c10; box-shadow: 0 0 5px #107c10; }
+    .side-spec    { background-color: #f7630c; box-shadow: 0 0 5px #f7630c; }
+    .side-civilian{ background-color: #8764b8; box-shadow: 0 0 5px #8764b8; }
+    .side-unknown { background-color: #767676; }
+  }
+
+  .orbat-side-label {
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: $text-primary;
+  }
+
+  .orbat-side-count {
+    font-size: 0.8rem;
+    color: $text-secondary;
+    margin-left: auto;
+  }
+
+  // Hierarchy layout
+  .orbat-hierarchy {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  // A command block = the command card + its subordinates row below
+  .orbat-command-block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    // Command element card sits at full width of its column
+    > .orbat-group-card {
+      align-self: flex-start;
+    }
+  }
+
+  // Subordinate elements are a wrapping row indented under the command card
+  .orbat-subordinates {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-left: 24px;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+  }
+
+  // Individual group card
+  .orbat-group-card {
+    flex: 0 1 240px;
+    min-width: 200px;
+    background-color: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .orbat-group-header {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 5px 10px;
+    // Default (unknown side)
+    color: $text-secondary;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    // Command elements (COY, PLT) — slightly larger, lighter text
+    &--command {
+      font-size: 0.78rem;
+      color: $text-primary;
+    }
+
+    // Side colour variants — applied via ngClass on side.cssClass
+    &--side-blufor {
+      color: #4da6ff;
+      background-color: rgba(0, 120, 215, 0.15);
+      border-bottom-color: rgba(0, 120, 215, 0.35);
+    }
+    &--side-opfor {
+      color: #ff6b6b;
+      background-color: rgba(232, 17, 35, 0.15);
+      border-bottom-color: rgba(232, 17, 35, 0.35);
+    }
+    &--side-indfor {
+      color: #5fba5f;
+      background-color: rgba(16, 124, 16, 0.15);
+      border-bottom-color: rgba(16, 124, 16, 0.35);
+    }
+    &--side-spec {
+      color: #ffaa66;
+      background-color: rgba(247, 99, 12, 0.15);
+      border-bottom-color: rgba(247, 99, 12, 0.35);
+    }
+    &--side-civilian {
+      color: #c39ee0;
+      background-color: rgba(135, 100, 184, 0.15);
+      border-bottom-color: rgba(135, 100, 184, 0.35);
+    }
+  }
+
+  .orbat-player-list {
+    list-style: none;
+    padding: 6px 10px;
+    margin: 0;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 0.82rem;
+      padding: 2px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  .orbat-player-role {
+    font-size: 0.72rem;
+    color: $text-secondary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 1;
+    min-width: 0;
+    text-align: left;
+  }
+
+  .orbat-player-name {
+    font-size: 0.82rem;
+    color: $text-primary;
+    text-align: right;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
   // Individual stat items
   .summary-item, .detail-item {
     display: flex;

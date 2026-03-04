@@ -124,6 +124,59 @@
           </div>
         </mat-tab>
         
+        <!-- ORBAT tab -->
+        <mat-tab label="ORBAT" *ngIf="orbatSummary && orbatSummary.length > 0">
+          <div class="orbat-container summary-scrollable">
+            <!-- One section per side -->
+            <div class="orbat-side-section" *ngFor="let side of orbatSummary">
+              <!-- Side header -->
+              <div class="orbat-side-header">
+                <span class="side-indicator" [ngClass]="side.cssClass"></span>
+                <span class="orbat-side-label">{{ side.label }}</span>
+                <span class="orbat-side-count">{{ side.totalPlayers }} players</span>
+              </div>
+
+              <!-- Hierarchy nodes -->
+              <div class="orbat-hierarchy">
+                <ng-container *ngFor="let node of side.hierarchyGroups">
+
+                  <!-- Command element (COY, PLT) or standalone -->
+                  <div class="orbat-command-block" [class.is-command]="node.isCommand">
+                    <div class="orbat-group-card">
+                      <div class="orbat-group-header"
+                           [class.orbat-group-header--command]="node.isCommand"
+                           [ngClass]="'orbat-group-header--' + side.cssClass">
+                        {{ node.name }}
+                      </div>
+                      <ul class="orbat-player-list" *ngIf="node.players.length > 0">
+                        <li *ngFor="let player of node.players">
+                          <span class="orbat-player-role" *ngIf="player.role">{{ player.role }}</span>
+                          <span class="orbat-player-name">{{ player.name }}</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <!-- Subordinate elements (1-1, 1-2…) indented below -->
+                    <div class="orbat-subordinates" *ngIf="node.subordinates && node.subordinates.length > 0">
+                      <div class="orbat-group-card" *ngFor="let sub of node.subordinates">
+                        <div class="orbat-group-header"
+                             [ngClass]="'orbat-group-header--' + side.cssClass">{{ sub.name }}</div>
+                        <ul class="orbat-player-list">
+                          <li *ngFor="let player of sub.players">
+                            <span class="orbat-player-role" *ngIf="player.role">{{ player.role }}</span>
+                            <span class="orbat-player-name">{{ player.name }}</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
         <!-- Kills tab -->
         <mat-tab label="Kills" *ngIf="processedStats.sessions && processedStats.sessions.length > 0">
           <div class="kills-container">

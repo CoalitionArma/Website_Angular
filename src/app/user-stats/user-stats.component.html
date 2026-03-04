@@ -22,10 +22,17 @@
             <mat-card-title class="text-orange-400">🏆 Server Ranking</mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <div class="stat-item">
-              <span class="stat-label">Server Rank:</span>
-              <span class="stat-value">#{{ rank.position }}/{{ rank.totalPlayers }}</span>
-            </div>
+            @if (rank.isRanked) {
+              <div class="stat-item">
+                <span class="stat-label">Server Rank:</span>
+                <span class="stat-value">#{{ rank.position }}/{{ rank.totalPlayers }}</span>
+              </div>
+            } @else {
+              <div class="stat-item">
+                <span class="stat-label">Server Rank:</span>
+                <span class="stat-value text-gray-400">Unranked <span class="text-xs">(need 6+ connections)</span></span>
+              </div>
+            }
           </mat-card-content>
         </mat-card>
       }
@@ -63,15 +70,19 @@
         <mat-card-content>
           <div class="stat-item">
             <span class="stat-label">AI Kills:</span>
-            <span class="stat-value">{{ stats.ai_kills | number }}</span>
+            <span class="stat-value">{{ (stats.ai_kills ?? 0) | number }}</span>
           </div>
           <div class="stat-item">
-            <span class="stat-label">AI Deaths:</span>
-            <span class="stat-value">{{ stats.ai_deaths | number }}</span>
+            <span class="stat-label">AI Roadkills:</span>
+            <span class="stat-value">{{ (stats.ai_roadkills ?? 0) | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Friendly AI Kills:</span>
+            <span class="stat-value">{{ (stats.friendly_ai_kills ?? 0) | number }}</span>
           </div>
           <div class="stat-item">
             <span class="stat-label">Coop K/D:</span>
-            <span class="stat-value">{{ stats.coop_kdr | number:'1.2-2' }}</span>
+            <span class="stat-value">{{ (stats.coop_kdr ?? 0) | number:'1.2-2' }}</span>
           </div>
         </mat-card-content>
       </mat-card>
@@ -84,19 +95,94 @@
         <mat-card-content>
           <div class="stat-item">
             <span class="stat-label">Shots Fired:</span>
-            <span class="stat-value">{{ stats.shots_fired | number }}</span>
+            <span class="stat-value">{{ (stats.shots_fired ?? 0) | number }}</span>
           </div>
           <div class="stat-item">
             <span class="stat-label">Kill Accuracy:</span>
-            <span class="stat-value">{{ stats.accuracy_percentage | number:'1.2-2' }}%</span>
+            <span class="stat-value">{{ (stats.accuracy_percentage ?? 0) | number:'1.2-2' }}%</span>
           </div>
           <div class="stat-item">
             <span class="stat-label">Grenades Thrown:</span>
-            <span class="stat-value">{{ stats.grenades_thrown | number }}</span>
+            <span class="stat-value">{{ (stats.grenades_thrown ?? 0) | number }}</span>
           </div>
           <div class="stat-item">
             <span class="stat-label">Friendly Fire:</span>
             <span class="stat-value">{{ stats.friendly_fire_events | number }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Movement Stats -->
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-card-title class="text-teal-400">🚶 Movement</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="stat-item">
+            <span class="stat-label">Distance Walked:</span>
+            <span class="stat-value">{{ ((stats.distance_walked ?? 0) / 1000) | number:'1.1-1' }} km</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Distance Driven:</span>
+            <span class="stat-value">{{ ((stats.distance_driven ?? 0) / 1000) | number:'1.1-1' }} km</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Distance as Passenger:</span>
+            <span class="stat-value">{{ ((stats.distance_as_occupant ?? 0) / 1000) | number:'1.1-1' }} km</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Medical Stats -->
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-card-title class="text-red-400">🩺 Medical</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="stat-item">
+            <span class="stat-label">Healing Done (friendlies):</span>
+            <span class="stat-value">{{ (stats.healing_done ?? 0) | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Bandages Applied:</span>
+            <span class="stat-value">{{ (stats.bandage_friendlies ?? 0) | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Saline Given:</span>
+            <span class="stat-value">{{ (stats.saline_friendlies ?? 0) | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Morphine Given:</span>
+            <span class="stat-value">{{ (stats.morphine_friendlies ?? 0) | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Tourniquets Applied:</span>
+            <span class="stat-value">{{ (stats.tourniquet_friendlies ?? 0) | number }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Experience Stats -->
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-card-title class="text-amber-400">⭐ Experience</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="stat-item">
+            <span class="stat-label">Level:</span>
+            <span class="stat-value">{{ (stats.level ?? 0) | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">XP:</span>
+            <span class="stat-value">{{ (stats.level_experience ?? 0) | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Missions Attended:</span>
+            <span class="stat-value">{{ stats.missions_attended | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Session Time:</span>
+            <span class="stat-value">{{ ((stats.session_duration ?? 0) / 3600) | number:'1.1-1' }} hrs</span>
           </div>
         </mat-card-content>
       </mat-card>

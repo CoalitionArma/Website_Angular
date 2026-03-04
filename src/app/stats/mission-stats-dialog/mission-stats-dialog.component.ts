@@ -63,6 +63,29 @@ export class MissionStatsDialogComponent implements OnInit, OnDestroy, AfterView
     avgDistance?: number;
     playerKills?: number;
   } = {};
+
+  // ORBAT summary: players grouped by faction, with group/role hierarchy
+  orbatSummary: {
+    side: string;
+    label: string;
+    cssClass: string;
+    totalPlayers: number;
+    /** Flat list preserved for legacy fallback */
+    groups: {
+      name: string;
+      players: { name: string; role: string }[];
+    }[];
+    /** Hierarchical tree for new-format rendering */
+    hierarchyGroups: {
+      name: string;
+      isCommand: boolean;
+      players: { name: string; role: string }[];
+      subordinates: {
+        name: string;
+        players: { name: string; role: string }[];
+      }[];
+    }[];
+  }[] = [];
   killsDisplayColumns: string[] = ['time', 'killer', 'victim', 'weapon', 'distance'];
   columnWidths = {
     time: '15%',
@@ -98,6 +121,7 @@ export class MissionStatsDialogComponent implements OnInit, OnDestroy, AfterView
         if (stats && !stats.loading && stats.stats) {
           this.setupChartData(stats.stats);
           this.extractAllKills(stats.stats);
+          this.buildOrbatSummary(stats.stats);
         }
       })
     );
@@ -183,7 +207,7 @@ export class MissionStatsDialogComponent implements OnInit, OnDestroy, AfterView
    */
   onTabChange(event: any): void {
     // If switching to the kills tab, ensure sort is applied
-    if (event.index === 1 && this.killsDataSource && this.sort) { // Index 1 should be the Kills tab
+    if (event.index === 2 && this.killsDataSource && this.sort) { // Index 2 is the Kills tab (ORBAT is now index 1)
       setTimeout(() => {
         this.killsDataSource.sort = this.sort;
       });
@@ -478,6 +502,159 @@ export class MissionStatsDialogComponent implements OnInit, OnDestroy, AfterView
     
     console.log(`Determined side for ${name}: ${side}`);
     return { side, cssClass };
+  }
+
+  /**
+   * Builds the ORBAT summary. Prefers the dedicated ORBAT field in the session
+   * data (new format) over reconstructing from kill events (legacy fallback).
+   */
+  /**
+   * Organises a flat list of groups into a command → subordinate → standalone hierarchy.
+   *
+   * Rules:
+   *  - COY / Company / CMD HQ  → company command (top-level, no parent)
+   *  - \d+PLT / \d+st|nd|rd|th Platoon → platoon command node
+   *  - \d+-\d+  (e.g. 1-1, 2-3)        → subordinate of the platoon whose number
+   *                                        matches the leading digit
+   *  - Everything else (MTR, MAT, FSG…) → standalone (no parent, no children)
+   */
+  private buildGroupHierarchy(groups: { name: string; players: { name: string; role: string }[] }[]) {
+    type HNode = {
+      name: string;
+      isCommand: boolean;
+      players: { name: string; role: string }[];
+      subordinates: { name: string; players: { name: string; role: string }[] }[];
+    };
+
+    const isCoy   = (n: string) => /^(coy|company|cmd[\s_]?hq|hq)$/i.test(n.trim());
+    const isPlt   = (n: string) => /^(\d+)(plt|pl|st plt|nd plt|rd plt|th plt|st platoon|nd platoon|rd platoon|th platoon)$/i.test(n.trim());
+    const pltNum  = (n: string) => { const m = n.trim().match(/^(\d+)/); return m ? parseInt(m[1]) : null; };
+    const isSquad = (n: string) => /^\d+-\d+$/i.test(n.trim()); // e.g. 1-1, 2-3
+    const squadPltNum = (n: string) => { const m = n.trim().match(/^(\d+)-/); return m ? parseInt(m[1]) : null; };
+
+    const result: HNode[] = [];
+    // Map platoon number → HNode for subordinate assignment
+    const pltMap = new Map<number, HNode>();
+
+    // First pass: create command nodes (COY then PLTs)
+    for (const g of groups) {
+      if (isCoy(g.name)) {
+        result.push({ name: g.name, isCommand: true, players: g.players, subordinates: [] });
+      } else if (isPlt(g.name)) {
+        const node: HNode = { name: g.name, isCommand: true, players: g.players, subordinates: [] };
+        result.push(node);
+        const num = pltNum(g.name);
+        if (num !== null) pltMap.set(num, node);
+      }
+    }
+
+    // Second pass: attach squads to their platoon; remainder are standalones
+    for (const g of groups) {
+      if (isCoy(g.name) || isPlt(g.name)) continue;
+      if (isSquad(g.name)) {
+        const num = squadPltNum(g.name);
+        const parent = num !== null ? pltMap.get(num) : undefined;
+        if (parent) {
+          parent.subordinates.push({ name: g.name, players: g.players });
+        } else {
+          // No matching platoon — treat as standalone
+          result.push({ name: g.name, isCommand: false, players: g.players, subordinates: [] });
+        }
+      } else {
+        // Standalone (MTR, MAT, FSG, etc.)
+        result.push({ name: g.name, isCommand: false, players: g.players, subordinates: [] });
+      }
+    }
+
+    return result;
+  }
+
+  private buildOrbatSummary(stats: MissionStatistics): void {
+    const factionConfig: Record<string, { label: string; cssClass: string; order: number }> = {
+      BLUFOR: { label: 'BLUFOR', cssClass: 'side-blufor', order: 1 },
+      OPFOR:  { label: 'OPFOR',  cssClass: 'side-opfor',  order: 2 },
+      INDFOR: { label: 'INDFOR', cssClass: 'side-indfor', order: 3 },
+      SPEC:   { label: 'SPEC',   cssClass: 'side-spec',   order: 4 },
+      CIV:    { label: 'CIV',    cssClass: 'side-civilian', order: 5 },
+    };
+
+    // --- New format: use dedicated ORBAT array ---
+    const sessionWithOrbat = stats.sessions?.find(
+      (s: any) => Array.isArray(s.ORBAT) && s.ORBAT.length > 0
+    );
+
+    if (sessionWithOrbat) {
+      this.orbatSummary = (sessionWithOrbat.ORBAT as any[])
+        .map((orbatSide: any) => {
+          const sideKey = (orbatSide.side as string).toUpperCase();
+          const config = factionConfig[sideKey] || { label: sideKey, cssClass: 'side-unknown', order: 99 };
+          const groups = (orbatSide.groups as any[] ?? []).map((g: any) => ({
+            name: g.name as string,
+            players: (g.players as any[] ?? []).map((p: any) => ({
+              name: p.name as string,
+              role: p.role as string
+            }))
+          }));
+          const totalPlayers = groups.reduce((sum, g) => sum + g.players.length, 0);
+          return {
+            side: sideKey,
+            label: config.label,
+            cssClass: config.cssClass,
+            totalPlayers,
+            groups,
+            hierarchyGroups: this.buildGroupHierarchy(groups)
+          };
+        })
+        .filter(s => s.groups.length > 0 || s.totalPlayers > 0)
+        .sort((a, b) => {
+          const orderA = factionConfig[a.side]?.order ?? 99;
+          const orderB = factionConfig[b.side]?.order ?? 99;
+          return orderA - orderB;
+        });
+      return;
+    }
+
+    // --- Legacy fallback: reconstruct from kill events ---
+    const factionPlayers: Record<string, Set<string>> = {};
+    if (stats.sessions && stats.sessions.length > 0) {
+      for (const session of stats.sessions) {
+        if (!session.kills) continue;
+        for (const kill of session.kills) {
+          if (kill.killer && kill.killer !== 'AI' && kill.killerFaction) {
+            const faction = (kill.killerFaction as string).toUpperCase();
+            if (faction === 'SPEC') continue;
+            if (!factionPlayers[faction]) factionPlayers[faction] = new Set();
+            factionPlayers[faction].add(kill.killer);
+          }
+          if (kill.victim && kill.victim !== 'AI' && kill.victimFaction) {
+            const faction = (kill.victimFaction as string).toUpperCase();
+            if (faction === 'SPEC') continue;
+            if (!factionPlayers[faction]) factionPlayers[faction] = new Set();
+            factionPlayers[faction].add(kill.victim);
+          }
+        }
+      }
+    }
+
+    this.orbatSummary = Object.entries(factionPlayers)
+      .filter(([, players]) => players.size > 0)
+      .map(([faction, players]) => {
+        const config = factionConfig[faction] || { label: faction, cssClass: 'side-unknown', order: 99 };
+        const groups = [{ name: 'Players', players: Array.from(players).sort().map(n => ({ name: n, role: '' })) }];
+        return {
+          side: faction,
+          label: config.label,
+          cssClass: config.cssClass,
+          totalPlayers: players.size,
+          groups,
+          hierarchyGroups: this.buildGroupHierarchy(groups)
+        };
+      })
+      .sort((a, b) => {
+        const orderA = factionConfig[a.side]?.order ?? 99;
+        const orderB = factionConfig[b.side]?.order ?? 99;
+        return orderA - orderB;
+      });
   }
 
   /**

@@ -227,12 +227,22 @@ export class StatsEffects {
         outcome = `${totalKills} total kills across ${data.length} session(s)`;
         
       } else {
-        // Legacy format
-        const events = data.events || data.timeline || data.log || [];
-        totalKills = events.length;
+        // Single-object format: { mission, date, BLUFOR, OPFOR, ORBAT, kills, result }
+        // This is the format written by the bot (not wrapped in an array).
+        const kills = data.kills || [];
+        totalKills = kills.length;
         playerCount = this.extractPlayerCount(data);
         duration = this.extractDuration(data);
-        outcome = this.extractOutcome(data) || 'Legacy data format';
+        outcome = this.extractOutcome(data) || 'No outcome recorded';
+
+        // Calculate duration from first/last kill times if not present
+        if (!duration && kills.length > 0) {
+          const firstKill = kills[0]?.time;
+          const lastKill = kills[kills.length - 1]?.time;
+          if (firstKill && lastKill && firstKill !== lastKill) {
+            duration = `${firstKill} - ${lastKill}`;
+          }
+        }
       }
       
     } catch (error) {
@@ -252,7 +262,7 @@ export class StatsEffects {
 
     return {
       events: [], // Empty for performance, dialog will process detailed events
-      sessions: Array.isArray(data) ? data : undefined, // Include sessions data if available
+      sessions: Array.isArray(data) ? data : [data], // Wrap single object so sessions is always set
       summary
     };
   }
@@ -283,7 +293,7 @@ export class StatsEffects {
     
     return {
       events: [],
-      sessions: Array.isArray(jsondata) ? jsondata : undefined,
+      sessions: Array.isArray(jsondata) ? jsondata : [jsondata],
       summary: {
         totalEvents: 0,
         totalKills: dataSize,

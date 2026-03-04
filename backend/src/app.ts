@@ -309,8 +309,10 @@ app.get('/api/user/stats/:userId', authenticateToken, async (req: Request<{ user
             type: QueryTypes.RAW
         });
         
-        // For stored procedures, results[0] is the actual data object, not an array
-        const userStatsData = results[0] as any;
+        // Sequelize returns stored procedure results as results[0] = array of rows.
+        // We expect exactly one row from the WHERE guid = ? clause.
+        const resultSet = results[0] as any;
+        const userStatsData = Array.isArray(resultSet) ? resultSet[0] : resultSet;
         
         if (!userStatsData) {
             res.status(404).json({ 
@@ -320,40 +322,81 @@ app.get('/api/user/stats/:userId', authenticateToken, async (req: Request<{ user
             return;
         }
         
-        // The data is the object itself, not an array element
         const data = userStatsData;
         
-        if (!data) {
-            res.status(404).json({ 
-                error: 'No data found in statistics result',
-                message: `Statistics query returned empty result for ARMA GUID: ${user.armaguid}`
-            });
-            return;
-        }
-        
-        // Extract stats from the result
+        // Extract stats from the result.
+        // Coalition-specific fields come from coalition.a4stats.
+        // Vanilla engine fields (shots, distance, medical, XP, bans) come from
+        // reforgerjs.playerstats joined by guid = playerUID. They may be null
+        // if the vanilla bot has not yet written a record for this player.
         const stats = {
+            // Identity
             id: data.id,
             steamid: data.steamid,
             name: data.name,
             guid: data.guid,
+
+            // Kill / death (coalition-tracked)
             kills: data.kills,
             deaths: data.deaths,
             kd_ratio: data.kd_ratio,
             tvt_kdr: data.tvt_kdr,
+            missions_attended: data.missions_attended,
+
+            // AI combat (reforgerjs.playerstats)
             ai_kills: data.ai_kills,
-            ai_deaths: data.ai_deaths,
+            ai_roadkills: data.ai_roadkills,
+            friendly_ai_kills: data.friendly_ai_kills,
+            friendly_ai_roadkills: data.friendly_ai_roadkills,
             coop_kdr: data.coop_kdr,
+
+            // Marksmanship (reforgerjs.playerstats)
             shots_fired: data.shots_fired,
             accuracy_percentage: data.accuracy_percentage,
-            friendly_fire_events: data.friendly_fire_events,
             grenades_thrown: data.grenades_thrown,
+
+            // Movement (reforgerjs.playerstats)
+            distance_walked: data.distance_walked,
+            distance_driven: data.distance_driven,
+            distance_as_occupant: data.distance_as_occupant,
+
+            // Medical (reforgerjs.playerstats)
+            bandage_friendlies: data.bandage_friendlies,
+            bandage_self: data.bandage_self,
+            saline_friendlies: data.saline_friendlies,
+            saline_self: data.saline_self,
+            morphine_friendlies: data.morphine_friendlies,
+            morphine_self: data.morphine_self,
+            tourniquet_friendlies: data.tourniquet_friendlies,
+            tourniquet_self: data.tourniquet_self,
+            healing_done: data.healing_done,
+
+            // Session / experience (reforgerjs.playerstats)
+            session_duration: data.session_duration,
+            level: data.level,
+            level_experience: data.level_experience,
+
+            // Vehicles (reforgerjs.playerstats)
+            roadkills: data.roadkills,
+            players_died_in_vehide: data.players_died_in_vehide,
+            points_as_driver_of_players: data.points_as_driver_of_players,
+
+            // Conduct (coalition-tracked)
+            friendly_fire_events: data.friendly_fire_events,
             civilians_killed: data.civilians_killed,
             disconnections: data.disconnections,
-            connections: data.connections
+            connections: data.connections,
+
+            // Ban tracking (reforgerjs.playerstats)
+            warcrimes: data.warcrimes,
+            kick_streak: data.kick_streak,
+            kick_session_duration: data.kick_session_duration,
+            lightban_streak: data.lightban_streak,
+            lightban_session_duration: data.lightban_session_duration,
+            heavyban_streak: data.heavyban_streak,
+            heavyban_kick_session_duration: data.heavyban_kick_session_duration,
         };
         
-        // For now, create a default ranking since the stored procedure doesn't include it yet
         const ranking = {
             total_players: data.total_players || 0,
             rank_position: data.rank_position || 0

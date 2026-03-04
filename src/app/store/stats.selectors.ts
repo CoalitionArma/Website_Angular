@@ -82,8 +82,8 @@ export const selectCombatScore = createSelector(
     
     const killScore = stats.kills * 10;
     const deathPenalty = stats.deaths * 5;
-    const accuracyBonus = stats.accuracy_percentage * 2; // Bonus for kill accuracy
-    const aiKillBonus = stats.ai_kills * 2;
+    const accuracyBonus = (stats.accuracy_percentage ?? 0) * 2; // Bonus for kill accuracy (null when playerstats record absent)
+    const aiKillBonus = (stats.ai_kills ?? 0) * 2;
     const ffPenalty = stats.friendly_fire_events * 20;
     const civPenalty = stats.civilians_killed * 50; // Heavy penalty for civilian casualties
     
@@ -96,9 +96,13 @@ export const selectRankInfo = createSelector(
   selectUserRanking,
   (stats, ranking) => {
     if (!stats || !ranking) return null;
+    // Players with ≤5 connections are excluded from the ranked pool.
+    // total_players reflects that pool size, so rank_position may exceed it for excluded players.
+    const isRanked = stats.connections > 5;
     return {
       position: ranking.rank_position,
-      totalPlayers: ranking.total_players
+      totalPlayers: ranking.total_players,
+      isRanked
     };
   }
 );

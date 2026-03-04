@@ -1,20 +1,27 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../db';
 
+/**
+ * Maps coalition.a4stats — coalition-specific stats tracked by Coalition_Bot
+ * via the COAServerLog.txt CSV pipeline.
+ *
+ * Vanilla engine stats (shots, distance, medical, XP, bans, etc.) live in
+ * reforgerjs.playerstats and are joined at query time in GetUserA4Stats.
+ */
 class A4Stats extends Model {
     public id!: number;
     public steamid!: string;
     public name!: string;
     public guid!: string;
+
+    // Kill / death (faction-aware, coalition-tracked)
     public tvt_kills!: number;
     public tvt_deaths!: number;
     public tvt_kdr!: number;
-    public ai_kills!: number;
-    public ai_deaths!: number;
-    public coop_kdr!: number;
-    public shots_fired!: number;
+
+    // Attendance & conduct (coalition-tracked)
+    public missions_attended!: number;
     public ff_events!: number;
-    public grenades_thrown!: number;
     public civs_killed!: number;
     public leaves!: number;
     public connections!: number;
@@ -33,11 +40,11 @@ A4Stats.init({
     },
     steamid: {
         type: DataTypes.STRING(80),
-        allowNull: false
+        allowNull: true
     },
     name: {
         type: DataTypes.STRING(255),
-        allowNull: false
+        allowNull: true
     },
     guid: {
         type: DataTypes.STRING(80),
@@ -58,27 +65,7 @@ A4Stats.init({
         allowNull: false,
         defaultValue: 0.0
     },
-    ai_kills: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: 0
-    },
-    ai_deaths: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: 0
-    },
-    coop_kdr: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-        defaultValue: 0.0
-    },
-    shots_fired: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: 0
-    },
-    grenades_thrown: {
+    missions_attended: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0
@@ -111,3 +98,4 @@ A4Stats.init({
 });
 
 export default A4Stats;
+
