@@ -239,13 +239,13 @@
 
 // Modern Profile Container
 .profile-container {
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 24px;
   min-height: 100vh;
   
   display: grid;
-  grid-template-columns: 1fr 800px 1fr;
+  grid-template-columns: 1fr 1100px 1fr;
   grid-template-areas: 
     ". header ."
     ". main ."

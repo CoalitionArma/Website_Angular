@@ -41,4 +41,14 @@ export class UserStatsComponent implements OnInit {
       console.log('❌ Stats error:', error);
     });
   }
+
+  /** Returns a 0–100 percentage for a distance value relative to the max of the three distance types. */
+  getDistPct(value: number, stats: any): number {
+    const max = Math.max(
+      stats.distance_walked ?? 0,
+      stats.distance_driven ?? 0,
+      stats.distance_as_occupant ?? 0
+    );
+    return max > 0 ? Math.round((value / max) * 100) : 0;
+  }
 }

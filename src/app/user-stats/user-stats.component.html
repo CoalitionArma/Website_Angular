@@ -5,240 +5,207 @@
       <span>Loading your statistics...</span>
     </div>
   }
-  
+
   @if (statsError$ | async; as error) {
     <div class="error-container">
       <h4>❌ Unable to load statistics</h4>
       <p>{{ error }}</p>
     </div>
   }
-  
+
   @if (userStats$ | async; as stats) {
-    <div class="stats-grid">
-      <!-- Server Rank Card -->
-      @if (rankInfo$ | async; as rank) {
-        <mat-card class="stat-card ranking-card">
-          <mat-card-header>
-            <mat-card-title class="text-orange-400">🏆 Server Ranking</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
+    <div class="dashboard">
+
+      <!-- ── HERO BANNER ─────────────────────────────────────────── -->
+      <div class="hero-banner">
+        <div class="hero-identity">
+          <span class="hero-name">{{ stats.name }}</span>
+          <span class="hero-id">COALITION #{{ stats.id }}</span>
+        </div>
+
+        @if (rankInfo$ | async; as rank) {
+          <div class="hero-rank">
             @if (rank.isRanked) {
-              <div class="stat-item">
-                <span class="stat-label">Server Rank:</span>
-                <span class="stat-value">#{{ rank.position }}/{{ rank.totalPlayers }}</span>
-              </div>
+              <span class="rank-badge ranked">🏆 #{{ rank.position }} / {{ rank.totalPlayers }}</span>
             } @else {
-              <div class="stat-item">
-                <span class="stat-label">Server Rank:</span>
-                <span class="stat-value text-gray-400">Unranked <span class="text-xs">(need 6+ missions attended)</span></span>
-              </div>
+              <span class="rank-badge unranked">Unranked · 6+ missions needed</span>
             }
-          </mat-card-content>
-        </mat-card>
-      }
+          </div>
+        }
 
-      <!-- Combat Stats -->
-      <mat-card class="stat-card">
-        <mat-card-header>
-          <mat-card-title class="text-green-400">🎯 Team vs Team</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="stat-item">
-            <span class="stat-label">Kills:</span>
-            <span class="stat-value">{{ stats.kills | number }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Deaths:</span>
-            <span class="stat-value">{{ stats.deaths | number }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">K/D Ratio:</span>
-            <span class="stat-value">{{ stats.kd_ratio | number:'1.2-2' }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">TvT K/D:</span>
-            <span class="stat-value">{{ stats.tvt_kdr | number:'1.2-2' }}</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
+        <div class="hero-pills">
+          <span class="pill pill-green">{{ stats.missions_attended }} missions</span>
+          <span class="pill pill-blue">{{ ((stats.session_duration ?? 0) / 3600) | number:'1.0-0' }} hrs played</span>
+          <span class="pill pill-amber">Lvl {{ stats.level ?? 0 }}</span>
+        </div>
+      </div>
 
-      <!-- AI Combat Stats -->
-      <mat-card class="stat-card">
-        <mat-card-header>
-          <mat-card-title class="text-blue-400">🤖 vs AI</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="stat-item">
-            <span class="stat-label">AI Kills:</span>
-            <span class="stat-value">{{ (stats.ai_kills ?? 0) | number }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">AI Roadkills:</span>
-            <span class="stat-value">{{ (stats.ai_roadkills ?? 0) | number }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Friendly AI Kills:</span>
-            <span class="stat-value">{{ (stats.friendly_ai_kills ?? 0) | number }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Coop K/D:</span>
-            <span class="stat-value">{{ (stats.coop_kdr ?? 0) | number:'1.2-2' }}</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
+      <!-- ── XP BAR ──────────────────────────────────────────────── -->
+      <div class="xp-bar-section">
+        <div class="xp-bar-header">
+          <span class="xp-label">Level {{ stats.level ?? 0 }}</span>
+          <span class="xp-value">{{ (stats.level_experience ?? 0) | number }} XP</span>
+        </div>
+        <div class="xp-track">
+          <div class="xp-fill" [style.width.%]="((stats.level_experience ?? 0) % 1000) / 10"></div>
+        </div>
+      </div>
 
-      <!-- Activity Stats -->
-      <mat-card class="stat-card">
-        <mat-card-header>
-          <mat-card-title class="text-purple-400">📊 Combat Details</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="stat-item">
-            <span class="stat-label">Shots Fired:</span>
-            <span class="stat-value">{{ (stats.shots_fired ?? 0) | number }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Kill Accuracy:</span>
-            <span class="stat-value">{{ (stats.accuracy_percentage ?? 0) | number:'1.2-2' }}%</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Grenades Thrown:</span>
-            <span class="stat-value">{{ (stats.grenades_thrown ?? 0) | number }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Friendly Fire:</span>
-            <span class="stat-value">{{ stats.friendly_fire_events | number }}</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
+      <!-- ── SECTIONS ────────────────────────────────────────────── -->
+      <div class="sections">
 
-      <!-- Movement Stats -->
-      <mat-card class="stat-card">
-        <mat-card-header>
-          <mat-card-title class="text-teal-400">🚶 Movement</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="stat-item">
-            <span class="stat-label">Distance Walked:</span>
-            <span class="stat-value">{{ ((stats.distance_walked ?? 0) / 1000) | number:'1.1-1' }} km</span>
+        <!-- Team vs Team -->
+        <section class="stat-section">
+          <h3 class="section-title"><span class="dot dot-green"></span>Team vs Team</h3>
+          <div class="big-numbers">
+            <div class="big-num">
+              <span class="big-val">{{ stats.kills | number }}</span>
+              <span class="big-lbl">Kills</span>
+            </div>
+            <div class="big-num">
+              <span class="big-val">{{ stats.deaths | number }}</span>
+              <span class="big-lbl">Deaths</span>
+            </div>
+            <div class="big-num accent-green">
+              <span class="big-val">{{ stats.tvt_kdr | number:'1.2-2' }}</span>
+              <span class="big-lbl">K/D</span>
+            </div>
+            <div class="big-num">
+              <span class="big-val">{{ (stats.accuracy_percentage ?? 0) | number:'1.1-1' }}%</span>
+              <span class="big-lbl">Accuracy</span>
+            </div>
           </div>
-          <div class="stat-item">
-            <span class="stat-label">Distance Driven:</span>
-            <span class="stat-value">{{ ((stats.distance_driven ?? 0) / 1000) | number:'1.1-1' }} km</span>
+          <div class="row-stats">
+            <div class="row-stat">
+              <span class="row-lbl">Shots Fired</span>
+              <span class="row-val">{{ (stats.shots_fired ?? 0) | number }}</span>
+            </div>
+            <div class="row-stat">
+              <span class="row-lbl">Grenades Thrown</span>
+              <span class="row-val">{{ (stats.grenades_thrown ?? 0) | number }}</span>
+            </div>
+            <div class="row-stat">
+              <span class="row-lbl">Friendly Fire</span>
+              <span class="row-val warn">{{ stats.friendly_fire_events | number }}</span>
+            </div>
+            <div class="row-stat">
+              <span class="row-lbl">Civilians Killed</span>
+              <span class="row-val warn">{{ stats.civilians_killed | number }}</span>
+            </div>
           </div>
-          <div class="stat-item">
-            <span class="stat-label">Distance as Passenger:</span>
-            <span class="stat-value">{{ ((stats.distance_as_occupant ?? 0) / 1000) | number:'1.1-1' }} km</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
+        </section>
 
-      <!-- Medical Stats -->
-      <mat-card class="stat-card">
-        <mat-card-header>
-          <mat-card-title class="text-red-400">🩺 Medical</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="stat-item">
-            <span class="stat-label">Healing Done (friendlies):</span>
-            <span class="stat-value">{{ (stats.healing_done ?? 0) | number }}</span>
+        <!-- vs AI -->
+        <section class="stat-section">
+          <h3 class="section-title"><span class="dot dot-blue"></span>vs AI</h3>
+          <div class="big-numbers">
+            <div class="big-num">
+              <span class="big-val">{{ (stats.ai_kills ?? 0) | number }}</span>
+              <span class="big-lbl">AI Kills</span>
+            </div>
+            <div class="big-num accent-blue">
+              <span class="big-val">{{ (stats.coop_kdr ?? 0) | number:'1.2-2' }}</span>
+              <span class="big-lbl">Coop K/D</span>
+            </div>
+            <div class="big-num">
+              <span class="big-val">{{ (stats.ai_roadkills ?? 0) | number }}</span>
+              <span class="big-lbl">AI Roadkills</span>
+            </div>
+            <div class="big-num">
+              <span class="big-val">{{ (stats.friendly_ai_kills ?? 0) | number }}</span>
+              <span class="big-lbl">Friendly AI Kills</span>
+            </div>
           </div>
-          <div class="stat-item">
-            <span class="stat-label">Bandages Applied:</span>
-            <span class="stat-value">{{ (stats.bandage_friendlies ?? 0) | number }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Saline Given:</span>
-            <span class="stat-value">{{ (stats.saline_friendlies ?? 0) | number }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Morphine Given:</span>
-            <span class="stat-value">{{ (stats.morphine_friendlies ?? 0) | number }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Tourniquets Applied:</span>
-            <span class="stat-value">{{ (stats.tourniquet_friendlies ?? 0) | number }}</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
+        </section>
 
-      <!-- Experience Stats -->
-      <mat-card class="stat-card">
-        <mat-card-header>
-          <mat-card-title class="text-amber-400">⭐ Experience</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="stat-item">
-            <span class="stat-label">Level:</span>
-            <span class="stat-value">{{ (stats.level ?? 0) | number }}</span>
+        <!-- Movement -->
+        <section class="stat-section">
+          <h3 class="section-title"><span class="dot dot-teal"></span>Movement</h3>
+          <div class="distance-bars">
+            <div class="dist-row">
+              <span class="dist-lbl">On foot</span>
+              <div class="dist-track">
+                <div class="dist-fill fill-teal" [style.width.%]="getDistPct(stats.distance_walked ?? 0, stats)"></div>
+              </div>
+              <span class="dist-val">{{ ((stats.distance_walked ?? 0) / 1000) | number:'1.1-1' }} km</span>
+            </div>
+            <div class="dist-row">
+              <span class="dist-lbl">Driving</span>
+              <div class="dist-track">
+                <div class="dist-fill fill-blue" [style.width.%]="getDistPct(stats.distance_driven ?? 0, stats)"></div>
+              </div>
+              <span class="dist-val">{{ ((stats.distance_driven ?? 0) / 1000) | number:'1.1-1' }} km</span>
+            </div>
+            <div class="dist-row">
+              <span class="dist-lbl">Passenger</span>
+              <div class="dist-track">
+                <div class="dist-fill fill-purple" [style.width.%]="getDistPct(stats.distance_as_occupant ?? 0, stats)"></div>
+              </div>
+              <span class="dist-val">{{ ((stats.distance_as_occupant ?? 0) / 1000) | number:'1.1-1' }} km</span>
+            </div>
           </div>
-          <div class="stat-item">
-            <span class="stat-label">XP:</span>
-            <span class="stat-value">{{ (stats.level_experience ?? 0) | number }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Missions Attended:</span>
-            <span class="stat-value">{{ stats.missions_attended | number }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Session Time:</span>
-            <span class="stat-value">{{ ((stats.session_duration ?? 0) / 3600) | number:'1.1-1' }} hrs</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
+        </section>
 
-      <!-- Violations & Connection Stats -->
-      <mat-card class="stat-card">
-        <mat-card-header>
-          <mat-card-title class="text-yellow-400">⚠️ Events & Connection</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="stat-item">
-            <span class="stat-label">Civilians Killed:</span>
-            <span class="stat-value">{{ stats.civilians_killed | number }}</span>
+        <!-- Medical -->
+        <section class="stat-section">
+          <h3 class="section-title"><span class="dot dot-red"></span>Medical</h3>
+          <div class="big-numbers">
+            <div class="big-num accent-red">
+              <span class="big-val">{{ (stats.healing_done ?? 0) | number }}</span>
+              <span class="big-lbl">Total Treatments</span>
+            </div>
           </div>
-          <div class="stat-item">
-            <span class="stat-label">Connections:</span>
-            <span class="stat-value">{{ stats.connections | number }}</span>
+          <div class="row-stats">
+            <div class="row-stat">
+              <span class="row-lbl">Bandages</span>
+              <span class="row-val">{{ (stats.bandage_friendlies ?? 0) | number }}</span>
+            </div>
+            <div class="row-stat">
+              <span class="row-lbl">Saline</span>
+              <span class="row-val">{{ (stats.saline_friendlies ?? 0) | number }}</span>
+            </div>
+            <div class="row-stat">
+              <span class="row-lbl">Morphine</span>
+              <span class="row-val">{{ (stats.morphine_friendlies ?? 0) | number }}</span>
+            </div>
+            <div class="row-stat">
+              <span class="row-lbl">Tourniquets</span>
+              <span class="row-val">{{ (stats.tourniquet_friendlies ?? 0) | number }}</span>
+            </div>
           </div>
-          <div class="stat-item">
-            <span class="stat-label">Disconnections:</span>
-            <span class="stat-value">{{ stats.disconnections | number }}</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
+        </section>
 
-      <!-- Player Information -->
-      <mat-card class="stat-card">
-        <mat-card-header>
-          <mat-card-title class="text-indigo-400">👤 Player Info</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="stat-item">
-            <span class="stat-label">Player Name:</span>
-            <span class="stat-value">{{ stats.name }}</span>
+        <!-- Player Info -->
+        <section class="stat-section">
+          <h3 class="section-title"><span class="dot dot-indigo"></span>Player Info</h3>
+          <div class="row-stats">
+            <div class="row-stat">
+              <span class="row-lbl">Connections</span>
+              <span class="row-val">{{ stats.connections | number }}</span>
+            </div>
+            <div class="row-stat">
+              <span class="row-lbl">Disconnections</span>
+              <span class="row-val">{{ stats.disconnections | number }}</span>
+            </div>
+            <div class="row-stat full-width">
+              <span class="row-lbl">Steam ID</span>
+              <span class="row-val mono">{{ stats.steamid }}</span>
+            </div>
+            <div class="row-stat full-width">
+              <span class="row-lbl">ARMA GUID</span>
+              <span class="row-val mono">{{ stats.guid }}</span>
+            </div>
           </div>
-          <div class="stat-item">
-            <span class="stat-label">Steam ID:</span>
-            <span class="stat-value text-xs">{{ stats.steamid }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">ARMA GUID:</span>
-            <span class="stat-value text-xs">{{ stats.guid }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">COALITION ID:</span>
-            <span class="stat-value">#{{ stats.id }}</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
+        </section>
+
+      </div><!-- /sections -->
+    </div><!-- /dashboard -->
   }
-  
+
   @if (!(hasStats$ | async) && !(statsLoading$ | async) && !(statsError$ | async)) {
     <div class="no-stats-container">
       <h4>🎮 No Statistics Available</h4>
-      <p>You haven't participated in any ARMA 4 missions yet.</p>
+      <p>You haven't participated in any ARMA missions yet.</p>
       <p class="text-sm">Join a mission to start tracking your statistics!</p>
     </div>
   }
