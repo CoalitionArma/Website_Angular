@@ -398,9 +398,11 @@ app.get('/api/user/stats/:userId', authenticateToken, async (req: Request<{ user
         };
         
         const ranking = {
-            total_players: data.total_players || 0,
-            rank_position: data.rank_position || 0
+            total_players: parseInt(data.total_players, 10) || 0,
+            rank_position: parseInt(data.rank_position, 10) || 0
         };
+        
+        console.log(`Ranking for ${user.armaguid}: position=${ranking.rank_position}, total=${ranking.total_players} (raw: ${data.rank_position}/${data.total_players})`);
         
         res.status(200).json({
             success: true,
