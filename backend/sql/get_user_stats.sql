@@ -104,13 +104,13 @@ BEGIN
         ps.heavyban_kick_session_duration,
 
         -- Ranking (coalition.a4stats only)
-        -- Only players with more than 5 connections are included in the ranked pool.
+        -- Only players with more than 5 missions_attended are included in the ranked pool.
         -- rank_position counts how many ranked players have a higher tvt_kdr than this player.
-        (SELECT COUNT(*) FROM coalition.a4stats WHERE connections > 5) AS total_players,
+        (SELECT COUNT(*) FROM coalition.a4stats WHERE missions_attended > 5) AS total_players,
         (
             SELECT COUNT(*) + 1
             FROM coalition.a4stats s2
-            WHERE s2.connections > 5
+            WHERE s2.missions_attended > 5
             AND s2.tvt_kdr > a.tvt_kdr
         ) AS rank_position
 

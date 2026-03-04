@@ -96,9 +96,9 @@ export const selectRankInfo = createSelector(
   selectUserRanking,
   (stats, ranking) => {
     if (!stats || !ranking) return null;
-    // Players with ≤5 connections are excluded from the ranked pool.
+    // Players with ≤5 missions_attended are excluded from the ranked pool.
     // total_players reflects that pool size, so rank_position may exceed it for excluded players.
-    const isRanked = stats.connections > 5;
+    const isRanked = stats.missions_attended > 5;
     return {
       position: ranking.rank_position,
       totalPlayers: ranking.total_players,
