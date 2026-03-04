@@ -47,11 +47,11 @@ BEGIN
         (
             SELECT COUNT(*) + 1 
             FROM coalition.a4stats s2 
-            WHERE s2.tvt_kdr > (
+            WHERE s2.connections > 5
+            AND s2.tvt_kdr > (
                 SELECT tvt_kdr 
                 FROM coalition.a4stats s3
                 WHERE s3.guid = p_arma_guid
-                AND s2.connections > 5
             )
         ) as rank_position
     FROM coalition.a4stats 
