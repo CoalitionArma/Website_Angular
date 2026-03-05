@@ -1,0 +1,171 @@
+<div class="leaderboard-page">
+
+  <!-- ── Header ─────────────────────────────────────────────────────── -->
+  <div class="lb-header">
+    <div class="lb-title-group">
+      <h1 class="lb-title">Leaderboard</h1>
+      <span class="lb-subtitle" *ngIf="!loading()">
+        {{ displayedPlayers().length }} players shown
+        <span *ngIf="totalPlayers() > 0"> · {{ totalPlayers() }} total registered</span>
+      </span>
+    </div>
+
+    <!-- Controls -->
+    <div class="lb-controls">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input
+          class="search-input"
+          type="text"
+          placeholder="Search player..."
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+        />
+      </div>
+
+      <button
+        class="filter-btn"
+        [class.active]="rankedOnly()"
+        (click)="toggleRankedOnly()"
+      >
+        <span class="filter-dot"></span>
+        Ranked only
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Loading ──────────────────────────────────────────────────────── -->
+  <div class="lb-loading" *ngIf="loading()">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span>Loading leaderboard…</span>
+  </div>
+
+  <!-- ── Error ────────────────────────────────────────────────────────── -->
+  <div class="lb-error" *ngIf="!loading() && error()">
+    <span>⚠ {{ error() }}</span>
+    <button class="retry-btn" (click)="loadLeaderboard()">Retry</button>
+  </div>
+
+  <!-- ── Table ────────────────────────────────────────────────────────── -->
+  <div class="lb-card" *ngIf="!loading() && !error()">
+    <div class="table-scroll">
+      <table class="lb-table">
+        <thead>
+          <tr>
+            <th class="col-rank">#</th>
+            <th class="col-name">Player</th>
+
+            <th
+              class="col-num sortable"
+              [class.active]="isActive('missions_attended')"
+              (click)="sortBy('missions_attended')"
+            >Missions {{ sortIcon('missions_attended') }}</th>
+
+            <th
+              class="col-num sortable"
+              [class.active]="isActive('tvt_kdr')"
+              (click)="sortBy('tvt_kdr')"
+            >TvT K/D {{ sortIcon('tvt_kdr') }}</th>
+
+            <th
+              class="col-num sortable"
+              [class.active]="isActive('kills')"
+              (click)="sortBy('kills')"
+            >Kills {{ sortIcon('kills') }}</th>
+
+            <th
+              class="col-num sortable"
+              [class.active]="isActive('deaths')"
+              (click)="sortBy('deaths')"
+            >Deaths {{ sortIcon('deaths') }}</th>
+
+            <th
+              class="col-num sortable"
+              [class.active]="isActive('accuracy_percentage')"
+              (click)="sortBy('accuracy_percentage')"
+            >Accuracy {{ sortIcon('accuracy_percentage') }}</th>
+
+            <th
+              class="col-num sortable"
+              [class.active]="isActive('ai_kills')"
+              (click)="sortBy('ai_kills')"
+            >AI Kills {{ sortIcon('ai_kills') }}</th>
+
+            <th
+              class="col-num sortable"
+              [class.active]="isActive('distance_walked')"
+              (click)="sortBy('distance_walked')"
+            >Distance {{ sortIcon('distance_walked') }}</th>
+
+            <th
+              class="col-num sortable"
+              [class.active]="isActive('healing_done')"
+              (click)="sortBy('healing_done')"
+            >Healing {{ sortIcon('healing_done') }}</th>
+
+            <th
+              class="col-num sortable"
+              [class.active]="isActive('level')"
+              (click)="sortBy('level')"
+            >Level {{ sortIcon('level') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let player of displayedPlayers(); let i = index"
+            [class]="rowClass(player, i)"
+          >
+            <!-- Rank column -->
+            <td class="col-rank">
+              <span *ngIf="player.is_ranked == 1" class="rank-num">
+                <ng-container *ngIf="i === 0">🥇</ng-container>
+                <ng-container *ngIf="i === 1">🥈</ng-container>
+                <ng-container *ngIf="i === 2">🥉</ng-container>
+                <ng-container *ngIf="i > 2">{{ player.rank_position }}</ng-container>
+              </span>
+              <span *ngIf="player.is_ranked != 1" class="rank-unranked">—</span>
+            </td>
+
+            <!-- Name -->
+            <td class="col-name">
+              <span class="player-name">{{ player.name }}</span>
+            </td>
+
+            <!-- Missions -->
+            <td class="col-num">{{ player.missions_attended }}</td>
+
+            <!-- TvT K/D -->
+            <td class="col-num kdr-cell">{{ formatKdr(player.tvt_kdr) }}</td>
+
+            <!-- Kills -->
+            <td class="col-num">{{ player.kills }}</td>
+
+            <!-- Deaths -->
+            <td class="col-num">{{ player.deaths }}</td>
+
+            <!-- Accuracy -->
+            <td class="col-num">{{ formatPct(player.accuracy_percentage) }}</td>
+
+            <!-- AI Kills -->
+            <td class="col-num">{{ player.ai_kills ?? '—' }}</td>
+
+            <!-- Distance -->
+            <td class="col-num">{{ formatDist(player.distance_walked) }}</td>
+
+            <!-- Healing -->
+            <td class="col-num">{{ formatHeal(player.healing_done) }}</td>
+
+            <!-- Level -->
+            <td class="col-num">{{ player.level ?? '—' }}</td>
+          </tr>
+
+          <!-- Empty state -->
+          <tr *ngIf="displayedPlayers().length === 0">
+            <td colspan="11" class="empty-row">No players found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

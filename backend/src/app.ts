@@ -420,6 +420,81 @@ app.get('/api/user/stats/:userId', authenticateToken, async (req: Request<{ user
     }
 });
 
+// Leaderboard Endpoint (public)
+app.get('/api/leaderboard', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const {
+            sort = 'tvt_kdr',
+            dir = 'desc',
+            ranked = 'false',
+            search = '',
+            limit = '100'
+        } = req.query;
+
+        const results = await sequelize.query('CALL GetLeaderboard()', {
+            type: QueryTypes.RAW
+        });
+
+        // Sequelize CALL with QueryTypes.RAW returns [ [ rows... ], metadata ]
+        // but some versions return [ rows... ] directly — handle both
+        const resultSet = results[0] as any;
+        let players: any[];
+        if (Array.isArray(resultSet) && resultSet.length > 0 && typeof resultSet[0] === 'object' && resultSet[0] !== null && !Array.isArray(resultSet[0])) {
+            // results[0] is already the flat row array
+            players = resultSet;
+        } else if (Array.isArray(resultSet) && Array.isArray(resultSet[0])) {
+            // results[0][0] is the row array (double-wrapped)
+            players = resultSet[0];
+        } else if (Array.isArray(results) && results.length > 0 && typeof (results as any)[0] === 'object') {
+            players = results as any[];
+        } else {
+            players = [];
+        }
+
+        console.log(`Leaderboard: resolved ${players.length} players`);
+
+        // Filter: ranked only
+        if (ranked === 'true') {
+            players = players.filter((p: any) => p.is_ranked == 1);
+        }
+
+        // Filter: search by name
+        if (search && typeof search === 'string' && search.trim().length > 0) {
+            const q = search.trim().toLowerCase();
+            players = players.filter((p: any) => p.name && p.name.toLowerCase().includes(q));
+        }
+
+        // Sort
+        const validSortCols = ['tvt_kdr', 'kills', 'deaths', 'missions_attended', 'accuracy_percentage', 'ai_kills', 'healing_done', 'distance_walked', 'level', 'coop_kdr', 'rank_position'];
+        const sortCol = validSortCols.includes(sort as string) ? sort as string : 'tvt_kdr';
+        const sortDir = dir === 'asc' ? 1 : -1;
+
+        players.sort((a: any, b: any) => {
+            const av = parseFloat(a[sortCol]) || 0;
+            const bv = parseFloat(b[sortCol]) || 0;
+            return (av > bv ? 1 : av < bv ? -1 : 0) * sortDir;
+        });
+
+        // Limit
+        const limitNum = Math.min(parseInt(limit as string, 10) || 100, 500);
+        players = players.slice(0, limitNum);
+
+        res.status(200).json({
+            success: true,
+            players: players,
+            total: players.length,
+            timestamp: new Date().toISOString()
+        });
+
+    } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+        res.status(500).json({
+            error: 'Failed to fetch leaderboard',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
 // Missions List Endpoint
 app.get('/api/missions', async (req: Request, res: Response): Promise<void> => {
     try {

@@ -1,0 +1,315 @@
+// ── Page wrapper ─────────────────────────────────────────────────────────────
+.leaderboard-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+  box-sizing: border-box;
+}
+
+// ── Header row ───────────────────────────────────────────────────────────────
+.lb-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.lb-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.lb-title {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.01em;
+}
+
+.lb-subtitle {
+  font-size: 0.8rem;
+  color: #bdbdbd;
+  letter-spacing: 0.04em;
+}
+
+// ── Controls ─────────────────────────────────────────────────────────────────
+.lb-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.search-wrap {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 0 0.75rem;
+  gap: 0.4rem;
+  transition: border-color 0.2s;
+
+  &:focus-within {
+    border-color: rgba(183, 28, 28, 0.6);
+  }
+}
+
+.search-icon {
+  font-size: 0.85rem;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 0.875rem;
+  padding: 0.5rem 0;
+  width: 180px;
+
+  &::placeholder {
+    color: #6b7280;
+  }
+}
+
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: #bdbdbd;
+  font-size: 0.8rem;
+  font-family: inherit;
+  padding: 0.45rem 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+  }
+
+  &.active {
+    background: rgba(183, 28, 28, 0.15);
+    border-color: rgba(183, 28, 28, 0.5);
+    color: #ef9a9a;
+
+    .filter-dot {
+      background: #b71c1c;
+    }
+  }
+}
+
+.filter-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #6b7280;
+  transition: background 0.2s;
+}
+
+// ── Loading ──────────────────────────────────────────────────────────────────
+.lb-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 4rem 0;
+  color: #bdbdbd;
+  font-size: 0.9rem;
+}
+
+// ── Error ────────────────────────────────────────────────────────────────────
+.lb-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  color: #ef9a9a;
+  font-size: 0.9rem;
+  background: rgba(183, 28, 28, 0.1);
+  border: 1px solid rgba(183, 28, 28, 0.3);
+  border-radius: 12px;
+}
+
+.retry-btn {
+  background: rgba(183, 28, 28, 0.2);
+  border: 1px solid rgba(183, 28, 28, 0.4);
+  border-radius: 6px;
+  color: #ef9a9a;
+  font-size: 0.8rem;
+  font-family: inherit;
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(183, 28, 28, 0.35);
+  }
+}
+
+// ── Card ─────────────────────────────────────────────────────────────────────
+.lb-card {
+  background: linear-gradient(135deg, rgba(66, 66, 66, 0.9), rgba(48, 48, 48, 0.9));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+// ── Table ────────────────────────────────────────────────────────────────────
+.lb-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  min-width: 860px;
+
+  thead tr {
+    background: rgba(0, 0, 0, 0.35);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  th {
+    padding: 0.75rem 0.75rem;
+    text-align: left;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #9e9e9e;
+    white-space: nowrap;
+    user-select: none;
+
+    &.sortable {
+      cursor: pointer;
+      transition: color 0.15s;
+
+      &:hover {
+        color: #e0e0e0;
+      }
+
+      &.active {
+        color: #ef9a9a;
+      }
+    }
+
+    &.col-rank {
+      width: 48px;
+      text-align: center;
+    }
+
+    &.col-num {
+      text-align: right;
+    }
+  }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background 0.12s;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    &.unranked {
+      opacity: 0.45;
+    }
+
+    &.rank-gold {
+      background: rgba(255, 215, 0, 0.05);
+
+      .rank-num, .player-name {
+        color: #ffd700;
+      }
+    }
+
+    &.rank-silver {
+      background: rgba(192, 192, 192, 0.05);
+
+      .rank-num, .player-name {
+        color: #c0c0c0;
+      }
+    }
+
+    &.rank-bronze {
+      background: rgba(205, 127, 50, 0.05);
+
+      .rank-num, .player-name {
+        color: #cd7f32;
+      }
+    }
+  }
+
+  td {
+    padding: 0.6rem 0.75rem;
+    color: #e0e0e0;
+    vertical-align: middle;
+
+    &.col-rank {
+      text-align: center;
+    }
+
+    &.col-num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      color: #bdbdbd;
+    }
+
+    &.kdr-cell {
+      font-weight: 600;
+      color: #fff;
+    }
+  }
+}
+
+// ── Rank cell ─────────────────────────────────────────────────────────────────
+.rank-num {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #e0e0e0;
+  font-variant-numeric: tabular-nums;
+}
+
+.rank-unranked {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+// ── Player name ───────────────────────────────────────────────────────────────
+.player-name {
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+// ── Empty row ─────────────────────────────────────────────────────────────────
+.empty-row {
+  text-align: center !important;
+  padding: 2.5rem !important;
+  color: #6b7280;
+  font-size: 0.875rem;
+}

@@ -25,6 +25,12 @@
                     </svg>
                     Events
                 </a>
+                <a class="link" routerLink="/leaderboard" routerLinkActive="active" ariaCurrentWhenActive="page">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="menu-icon">
+                        <path d="M7.5 21H2V9h5.5v12zm7.25-18h-5.5v18h5.5V3zM22 11h-5.5v10H22V11z"/>
+                    </svg>
+                    Leaderboard
+                </a>
                 <a class="link" href="https://coalitiongroup.net/wiki/" target="_blank">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="menu-icon">
                         <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
@@ -109,6 +115,7 @@
         <a class="w-full text-center text-4xl text-white bg-transparent" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page" (click)="closeMobileMenu()">Home</a>
         <a class="w-full text-center text-4xl text-white bg-transparent" routerLink="/stats" routerLinkActive="active" ariaCurrentWhenActive="page" (click)="closeMobileMenu()">Stats</a>
         <a class="w-full text-center text-4xl text-white bg-transparent" routerLink="/events" routerLinkActive="active" ariaCurrentWhenActive="page" (click)="closeMobileMenu()">Events</a>
+        <a class="w-full text-center text-4xl text-white bg-transparent" routerLink="/leaderboard" routerLinkActive="active" ariaCurrentWhenActive="page" (click)="closeMobileMenu()">Leaderboard</a>
         @if (this.userService.loggedIn && this.userService.dbUser?.isAdmin) {
             <a class="w-full text-center text-4xl text-white bg-transparent" routerLink="/admin" routerLinkActive="active" ariaCurrentWhenActive="page" (click)="closeMobileMenu()">Admin</a>
         }
