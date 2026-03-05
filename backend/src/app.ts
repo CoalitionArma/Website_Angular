@@ -451,8 +451,6 @@ app.get('/api/leaderboard', async (req: Request, res: Response): Promise<void> =
             players = [];
         }
 
-        console.log(`Leaderboard: resolved ${players.length} players`);
-
         // Filter: ranked only
         if (ranked === 'true') {
             players = players.filter((p: any) => p.is_ranked == 1);
