@@ -48,6 +48,7 @@ export const routes: Routes = [
     {
         path: 'leaderboard',
         component: LeaderboardComponent,
+        canActivate: [AuthGuard],
         data: {
             title: 'Leaderboard'
         },
