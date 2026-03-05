@@ -342,6 +342,7 @@ app.get('/api/user/stats/:userId', authenticateToken, async (req: Request<{ user
             kd_ratio: data.kd_ratio,
             tvt_kdr: data.tvt_kdr,
             missions_attended: data.missions_attended,
+            total_missions_attended: data.total_missions_attended,
 
             // AI combat (reforgerjs.playerstats)
             ai_kills: data.ai_kills,
@@ -463,7 +464,7 @@ app.get('/api/leaderboard', async (req: Request, res: Response): Promise<void> =
         }
 
         // Sort
-        const validSortCols = ['tvt_kdr', 'kills', 'deaths', 'missions_attended', 'accuracy_percentage', 'ai_kills', 'healing_done', 'distance_walked', 'level', 'coop_kdr', 'rank_position'];
+        const validSortCols = ['tvt_kdr', 'kills', 'deaths', 'missions_attended', 'total_missions_attended', 'accuracy_percentage', 'ai_kills', 'healing_done', 'distance_walked', 'level', 'coop_kdr', 'rank_position'];
         const sortCol = validSortCols.includes(sort as string) ? sort as string : 'tvt_kdr';
         const sortDir = dir === 'asc' ? 1 : -1;
 

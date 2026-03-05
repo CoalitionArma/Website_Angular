@@ -21,6 +21,7 @@ class A4Stats extends Model {
 
     // Attendance & conduct (coalition-tracked)
     public missions_attended!: number;
+    public total_missions_attended!: number;
     public ff_events!: number;
     public civs_killed!: number;
     public leaves!: number;
@@ -66,6 +67,11 @@ A4Stats.init({
         defaultValue: 0.0
     },
     missions_attended: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+    },
+    total_missions_attended: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0

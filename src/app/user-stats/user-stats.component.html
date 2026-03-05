@@ -34,7 +34,7 @@
         }
 
         <div class="hero-pills">
-          <span class="pill pill-green">{{ stats.missions_attended }} missions</span>
+          <span class="pill pill-green">{{ stats.total_missions_attended }} missions ({{ stats.missions_attended }} this month)</span>
           <span class="pill pill-blue">{{ ((stats.session_duration ?? 0) / 3600) | number:'1.0-0' }} hrs played</span>
           <span class="pill pill-amber">Lvl {{ stats.level ?? 0 }}</span>
         </div>

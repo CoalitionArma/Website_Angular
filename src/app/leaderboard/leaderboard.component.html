@@ -57,9 +57,15 @@
 
             <th
               class="col-num sortable"
+              [class.active]="isActive('total_missions_attended')"
+              (click)="sortBy('total_missions_attended')"
+            >Total Missions {{ sortIcon('total_missions_attended') }}</th>
+
+            <th
+              class="col-num sortable"
               [class.active]="isActive('missions_attended')"
               (click)="sortBy('missions_attended')"
-            >Missions {{ sortIcon('missions_attended') }}</th>
+            >Monthly {{ sortIcon('missions_attended') }}</th>
 
             <th
               class="col-num sortable"
@@ -131,7 +137,10 @@
               <span class="player-name">{{ player.name }}</span>
             </td>
 
-            <!-- Missions -->
+            <!-- Total Missions -->
+            <td class="col-num">{{ player.total_missions_attended }}</td>
+
+            <!-- Monthly Missions -->
             <td class="col-num">{{ player.missions_attended }}</td>
 
             <!-- TvT K/D -->

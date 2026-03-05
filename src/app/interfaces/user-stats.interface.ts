@@ -19,6 +19,7 @@ export interface UserStats {
   kd_ratio: number;
   tvt_kdr: number;
   missions_attended: number;
+  total_missions_attended: number;
 
   // AI combat (reforgerjs.playerstats)
   ai_kills: number | null;

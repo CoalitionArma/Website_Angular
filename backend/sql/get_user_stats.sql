@@ -93,6 +93,7 @@ BEGIN
         a.leaves AS disconnections,
         a.connections,
         a.missions_attended,
+        a.total_missions_attended,
 
         -- Ban tracking (vanilla engine)
         ps.warcrimes,
@@ -105,12 +106,12 @@ BEGIN
 
         -- Ranking (coalition.a4stats only)
         -- total_players counts all players ever seen on the server.
-        -- rank_position is determined within the ranked pool (missions_attended > 5).
+        -- rank_position is determined within the ranked pool (total_missions_attended > 5).
         (SELECT COUNT(*) FROM coalition.a4stats) AS total_players,
         (
             SELECT COUNT(*) + 1
             FROM coalition.a4stats s2
-            WHERE s2.missions_attended > 5
+            WHERE s2.total_missions_attended > 5
             AND s2.tvt_kdr > a.tvt_kdr
         ) AS rank_position
 

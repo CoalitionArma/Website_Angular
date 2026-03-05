@@ -6,7 +6,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { environment } from '../../environments/environment';
 
 export type SortCol =
-  | 'tvt_kdr' | 'kills' | 'deaths' | 'missions_attended'
+  | 'tvt_kdr' | 'kills' | 'deaths' | 'missions_attended' | 'total_missions_attended'
   | 'accuracy_percentage' | 'ai_kills' | 'healing_done'
   | 'distance_walked' | 'level' | 'coop_kdr';
 
@@ -18,6 +18,7 @@ export interface LeaderboardPlayer {
   deaths: number;
   tvt_kdr: number;
   missions_attended: number;
+  total_missions_attended: number;
   ai_kills: number;
   coop_kdr: number;
   shots_fired: number;
