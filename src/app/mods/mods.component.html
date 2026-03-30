@@ -27,21 +27,32 @@
       </div>
 
       <!-- Mod cards grid -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
         <a
           *ngFor="let mod of category.mods"
           [href]="workshopUrl(mod.guid)"
           target="_blank"
           rel="noopener noreferrer"
-          class="group flex items-center gap-2 bg-neutral-800 hover:bg-red-900 border border-neutral-700 hover:border-red-700 rounded px-3 py-2.5 transition-colors duration-150 cursor-pointer no-underline"
+          class="group flex flex-col bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 hover:border-red-700 rounded overflow-hidden transition-colors duration-150 cursor-pointer no-underline"
         >
-          <svg class="shrink-0 w-3.5 h-3.5 text-neutral-500 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-          </svg>
-          <span class="text-sm text-neutral-300 group-hover:text-white transition-colors truncate leading-tight">
-            {{ mod.name }}
-          </span>
+          <div class="relative w-full aspect-video overflow-hidden bg-neutral-900">
+            <img
+              [src]="mod.image"
+              [alt]="mod.name"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              loading="lazy"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-end justify-end p-2">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </div>
+          </div>
+          <div class="px-2.5 py-2">
+            <span class="text-xs text-neutral-300 group-hover:text-white transition-colors leading-tight line-clamp-2">
+              {{ mod.name }}
+            </span>
+          </div>
         </a>
       </div>
 
