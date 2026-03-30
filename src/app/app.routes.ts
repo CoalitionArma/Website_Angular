@@ -6,6 +6,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { EventsComponent } from './events/events.component';
 import { AdminComponent } from './admin/admin.component';
 import { LeaderboardComponent } from './leaderboard/leaderboard.component';
+import { ModsComponent } from './mods/mods.component';
 import { AuthGuard } from './auth/auth.guard';
 import { AdminGuard } from './auth/admin.guard';
 
@@ -51,6 +52,13 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         data: {
             title: 'Leaderboard'
+        },
+    },
+    {
+        path: 'mods',
+        component: ModsComponent,
+        data: {
+            title: 'Current Mods'
         },
     }
 

@@ -1,0 +1,53 @@
+<div class="mods text-white">
+
+  <!-- Hero -->
+  <div class="relative py-24 flex items-center justify-center text-center overflow-hidden bg-neutral-900">
+    <div class="absolute inset-0 bg-cover bg-center bg-fixed opacity-20"
+      style="background-image: url('./assets/images/lmg.png');"></div>
+    <div class="relative z-10">
+      <h1 class="text-6xl font-bold tracking-wide">ACTIVE MODS</h1>
+      <p class="mt-4 text-neutral-400 text-lg">{{ totalMods }} mods currently running on Coalition Reforger servers</p>
+      <div class="mt-3 w-24 h-1 bg-red-900 mx-auto rounded"></div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="bg-neutral-900 w-full">
+  <div class="px-6 py-12 max-w-screen-xl mx-auto">
+
+    <div *ngFor="let category of categories" class="mb-12">
+
+      <!-- Category header -->
+      <div class="flex items-center gap-4 mb-5">
+        <h2 class="text-2xl font-bold text-white uppercase tracking-widest">{{ category.name }}</h2>
+        <span class="text-xs text-neutral-500 font-mono border border-neutral-700 px-2 py-0.5 rounded">
+          {{ category.mods.length }}
+        </span>
+        <div class="flex-1 h-px bg-red-900 opacity-60"></div>
+      </div>
+
+      <!-- Mod cards grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+        <a
+          *ngFor="let mod of category.mods"
+          [href]="workshopUrl(mod.guid)"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group flex items-center gap-2 bg-neutral-800 hover:bg-red-900 border border-neutral-700 hover:border-red-700 rounded px-3 py-2.5 transition-colors duration-150 cursor-pointer no-underline"
+        >
+          <svg class="shrink-0 w-3.5 h-3.5 text-neutral-500 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+          <span class="text-sm text-neutral-300 group-hover:text-white transition-colors truncate leading-tight">
+            {{ mod.name }}
+          </span>
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+  </div>
+
+</div>
