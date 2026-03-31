@@ -104,6 +104,7 @@ export class ModsComponent {
         { name: 'Gs Mountable BTR-70', guid: '617A2E90EA218AC4', image: 'https://ar-gcp-cdn.bistudio.com/image/a023/4b28aeac715c245a829956c05468edb1e8b9404d68b8d2857f29d524f648/123317.jpg' },
         { name: 'Integrity - Coyota Offroad', guid: '68F0286BB2B783E4', image: 'https://ar-gcp-cdn.bistudio.com/image/b5c9/82156b0d7d4e85dcd47bd4895610157d90ff5502bfac4fb1972eccb9e4ca/203232.jpg' },
         { name: 'Parachute Framework', guid: '65930CB4CD0237B2', image: 'https://ar-gcp-cdn.bistudio.com/image/fd7f/9e236504792d285dfd1e6f268f16e77e8c57b05d19b693e8b164d7af8b68/81534.jpg' },
+        { name: 'Tactical Flava', guid: '5D550926D43F1409', image: 'https://ar-gcp-cdn.bistudio.com/image/a721/24c1e41bc15ba4e11ad83e07185dc98f00f593b93a04b25afd314670b9cb/19418.jpg' },
       ]
     },
     {
@@ -157,7 +158,6 @@ export class ModsComponent {
         { name: 'Slower Strafe', guid: '60557550B10EB832', image: 'https://ar-gcp-cdn.bistudio.com/image/c7e9/f61699599a67d00eabece0b46eb3ae639ce510ec628ab9d5e2a30e3dfec3/6209.jpg' },
         { name: 'Spectral Tracers - Unified', guid: '66EE300214703AC9', image: 'https://ar-gcp-cdn.bistudio.com/image/4d7a/d1c0be732df649db627e350693df7478f0c3fec6a763b2049f9a146d09ab/25560.jpg' },
         { name: 'Stun Grenade', guid: '59EAA899751805DF', image: 'https://ar-gcp-cdn.bistudio.com/image/4e61/4d2fdf1bdb0fde79c7f7d03652bd155406501cfc4f3b952794834e56fdcf/6357.jpg' },
-        { name: 'Tactical Flava', guid: '5D550926D43F1409', image: 'https://ar-gcp-cdn.bistudio.com/image/a721/24c1e41bc15ba4e11ad83e07185dc98f00f593b93a04b25afd314670b9cb/19418.jpg' },
         { name: 'Thermal PostProcess', guid: '661B5884EF0760FE', image: 'https://ar-gcp-cdn.bistudio.com/image/c6ae/29aa4b5bf40ac75e14615f18c206aa2855d23b8af9b8b5b59c504a758fba/100739.jpg' },
         { name: 'Vanilla IEDs', guid: '68B6525C55B7F276', image: 'https://ar-gcp-cdn.bistudio.com/image/84b8/72b30e8c8d4a1da7864f432ffa3c0b8fa12d4bdb69a40d30ee3cef70f4ac/46016.jpg' },
         { name: 'VTF Rally Championship', guid: '60F697135C1AF8E9', image: 'https://ar-gcp-cdn.bistudio.com/image/5311/e7eceac2d658cf057ddf468ea38c33ecc36e9eabb25b388d60a5bb113282/103474.jpg' },
