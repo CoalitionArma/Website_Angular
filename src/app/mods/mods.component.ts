@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 
 interface Mod {
   name: string;
@@ -15,12 +15,26 @@ interface ModCategory {
 @Component({
   selector: 'app-mods',
   standalone: true,
-  imports: [NgFor],
+  imports: [NgFor, NgIf],
   templateUrl: './mods.component.html',
   styleUrl: './mods.component.scss'
 })
 export class ModsComponent {
   readonly workshopBaseUrl = 'https://reforger.armaplatform.com/workshop/';
+
+  collapsedCategories = new Set<string>();
+
+  toggleCategory(name: string): void {
+    if (this.collapsedCategories.has(name)) {
+      this.collapsedCategories.delete(name);
+    } else {
+      this.collapsedCategories.add(name);
+    }
+  }
+
+  isCollapsed(name: string): boolean {
+    return this.collapsedCategories.has(name);
+  }
 
   workshopUrl(guid: string): string {
     return this.workshopBaseUrl + guid;
