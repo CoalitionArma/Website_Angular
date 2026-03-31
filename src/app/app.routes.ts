@@ -7,6 +7,8 @@ import { EventsComponent } from './events/events.component';
 import { AdminComponent } from './admin/admin.component';
 import { LeaderboardComponent } from './leaderboard/leaderboard.component';
 import { ModsComponent } from './mods/mods.component';
+import { GettingStartedComponent } from './getting-started/getting-started.component';
+import { SoldierGuideComponent } from './soldier-guide/soldier-guide.component';
 import { AuthGuard } from './auth/auth.guard';
 import { AdminGuard } from './auth/admin.guard';
 
@@ -59,6 +61,20 @@ export const routes: Routes = [
         component: ModsComponent,
         data: {
             title: 'Current Mods'
+        },
+    },
+    {
+        path: 'getting-started',
+        component: GettingStartedComponent,
+        data: {
+            title: 'Getting Started'
+        },
+    },
+    {
+        path: 'soldier-guide',
+        component: SoldierGuideComponent,
+        data: {
+            title: 'New Soldier Guide'
         },
     }
 

@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+
+.step-number {
+  font-size: 6rem;
+  font-weight: 900;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(153, 27, 27, 0.5);
+  user-select: none;
+}

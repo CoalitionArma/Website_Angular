@@ -13,17 +13,23 @@
                     </svg>
                     Home
                 </a>
-                <a class="link" routerLink="/stats" routerLinkActive="active" ariaCurrentWhenActive="page">
+                <a class="link" routerLink="/getting-started" routerLinkActive="active" ariaCurrentWhenActive="page">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="menu-icon">
-                        <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z"/>
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
                     </svg>
-                    Stats
+                    Get Started
                 </a>
                 <a class="link" routerLink="/events" routerLinkActive="active" ariaCurrentWhenActive="page">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="menu-icon">
                         <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-2 .89-2 2v1c0 1.11.89 2 2 2h1v9c0 1.11.89 2 2 2h10c1.11 0 2-.89 2-2v-9h1c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-1.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5S13.5 6.83 13.5 6s.67-1.5 1.5-1.5zM8.5 6c0-.83.67-1.5 1.5-1.5S11.5 5.17 11.5 6s-.67 1.5-1.5 1.5S8.5 6.83 8.5 6zM7 20v-9h10v9H7z"/>
                     </svg>
                     Events
+                </a>
+                <a class="link" routerLink="/stats" routerLinkActive="active" ariaCurrentWhenActive="page">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="menu-icon">
+                        <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z"/>
+                    </svg>
+                    Stats
                 </a>
                 <a class="link" routerLink="/leaderboard" routerLinkActive="active" ariaCurrentWhenActive="page">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="menu-icon">
@@ -35,7 +41,7 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="menu-icon">
                         <path d="M20.5 11H19V7c0-1.1-.9-2-2-2h-4V3.5C13 2.12 11.88 1 10.5 1S8 2.12 8 3.5V5H4c-1.1 0-1.99.9-1.99 2v3.8H3.5c1.49 0 2.7 1.21 2.7 2.7s-1.21 2.7-2.7 2.7H2V20c0 1.1.9 2 2 2h3.8v-1.5c0-1.49 1.21-2.7 2.7-2.7 1.49 0 2.7 1.21 2.7 2.7V22H17c1.1 0 2-.9 2-2v-4h1.5c1.38 0 2.5-1.12 2.5-2.5S21.88 11 20.5 11z"/>
                     </svg>
-                    Current Mods
+                    Mods
                 </a>
                 <a class="link" href="https://coalitiongroup.net/wiki/" target="_blank">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="menu-icon">
@@ -119,8 +125,9 @@
 
     <div id="mobileMenu" class="md:hidden flex-col justify-start backdrop-blur-md bg-gradient-to-r from-neutral-800/60 to-neutral-900/60" [class.drop-mobile-menu]="mobileMenuVisible" [class.hide-mobile-menu]="!mobileMenuVisible">
         <a class="w-full text-center text-4xl text-white bg-transparent" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page" (click)="closeMobileMenu()">Home</a>
-        <a class="w-full text-center text-4xl text-white bg-transparent" routerLink="/stats" routerLinkActive="active" ariaCurrentWhenActive="page" (click)="closeMobileMenu()">Stats</a>
+        <a class="w-full text-center text-4xl text-white bg-transparent" routerLink="/getting-started" routerLinkActive="active" ariaCurrentWhenActive="page" (click)="closeMobileMenu()">Get Started</a>
         <a class="w-full text-center text-4xl text-white bg-transparent" routerLink="/events" routerLinkActive="active" ariaCurrentWhenActive="page" (click)="closeMobileMenu()">Events</a>
+        <a class="w-full text-center text-4xl text-white bg-transparent" routerLink="/stats" routerLinkActive="active" ariaCurrentWhenActive="page" (click)="closeMobileMenu()">Stats</a>
         <a class="w-full text-center text-4xl text-white bg-transparent" routerLink="/leaderboard" routerLinkActive="active" ariaCurrentWhenActive="page" (click)="closeMobileMenu()">Leaderboard</a>
         <a class="w-full text-center text-4xl text-white bg-transparent" routerLink="/mods" routerLinkActive="active" ariaCurrentWhenActive="page" (click)="closeMobileMenu()">Mods</a>
         @if (this.userService.loggedIn && this.userService.dbUser?.isAdmin) {

@@ -1,0 +1,633 @@
+<div class="text-white">
+
+  <!-- ── HERO ── -->
+  <div class="relative h-dvh flex items-center justify-center text-center overflow-hidden">
+    <div class="absolute inset-0 bg-cover bg-center bg-fixed"
+      style="background-image: url('./assets/images/1874880_20240503213029_1.png');"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-neutral-950"></div>
+    <div class="relative z-10 px-6 max-w-4xl mx-auto text-center">
+      <p class="text-red-500 uppercase tracking-[0.3em] text-sm font-semibold mb-4">Coalition Reforger</p>
+      <h1 class="text-6xl lg:text-8xl font-black tracking-tight leading-none mb-6">
+        NEW SOLDIER<br><span class="text-red-600">GUIDE</span>
+      </h1>
+      <p class="text-neutral-300 text-xl lg:text-2xl max-w-2xl mx-auto mb-10 leading-relaxed">
+        Everything you need to know before the bullets start flying.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a routerLink="/getting-started"
+          class="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur border border-white/20 hover:border-white/40 text-white font-bold px-8 py-4 rounded transition-colors duration-200 text-lg no-underline">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+          How to Join
+        </a>
+        <a [href]="wikiUrl" target="_blank" rel="noopener noreferrer"
+          class="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur border border-white/20 hover:border-white/40 text-white font-bold px-8 py-4 rounded transition-colors duration-200 text-lg no-underline">
+          Full Wiki
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+      <span class="text-xs text-neutral-400 uppercase tracking-widest">Scroll</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="text-neutral-400">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ── STICKY NAV ── -->
+  <div class="sticky top-[64px] z-30 bg-neutral-950/90 backdrop-blur border-b border-neutral-800">
+    <div class="max-w-screen-xl mx-auto px-6 overflow-x-auto flex justify-center">
+      <div class="flex gap-0 min-w-max">
+        <a *ngFor="let s of sections" [href]="'#' + s.id"
+          class="text-xs font-semibold uppercase tracking-widest text-neutral-500 hover:text-white px-4 py-4 border-b-2 border-transparent hover:border-red-600 transition-colors duration-200 no-underline whitespace-nowrap">
+          {{ s.label }}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── INTRO CALLOUT ── -->
+  <div class="bg-neutral-950 w-full">
+    <div class="max-w-screen-lg mx-auto px-6 pt-16 pb-4">
+      <div class="bg-red-950/30 border border-red-900/50 rounded-xl p-6 flex gap-4">
+        <svg class="shrink-0 text-red-500 mt-0.5" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+        </svg>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          This guide covers how <strong class="text-white">Coalition conducts warfare in-game</strong>, not real-world doctrine.
+          You will be expected to know and perform these techniques in real time during sessions.
+          Take it seriously — your squad depends on it.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- ── SECTION 1: PLATOON STRUCTURE ── -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div id="structure" class="section-anchor bg-neutral-950 w-full">
+    <div class="max-w-screen-lg mx-auto px-6 py-16">
+      <div class="mb-10">
+        <p class="text-red-500 uppercase tracking-[0.25em] text-xs font-semibold mb-3">Section 1</p>
+        <h2 class="text-4xl font-black tracking-tight">PLATOON STRUCTURE</h2>
+        <div class="mt-3 w-16 h-1 bg-red-700 rounded"></div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <div>
+          <p class="text-neutral-400 leading-relaxed mb-6">
+            A <strong class="text-white">Platoon Element</strong> (Platoon Leader and Platoon Sergeant / 2IC) commands up to <strong class="text-white">five squads</strong>.
+            Each squad is led by a Squad Leader and Medic, with two color fireteams beneath them.
+          </p>
+
+          <!-- Platoon Element -->
+          <div class="flex items-center gap-4 bg-neutral-900 rounded-lg p-4 border border-yellow-900/40 mb-3">
+            <div class="w-3 h-3 rounded-full bg-yellow-400 shrink-0"></div>
+            <div>
+              <p class="font-bold text-sm text-yellow-200">PLATOON ELEMENT</p>
+              <p class="text-neutral-400 text-xs">PL (Platoon Leader) &middot; PSgt (Platoon Sergeant / 2IC)</p>
+            </div>
+            <span class="ml-auto text-xs text-neutral-500">Commands up to 5 squads</span>
+          </div>
+
+          <h3 class="text-lg font-bold mb-3">Squad Composition</h3>
+          <p class="text-neutral-400 text-sm mb-4">Each squad has a <strong class="text-white">command element</strong> and two color fireteams — up to nine troopers total:</p>
+
+          <div class="flex flex-col gap-3">
+            <div class="flex items-center gap-4 bg-neutral-900 rounded-lg p-4 border border-neutral-800">
+              <div class="w-3 h-3 rounded-full bg-white shrink-0"></div>
+              <div>
+                <p class="font-bold text-sm">WHITE TEAM</p>
+                <p class="text-neutral-400 text-xs">SL (Squad Leader) &middot; MEDIC</p>
+              </div>
+              <span class="ml-auto text-xs text-neutral-500">Command</span>
+            </div>
+            <div class="flex items-center gap-4 bg-neutral-900 rounded-lg p-4 border border-red-900/40">
+              <div class="w-3 h-3 rounded-full bg-red-500 shrink-0"></div>
+              <div>
+                <p class="font-bold text-sm text-red-300">RED TEAM</p>
+                <p class="text-neutral-400 text-xs">FTL · AR · AAR</p>
+              </div>
+              <span class="ml-auto text-xs text-neutral-500">Base of Fire</span>
+            </div>
+            <div class="flex items-center gap-4 bg-neutral-900 rounded-lg p-4 border border-green-900/40">
+              <div class="w-3 h-3 rounded-full bg-green-500 shrink-0"></div>
+              <div>
+                <p class="font-bold text-sm text-green-300">GREEN TEAM</p>
+                <p class="text-neutral-400 text-xs">FTL · RAT · RAT · RIFLEMAN</p>
+              </div>
+              <span class="ml-auto text-xs text-neutral-500">Maneuver</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screenshot -->
+        <div class="relative rounded-xl overflow-hidden aspect-video shadow-2xl">
+          <img src="./assets/images/1874880_20240503203941_1.png" alt="Arma Reforger gameplay" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+          <p class="absolute bottom-3 left-4 text-xs text-neutral-400">Red team holds position while green team flanks</p>
+        </div>
+      </div>
+
+      <!-- Team purpose callouts -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+        <div class="bg-neutral-900 border border-red-900/40 rounded-xl p-5">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+            <span class="font-bold text-red-300 text-sm">RED TEAM — Base of Fire</span>
+          </div>
+          <p class="text-neutral-400 text-sm leading-relaxed">The FTL, AR, and AAR combination delivers sustained suppression. The LMG, underbarrelled grenade launcher, and two sets of binoculars allow Red team to cover Green in almost any environment.</p>
+        </div>
+        <div class="bg-neutral-900 border border-green-900/40 rounded-xl p-5">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+            <span class="font-bold text-green-300 text-sm">GREEN TEAM — Maneuver</span>
+          </div>
+          <p class="text-neutral-400 text-sm leading-relaxed">Two RATs and a Rifleman provide the squad's anti-armor punch while flanking pinned enemies. Green team advances while Red team keeps enemies suppressed and heads down.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- ── SECTION 2: ROLES ── -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div id="roles" class="section-anchor bg-neutral-900 w-full">
+    <div class="max-w-screen-lg mx-auto px-6 py-16">
+      <div class="mb-10">
+        <p class="text-red-500 uppercase tracking-[0.25em] text-xs font-semibold mb-3">Section 2</p>
+        <h2 class="text-4xl font-black tracking-tight">SQUAD ROLES</h2>
+        <div class="mt-3 w-16 h-1 bg-red-700 rounded"></div>
+      </div>
+
+      <!-- Recruit restriction banner -->
+      <div class="bg-amber-950/40 border border-amber-700/50 rounded-lg px-5 py-3 flex items-center gap-3 mb-8 text-sm">
+        <svg class="shrink-0 text-amber-400" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2L1 21h22L12 2zm0 3.5L20.5 19H3.5L12 5.5zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/>
+        </svg>
+        <span class="text-amber-300"><strong class="text-amber-200">New Players:</strong> You should avoid SL, FTL, and AR roles for your first few sessions. Start as AAR, RAT, or Rifleman to learn before leading.</span>
+      </div>
+
+      <div class="flex flex-col gap-5">
+        <div *ngFor="let role of roles"
+          class="group bg-neutral-800 border rounded-xl overflow-hidden transition-colors duration-300"
+          [class.border-red-900]="role.team === 'red'"
+          [class.border-green-900]="role.team === 'green'"
+          [class.border-neutral-700]="role.team === 'white'">
+
+          <div class="flex flex-col md:flex-row">
+            <!-- Left accent -->
+            <div class="w-full md:w-1.5 md:h-auto h-1.5 shrink-0"
+              [class.bg-red-700]="role.team === 'red'"
+              [class.bg-green-700]="role.team === 'green'"
+              [class.bg-white]="role.team === 'white'"></div>
+
+            <div class="flex flex-col md:flex-row flex-1 p-5 gap-5">
+              <!-- Role info -->
+              <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                  <h3 class="text-lg font-bold">{{ role.name }}</h3>
+                  <span *ngIf="!role.recruitsAllowed"
+                    class="text-xs bg-amber-900/60 text-amber-300 border border-amber-700/50 px-2 py-0.5 rounded font-mono">
+                    Restricted
+                  </span>
+                </div>
+                <p class="text-neutral-400 text-sm leading-relaxed mb-4">{{ role.summary }}</p>
+
+                <!-- Tip -->
+                <div class="flex items-start gap-2 bg-neutral-900/60 rounded-lg p-3 text-xs text-neutral-400">
+                  <svg class="shrink-0 text-red-500 mt-0.5" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                  </svg>
+                  <span><strong class="text-neutral-300">Tip:</strong> {{ role.tip }}</span>
+                </div>
+              </div>
+
+              <!-- Loadout -->
+              <div class="md:w-56 shrink-0">
+                <p class="text-xs font-semibold uppercase tracking-widest text-neutral-500 mb-2">Loadout</p>
+                <ul class="flex flex-col gap-1.5">
+                  <li *ngFor="let item of role.loadout" class="flex items-start gap-2 text-sm text-neutral-300">
+                    <svg class="shrink-0 text-red-700 mt-1" width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
+                      <circle cx="5" cy="5" r="5"/>
+                    </svg>
+                    {{ item }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Advanced role cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+
+        <!-- AAR -->
+        <div class="bg-neutral-700 border border-red-900/40 rounded-xl p-6">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-2 h-2 rounded-full bg-red-500"></div>
+            <span class="text-xs font-mono uppercase tracking-widest text-red-400">Red Team</span>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Playing AAR</h3>
+          <p class="text-neutral-400 text-sm leading-relaxed mb-4">
+            The AAR is the second man behind the LMG. Stay directly with your AR and FTL while moving. You are their eyes and their ammunition carrier.
+          </p>
+          <ul class="flex flex-col gap-2 text-sm text-neutral-300">
+            <li class="flex items-start gap-2"><svg class="shrink-0 text-red-700 mt-1.5" width="8" height="8" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>Spot targets and observe bullet impact with binoculars</li>
+            <li class="flex items-start gap-2"><svg class="shrink-0 text-red-700 mt-1.5" width="8" height="8" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>Carry and resupply spare ammunition for the gun</li>
+            <li class="flex items-start gap-2"><svg class="shrink-0 text-red-700 mt-1.5" width="8" height="8" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>Watch the AR's flanks — he will tunnel-vision on targets</li>
+          </ul>
+        </div>
+
+        <!-- Rifleman -->
+        <div class="bg-neutral-700 border border-green-900/40 rounded-xl p-6">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-2 h-2 rounded-full bg-green-500"></div>
+            <span class="text-xs font-mono uppercase tracking-widest text-green-400">Green Team</span>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Playing Rifleman</h3>
+          <p class="text-neutral-400 text-sm leading-relaxed mb-4">
+            The Rifleman is the maneuver backbone of Green team. Your flexibility makes you invaluable — support the FTL, cover the RATs while they set up shots, and be the first through the door.
+          </p>
+          <ul class="flex flex-col gap-2 text-sm text-neutral-300">
+            <li class="flex items-start gap-2"><svg class="shrink-0 text-green-700 mt-1.5" width="8" height="8" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>Stick with your Green FTL and follow their positioning calls</li>
+            <li class="flex items-start gap-2"><svg class="shrink-0 text-green-700 mt-1.5" width="8" height="8" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>Cover the RATs' flanks while they identify and engage armor</li>
+            <li class="flex items-start gap-2"><svg class="shrink-0 text-green-700 mt-1.5" width="8" height="8" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>Use grenades and suppressive fire to clear buildings and obstacles</li>
+          </ul>
+        </div>
+
+        <!-- RAT -->
+        <div class="bg-neutral-700 border border-green-900/40 rounded-xl p-6">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-2 h-2 rounded-full bg-green-500"></div>
+            <span class="text-xs font-mono uppercase tracking-widest text-green-400">Green Team</span>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Playing RAT</h3>
+          <p class="text-neutral-400 text-sm leading-relaxed mb-4">
+            You are often the whole platoon's only anti-armor asset. One shot, one launcher. A missed round can get your whole team killed.
+          </p>
+          <ul class="flex flex-col gap-2 text-sm text-neutral-300">
+            <li class="flex items-start gap-2"><svg class="shrink-0 text-green-700 mt-1.5" width="8" height="8" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>Always clear your backblast and call your rocket</li>
+            <li class="flex items-start gap-2"><svg class="shrink-0 text-green-700 mt-1.5" width="8" height="8" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>Know your launcher's backblast clearance before firing</li>
+            <li class="flex items-start gap-2"><svg class="shrink-0 text-green-700 mt-1.5" width="8" height="8" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>Coordinate with your partner RAT — two launchers double your coverage</li>
+          </ul>
+          <a [href]="atWikiUrl" target="_blank" rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 text-green-400 hover:text-green-300 text-xs mt-4 no-underline transition-colors">
+            AT launcher manuals
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- ── SECTION 3: FORMATIONS ── -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div id="formations" class="section-anchor bg-neutral-950 w-full">
+    <div class="max-w-screen-lg mx-auto px-6 py-16">
+      <div class="mb-10">
+        <p class="text-red-500 uppercase tracking-[0.25em] text-xs font-semibold mb-3">Section 3</p>
+        <h2 class="text-4xl font-black tracking-tight">FORMATIONS &amp; SPACING</h2>
+        <div class="mt-3 w-16 h-1 bg-red-700 rounded"></div>
+      </div>
+
+      <p class="text-neutral-400 leading-relaxed mb-3">
+        There are three formations you must know. Each maintains a minimum of <strong class="text-white">5 meters of spacing</strong> between soldiers.
+        Your FTL will call "push out" or "pull in" — use your CSI compass HUD to judge distance.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        <div *ngFor="let f of formations; let i = index"
+          class="bg-neutral-900 border border-neutral-800 hover:border-red-900 rounded-xl overflow-hidden transition-colors duration-300">
+          <div class="aspect-video bg-neutral-800 overflow-hidden">
+            <img [src]="f.image" [alt]="f.name" class="w-full h-full object-contain p-2" loading="lazy"
+              (error)="$any($event.target).style.display='none'">
+          </div>
+          <div class="p-5">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-red-500 font-black text-2xl font-mono">0{{ i + 1 }}</span>
+              <h3 class="font-bold text-lg">{{ f.name }}</h3>
+            </div>
+            <p class="text-neutral-400 text-sm leading-relaxed mb-3">{{ f.description }}</p>
+            <div class="flex items-start gap-2 bg-neutral-800 rounded px-3 py-2 text-xs text-neutral-400">
+              <svg class="shrink-0 text-red-600 mt-0.5" width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L1 21h22L12 2zm0 3.5L20.5 19H3.5L12 5.5zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/>
+              </svg>
+              <span><strong class="text-neutral-300">When:</strong> {{ f.use }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screenshot strip -->
+      <div class="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="relative rounded-lg overflow-hidden aspect-video">
+          <img src="./assets/images/1874880_20240503203708_1.png" alt="Reforger infantry" class="w-full h-full object-cover" loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        </div>
+        <div class="relative rounded-lg overflow-hidden aspect-video">
+          <img src="./assets/images/1874880_20240419204122_1.png" alt="Reforger infantry" class="w-full h-full object-cover" loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        </div>
+        <div class="relative rounded-lg overflow-hidden aspect-video">
+          <img src="./assets/images/1874880_20240426213657_1.png" alt="Reforger infantry" class="w-full h-full object-cover" loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        </div>
+        <div class="relative rounded-lg overflow-hidden aspect-video">
+          <img src="./assets/images/1874880_20240517211224_1.png" alt="Reforger infantry" class="w-full h-full object-cover" loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- ── SECTION 4: RADIOS ── -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div id="radios" class="section-anchor bg-neutral-900 w-full">
+    <div class="max-w-screen-lg mx-auto px-6 py-16">
+      <div class="mb-10">
+        <p class="text-red-500 uppercase tracking-[0.25em] text-xs font-semibold mb-3">Section 4</p>
+        <h2 class="text-4xl font-black tracking-tight">RADIOS / COMMUNICATIONS</h2>
+        <div class="mt-3 w-16 h-1 bg-red-700 rounded"></div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+        <div>
+          <p class="text-neutral-400 leading-relaxed mb-6">
+            All in-squad communication uses <strong class="text-white">in-game push-to-talk radios</strong>.
+            Each squad is assigned a radio frequency at mission start. You can press "P" to see all squads and their frequencies.
+          </p>
+
+          <!-- Net types -->
+          <div class="flex flex-col gap-4 mb-6">
+            <div class="bg-neutral-800 border border-neutral-700 rounded-xl p-5">
+              <h3 class="font-bold mb-2 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                Squad Net
+              </h3>
+              <p class="text-neutral-400 text-sm leading-relaxed">All members of the squad share one frequency. Each FTL carries <strong class="text-white">one short-range AN/PRC-343</strong>. The SL carries <strong class="text-white">two radios</strong> — one for the squad net and one for the platoon net.</p>
+            </div>
+            <div class="bg-neutral-800 border border-neutral-700 rounded-xl p-5">
+              <h3 class="font-bold mb-2 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                Platoon Net
+              </h3>
+              <p class="text-neutral-400 text-sm leading-relaxed">The Platoon Element (PL + PSgt) and Squad Leaders share one dedicated channel. Both PL and PSgt carry <strong class="text-white">two radios</strong>. Strict radio discipline required — regular soldiers do not transmit on this net.</p>
+            </div>
+          </div>
+
+          <!-- Callsigns -->
+          <div class="bg-neutral-800 border border-neutral-700 rounded-xl p-5 mb-6">
+            <h3 class="font-bold mb-3 text-sm uppercase tracking-widest text-neutral-400">Callsigns</h3>
+            <p class="text-neutral-400 text-sm leading-relaxed mb-4">
+              Callsigns identify who is transmitting. Always state your callsign when you key up — never say "me" or "I".
+            </p>
+            <div class="flex flex-col gap-3">
+              <div class="flex items-center gap-3">
+                <span class="shrink-0 w-10 h-8 rounded bg-yellow-900/50 border border-yellow-700/50 text-yellow-300 font-black font-mono text-sm flex items-center justify-center">6</span>
+                <div>
+                  <p class="text-sm font-semibold text-white">Platoon Leader</p>
+                  <p class="text-neutral-400 text-xs">Always callsign <strong class="text-yellow-300">"6"</strong> — e.g. "1-6" for 1st Platoon Leader</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="shrink-0 w-10 h-8 rounded bg-yellow-900/50 border border-yellow-700/50 text-yellow-300 font-black font-mono text-sm flex items-center justify-center">7</span>
+                <div>
+                  <p class="text-sm font-semibold text-white">Platoon Sergeant (2IC)</p>
+                  <p class="text-neutral-400 text-xs">Always callsign <strong class="text-yellow-300">"7"</strong> — e.g. "1-7" for 1st Platoon Sergeant</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="shrink-0 w-10 h-8 rounded bg-blue-900/50 border border-blue-700/50 text-blue-300 font-black font-mono text-sm flex items-center justify-center">1-1</span>
+                <div>
+                  <p class="text-sm font-semibold text-white">Squad Callsign</p>
+                  <p class="text-neutral-400 text-xs">Format is <strong class="text-blue-300">Platoon#-Squad#</strong> — 1st platoon, 1st squad = <strong class="text-blue-300">"1-1"</strong></p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="shrink-0 w-10 h-8 rounded bg-neutral-700 border border-neutral-600 text-neutral-300 font-black font-mono text-sm flex items-center justify-center">1</span>
+                <div>
+                  <p class="text-sm font-semibold text-white">Short Callsign (Platoon Net)</p>
+                  <p class="text-neutral-400 text-xs">On your own platoon net, squads can drop the platoon number and use just their squad number — e.g. "1" for 1st squad. Only one platoon is on that net, so there's no ambiguity.</p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 bg-neutral-900 rounded-lg px-4 py-3 font-mono text-sm text-green-300">
+              "6, 1-1 moving to phase line alpha, out."
+            </div>
+          </div>
+
+          <a [href]="commsWikiUrl" target="_blank" rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 text-red-400 hover:text-red-300 text-sm no-underline transition-colors">
+            Full comms & marking guide
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+            </svg>
+          </a>
+        </div>
+
+        <div>
+          <!-- ADD Report -->
+          <div class="bg-neutral-800 border border-red-900/60 rounded-xl p-6 mb-6">
+            <h3 class="font-bold text-lg mb-1">The ADD Contact Report</h3>
+            <p class="text-neutral-400 text-sm mb-5">Every contact call on radio follows this format:</p>
+            <div class="flex flex-col gap-3">
+              <div *ngFor="let step of addSteps" class="flex items-start gap-4">
+                <span class="shrink-0 w-10 h-10 rounded-lg bg-red-900/60 border border-red-700/50 text-red-300 text-xl font-black flex items-center justify-center">{{ step.letter }}</span>
+                <div>
+                  <p class="font-bold text-sm">{{ step.word }}</p>
+                  <p class="text-neutral-400 text-xs">{{ step.desc }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-5 bg-neutral-900 rounded-lg px-4 py-3 font-mono text-sm text-green-300">
+              "Green team contact, two EI at that tree line bearing 252, 300 meters."
+            </div>
+          </div>
+
+          <!-- Rules -->
+          <div class="bg-neutral-800 border border-neutral-700 rounded-xl p-5">
+            <h3 class="font-bold mb-3 text-sm uppercase tracking-widest text-neutral-400">Radio Rules</h3>
+            <ul class="flex flex-col gap-2">
+              <li *ngFor="let rule of radioRules" class="flex items-start gap-2 text-sm text-neutral-300">
+                <svg class="shrink-0 text-red-700 mt-1.5" width="8" height="8" viewBox="0 0 10 10" fill="currentColor">
+                  <circle cx="5" cy="5" r="5"/>
+                </svg>
+                {{ rule }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- ── SECTION 5: MEDICAL ── -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div id="medical" class="section-anchor w-full relative overflow-hidden">
+    <div class="absolute inset-0 bg-cover bg-center bg-fixed opacity-20"
+      style="background-image: url('./assets/images/1874880_20240517212309_1.png');"></div>
+    <div class="absolute inset-0 bg-neutral-950/80"></div>
+    <div class="relative z-10 max-w-screen-lg mx-auto px-6 py-16">
+      <div class="mb-10">
+        <p class="text-red-500 uppercase tracking-[0.25em] text-xs font-semibold mb-3">Section 5</p>
+        <h2 class="text-4xl font-black tracking-tight">MEDICAL</h2>
+        <div class="mt-3 w-16 h-1 bg-red-700 rounded"></div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <div>
+          <p class="text-neutral-400 leading-relaxed mb-6">
+            Open your inventory when injured to see all active wounds. Hover any injury to see its status. You start with <strong class="text-white">2 bandages, 2 tourniquets, and morphine</strong>.
+          </p>
+
+          <!-- Critical callout -->
+          <div class="bg-red-950/50 border border-red-700/60 rounded-xl p-5 mb-6">
+            <p class="font-bold text-red-300 mb-1">⚠ "Stable" ≠ Bandaged</p>
+            <p class="text-neutral-300 text-sm leading-relaxed">
+              <strong>Stable</strong> means: no active bleeding <em>+</em> fluids administered <em>+</em> stable heart rate.
+              Bandaged limbs alone are <strong class="text-red-400">NOT</strong> stable. Failure to get proper treatment can lead to unconsciousness and cardiac arrest.
+            </p>
+          </div>
+
+          <h3 class="font-bold mb-3">Self-Aid Steps</h3>
+          <ol class="flex flex-col gap-3">
+            <li class="flex items-start gap-3 text-sm text-neutral-300">
+              <span class="shrink-0 w-6 h-6 rounded-full bg-red-900/60 border border-red-700/50 text-red-300 text-xs font-bold flex items-center justify-center mt-0.5">1</span>
+              <span><strong class="text-white">Kill the threat </strong>and get to cover — do not treat yourself while still under fire</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-neutral-300">
+              <span class="shrink-0 w-6 h-6 rounded-full bg-red-900/60 border border-red-700/50 text-red-300 text-xs font-bold flex items-center justify-center mt-0.5">2</span>
+              <span>Check for bleeding wounds and apply a <strong class="text-white">tourniquet</strong> if not in immediate danger</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-neutral-300">
+              <span class="shrink-0 w-6 h-6 rounded-full bg-red-900/60 border border-red-700/50 text-red-300 text-xs font-bold flex items-center justify-center mt-0.5">3</span>
+              <span>Apply <strong class="text-white">bandages</strong> to limbs if in a safe area and remove tourniquet if applied</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-neutral-300">
+              <span class="shrink-0 w-6 h-6 rounded-full bg-red-900/60 border border-red-700/50 text-red-300 text-xs font-bold flex items-center justify-center mt-0.5">4</span>
+              <span>Request a <strong class="text-white">medic</strong> if in so much pain that it affects your vision</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-neutral-300">
+              <span class="shrink-0 w-6 h-6 rounded-full bg-red-900/60 border border-red-700/50 text-red-300 text-xs font-bold flex items-center justify-center mt-0.5">5</span>
+              <span>If you're out of supplies or need fluids — <strong class="text-white">tell your FTL</strong> you need a medic immediately</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-neutral-300">
+              <span class="shrink-0 w-6 h-6 rounded-full bg-red-900/60 border border-red-700/50 text-red-300 text-xs font-bold flex items-center justify-center mt-0.5">6</span>
+              <span>Once bleeding stops, fluids are in, and all tourniquets are removed — you're safe to continue</span>
+            </li>
+          </ol>
+        </div>
+
+        <div class="flex flex-col gap-4">
+          <h3 class="font-bold mb-1">Buddy-Aid Steps</h3>
+          <ol class="flex flex-col gap-3 mb-2">
+            <li class="flex items-start gap-3 text-sm text-neutral-300">
+              <span class="shrink-0 w-6 h-6 rounded-full bg-red-900/60 border border-red-700/50 text-red-300 text-xs font-bold flex items-center justify-center mt-0.5">1</span>
+              <span><strong class="text-white">Suppress / kill the threat</strong> — never expose yourself to recover a buddy while still in contact</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-neutral-300">
+              <span class="shrink-0 w-6 h-6 rounded-full bg-red-900/60 border border-red-700/50 text-red-300 text-xs font-bold flex items-center justify-center mt-0.5">2</span>
+              <span><strong class="text-white">Pop smoke</strong> to cover your approach if your buddy is unconscious and in the open</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-neutral-300">
+              <span class="shrink-0 w-6 h-6 rounded-full bg-red-900/60 border border-red-700/50 text-red-300 text-xs font-bold flex items-center justify-center mt-0.5">3</span>
+              <span><strong class="text-white">Stop the bleeding</strong> — apply tourniquets and bandages to keep them alive until the medic arrives</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-neutral-300">
+              <span class="shrink-0 w-6 h-6 rounded-full bg-red-900/60 border border-red-700/50 text-red-300 text-xs font-bold flex items-center justify-center mt-0.5">4</span>
+              <span><strong class="text-white">Call the medic</strong> through your FTL with location and number of casualties</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-neutral-300">
+              <span class="shrink-0 w-6 h-6 rounded-full bg-red-900/60 border border-red-700/50 text-red-300 text-xs font-bold flex items-center justify-center mt-0.5">5</span>
+              <span><strong class="text-white">Pull security</strong> — face out and hold your sector while the medic works</span>
+            </li>
+          </ol>
+
+          <div class="bg-neutral-900/80 border border-neutral-800 rounded-xl p-5">
+            <h3 class="font-bold mb-3 text-sm uppercase tracking-widest text-neutral-400">Remember</h3>
+            <ul class="flex flex-col gap-2 text-sm text-neutral-300">
+              <li class="flex items-start gap-2">
+                <svg class="shrink-0 text-red-700 mt-1.5" width="8" height="8" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>
+                Medical personnel are not guaranteed to be on your short-range channel
+              </li>
+              <li class="flex items-start gap-2">
+                <svg class="shrink-0 text-red-700 mt-1.5" width="8" height="8" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>
+                Route all medic requests through your Fireteam Leader
+              </li>
+              <li class="flex items-start gap-2">
+                <svg class="shrink-0 text-red-700 mt-1.5" width="8" height="8" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>
+                Remove tourniquets once a medic has treated you — they stop circulation
+              </li>
+              <li class="flex items-start gap-2">
+                <svg class="shrink-0 text-red-700 mt-1.5" width="8" height="8" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>
+                Don't wait until you're unconscious — inform leadership early
+              </li>
+            </ul>
+          </div>
+
+          <a [href]="medicalWikiUrl" target="_blank" rel="noopener noreferrer"
+            class="inline-flex items-center justify-center gap-2 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 text-white text-sm font-semibold px-5 py-3 rounded-xl transition-colors no-underline">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="text-red-400">
+              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/>
+            </svg>
+            Full Medical Guide on Wiki
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FAQ ── -->
+  <div class="bg-neutral-950 w-full">
+    <div class="max-w-screen-md mx-auto px-6 py-16">
+      <div class="text-center mb-12">
+        <p class="text-red-500 uppercase tracking-[0.25em] text-xs font-semibold mb-3">Common Questions</p>
+        <h2 class="text-4xl font-black tracking-tight">FAQ</h2>
+        <div class="mt-4 w-16 h-1 bg-red-700 mx-auto rounded"></div>
+      </div>
+      <div class="flex flex-col divide-y divide-neutral-800">
+        <div *ngFor="let item of faqs" class="py-6">
+          <h4 class="text-lg font-bold mb-2">{{ item.q }}</h4>
+          <p class="text-neutral-400 leading-relaxed text-sm">{{ item.a }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FINAL CTA ── -->
+  <div class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-cover bg-center bg-fixed"
+      style="background-image: url('./assets/images/lmg.png');"></div>
+    <div class="absolute inset-0 bg-black/80"></div>
+    <div class="relative z-10 max-w-3xl mx-auto px-6 py-24 text-center">
+      <h2 class="text-5xl lg:text-6xl font-black tracking-tight mb-6">
+        READY TO<br><span class="text-red-500">DEPLOY?</span>
+      </h2>
+      <p class="text-neutral-300 text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+        You know the basics. Now get in the server and put it into practice.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a routerLink="/getting-started"
+          class="inline-flex items-center justify-center gap-3 bg-red-700 hover:bg-red-600 text-white font-bold px-10 py-5 rounded text-xl transition-colors duration-200 no-underline">
+          How to Join
+        </a>
+        <a [href]="wikiUrl" target="_blank" rel="noopener noreferrer"
+          class="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold px-10 py-5 rounded text-xl transition-colors duration-200 no-underline">
+          Full Wiki
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
