@@ -36,6 +36,7 @@ export class ModsComponent {
         { name: 'Mussalo', guid: '59CF333B3A309D6E', image: 'https://ar-gcp-cdn.bistudio.com/image/92ee/a49ccf7d447af4178667d18561cb0ffdefbb5293bdb8296ef2a28506e8fe/97037.jpg' },
         { name: 'The Golden Gate', guid: '6734F85352EF7A79', image: 'https://ar-gcp-cdn.bistudio.com/image/7ca0/b7b3a21ac2a3ab054b04174f23df78d947abc4ccff925842841a490ae26c/80169.jpg' },
         { name: 'Zarichne', guid: '61732D4F7D980E9A', image: 'https://ar-gcp-cdn.bistudio.com/image/0766/e4ad7b00157292762d923145ee792850b868a95651121c5f2066c03f36da/84029.jpg' },
+         { name: 'Zimnitrita', guid: '597697D81A1EA202', image: 'https://ar-gcp-cdn.bistudio.com/image/7602/630f890fefb01e9b55a046fee4928cf5126929d458d6c571d3cbbb9bda0e/158828.jpg' },
       ]
     },
     {
@@ -162,7 +163,6 @@ export class ModsComponent {
         { name: 'VTF Rally Championship', guid: '60F697135C1AF8E9', image: 'https://ar-gcp-cdn.bistudio.com/image/5311/e7eceac2d658cf057ddf468ea38c33ecc36e9eabb25b388d60a5bb113282/103474.jpg' },
         { name: 'WeakerWalls', guid: '620A15433CA8D688', image: 'https://ar-gcp-cdn.bistudio.com/image/4a2d/e4525db0a8c6caed7c0978fac849b9e2f611d123a52c633253a106027f2c/72185.jpg' },
         { name: 'Wirecutters 2', guid: '62F364B35E9B51B0', image: 'https://ar-gcp-cdn.bistudio.com/image/7012/559c5f9bc6b5f466500d14c0d0d9e447f5043fe55b0adf047dd38e1edefc/60734.jpg' },
-        { name: 'Zimnitrita', guid: '597697D81A1EA202', image: 'https://ar-gcp-cdn.bistudio.com/image/7602/630f890fefb01e9b55a046fee4928cf5126929d458d6c571d3cbbb9bda0e/158828.jpg' },
       ]
     },
   ];
