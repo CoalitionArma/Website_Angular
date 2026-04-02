@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   apiUrl: 'https://api.coalitiongroup.net/api',
-  botApiUrl: 'http://bot.coalitiongroup.net',
+  botApiUrl: 'https://bot.coalitiongroup.net',
   discordApiUrl: 'https://discord.com/api',
   discordCdnUrl: 'https://cdn.discordapp.com',
   clientId: '1311851378875830354',
