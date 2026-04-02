@@ -16,10 +16,12 @@ interface DiscordRoleResponse {
 
 class DiscordRoleService {
   private discordBotUrl: string;
+  private apiSecret: string;
   private timeout: number;
 
   constructor() {
     this.discordBotUrl = process.env.DISCORD_BOT_API_URL || 'http://localhost:5000';
+    this.apiSecret = process.env.DISCORD_BOT_API_SECRET || '';
     this.timeout = 5000; // 5 second timeout
   }
 
@@ -38,7 +40,8 @@ class DiscordRoleService {
         {
           timeout: this.timeout,
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'x-api-key': this.apiSecret
           }
         }
       );
@@ -81,7 +84,8 @@ class DiscordRoleService {
         {
           timeout: this.timeout,
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'x-api-key': this.apiSecret
           }
         }
       );
@@ -269,7 +273,8 @@ class DiscordRoleService {
         {
           timeout: this.timeout,
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'x-api-key': this.apiSecret
           }
         }
       );

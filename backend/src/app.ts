@@ -26,7 +26,8 @@ import {
     EventRole, 
     CreateEventRequest, 
     UpdateEventRequest,
-    SlotRoleRequest 
+    SlotRoleRequest,
+    AdminSlotRequest
 } from './interfaces/event.interface';
 import discordRoleService from './services/discordRoleService';
 
@@ -1096,6 +1097,137 @@ app.post('/api/events/admin/kick', authenticateToken, async (req: Request<{}, {}
         res.status(500).json({
             success: false,
             error: 'Failed to kick user from role',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
+// Admin slot a specific user into a role
+app.post('/api/events/admin/slot', authenticateToken, async (req: Request<{}, {}, AdminSlotRequest>, res: Response): Promise<void> => {
+    try {
+        const { eventId, sideId, groupId, roleId, targetUserId } = req.body;
+        const adminId = (req.body as any).id; // From JWT token
+
+        // Check if the requesting user is an admin
+        const adminUser = await SQLUsers.findOne({ where: { discordid: adminId } });
+        if (!adminUser || !adminUser.isAdmin) {
+            res.status(403).json({
+                success: false,
+                message: 'Only administrators can slot users into roles'
+            });
+            return;
+        }
+
+        // Find the target user
+        const targetUser = await SQLUsers.findOne({ where: { discordid: targetUserId } });
+        if (!targetUser) {
+            res.status(404).json({
+                success: false,
+                message: 'Target user not found'
+            });
+            return;
+        }
+
+        // Check if target user has an ARMA GUID
+        if (!targetUser.armaguid) {
+            res.status(400).json({
+                success: false,
+                message: `${targetUser.username} has not set their ARMA GUID in their profile`
+            });
+            return;
+        }
+
+        // Find the event
+        const event = await Event.findByPk(eventId);
+        if (!event) {
+            res.status(404).json({
+                success: false,
+                message: 'Event not found'
+            });
+            return;
+        }
+
+        // Parse the sides
+        const sides: EventSide[] = JSON.parse(event.groups as string);
+
+        // Find the target side, group, and role
+        const side = sides.find(s => s.id === sideId);
+        if (!side) {
+            res.status(404).json({ success: false, message: 'Side not found' });
+            return;
+        }
+
+        const group = side.groups.find(g => g.id === groupId);
+        if (!group) {
+            res.status(404).json({ success: false, message: 'Group not found' });
+            return;
+        }
+
+        const role = group.roles.find(r => r.id === roleId);
+        if (!role) {
+            res.status(404).json({ success: false, message: 'Role not found' });
+            return;
+        }
+
+        // Check if role is already slotted by someone else
+        if (role.slottedUserId && role.slottedUserId !== targetUserId) {
+            res.status(400).json({
+                success: false,
+                message: `Role is already taken by ${role.slottedUser}`
+            });
+            return;
+        }
+
+        // Remove target user from any existing role in this event
+        for (const s of sides) {
+            for (const g of s.groups) {
+                for (const r of g.roles) {
+                    if (r.slottedUserId === targetUserId && r.id !== roleId) {
+                        r.slottedUser = undefined;
+                        r.slottedUserId = undefined;
+                        r.slottedUserArmaGuid = undefined;
+                    }
+                }
+            }
+        }
+
+        // Slot the target user
+        role.slottedUser = targetUser.username;
+        role.slottedUserId = targetUserId;
+        role.slottedUserArmaGuid = targetUser.armaguid || undefined;
+
+        // Update the event
+        await event.update({ groups: JSON.stringify(sides) });
+
+        // Assign Discord role (non-blocking)
+        try {
+            const isInServer = await discordRoleService.isUserInDiscordServer(targetUserId);
+            if (isInServer) {
+                await discordRoleService.assignEventBasedRole(targetUserId, event, sideId, role.name);
+            }
+        } catch (discordError) {
+            console.error(`❌ Error assigning Discord role for admin-slotted user ${targetUser.username}:`, discordError);
+        }
+
+        // Return the updated event
+        const eventData = event.toJSON();
+        const responseEvent = {
+            ...eventData,
+            sides: JSON.parse(eventData.groups as string),
+            groups: undefined
+        };
+        delete responseEvent.groups;
+
+        res.status(200).json({
+            success: true,
+            event: responseEvent,
+            message: `Successfully slotted ${targetUser.username} into ${role.name}`
+        });
+    } catch (error) {
+        console.error('Error admin-slotting user:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to slot user',
             details: error instanceof Error ? error.message : 'Unknown error'
         });
     }

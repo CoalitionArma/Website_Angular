@@ -79,6 +79,10 @@ export interface SlotRoleRequest {
   roleId: string;
 }
 
+export interface AdminSlotRequest extends SlotRoleRequest {
+  targetUserId: string; // Discord ID of the user to slot
+}
+
 export interface SlotRoleResponse {
   event: Event;
   success: boolean;

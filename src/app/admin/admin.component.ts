@@ -4,11 +4,12 @@ import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
 import { CommunityManagementComponent } from '../community-management/community-management.component';
 import { UserManagementComponent } from '../user-management/user-management.component';
+import { EventSlottingComponent } from './event-slotting/event-slotting.component';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, CommunityManagementComponent, UserManagementComponent],
+  imports: [CommonModule, CommunityManagementComponent, UserManagementComponent, EventSlottingComponent],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'
 })
@@ -35,6 +36,10 @@ export class AdminComponent implements OnInit {
 
   showUserManagement(): void {
     this.selectedView = 'users';
+  }
+
+  showEventSlotting(): void {
+    this.selectedView = 'event-slotting';
   }
 
   showDashboard(): void {

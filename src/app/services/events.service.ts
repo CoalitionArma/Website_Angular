@@ -9,7 +9,8 @@ import {
   UpdateEventRequest,
   CreateEventResponse, 
   SlotRoleRequest, 
-  SlotRoleResponse 
+  SlotRoleResponse,
+  AdminSlotRequest
 } from '../interfaces/event.interface';
 
 @Injectable({
@@ -159,6 +160,30 @@ export class EventsService {
           // Update the event in the local events list
           const currentEvents = this.eventsSubject.value;
           const updatedEvents = currentEvents.map(event => 
+            event.id === processedEvent.id ? processedEvent : event
+          );
+          this.eventsSubject.next(updatedEvents);
+        }
+      }),
+      catchError(this.handleError)
+    );
+  }
+
+  // Admin slot a specific user into a role
+  adminSlotUser(slotData: AdminSlotRequest): Observable<SlotRoleResponse> {
+    const headers = this.getAuthHeaders();
+
+    return this.http.post<SlotRoleResponse>(`${this.EVENTS_URL}/admin/slot`, slotData, { headers }).pipe(
+      tap((response: SlotRoleResponse) => {
+        if (response.success) {
+          const processedEvent = {
+            ...response.event,
+            dateTime: new Date(response.event.dateTime),
+            createdAt: new Date(response.event.createdAt),
+            updatedAt: new Date(response.event.updatedAt)
+          };
+          const currentEvents = this.eventsSubject.value;
+          const updatedEvents = currentEvents.map(event =>
             event.id === processedEvent.id ? processedEvent : event
           );
           this.eventsSubject.next(updatedEvents);

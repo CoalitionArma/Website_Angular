@@ -87,3 +87,7 @@ export interface SlotRoleRequest {
     groupId: string;
     roleId: string;
 }
+
+export interface AdminSlotRequest extends SlotRoleRequest {
+    targetUserId: string; // Discord ID of the user to slot
+}

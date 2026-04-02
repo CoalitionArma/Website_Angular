@@ -1,0 +1,159 @@
+<div class="event-slotting">
+  <div class="slotting-header">
+    <h2>Event Slotting</h2>
+    <p>Select an event to view and manage slot assignments.</p>
+  </div>
+
+  <!-- Event selector -->
+  <div class="event-selector">
+    <label for="event-select">Event</label>
+    <select id="event-select" [value]="selectedEventId" (change)="onEventSelect($any($event.target).value)">
+      <option value="">-- Select an event --</option>
+      @for (event of events; track event.id) {
+        <option [value]="event.id">
+          {{ event.title }} &mdash; {{ event.dateTime | date:'mediumDate' }}
+        </option>
+      }
+    </select>
+  </div>
+
+  <!-- Feedback message -->
+  @if (message) {
+    <div class="feedback-message" [class.success]="messageType === 'success'" [class.error]="messageType === 'error'">
+      {{ message }}
+    </div>
+  }
+
+  <!-- Loading -->
+  @if (loading) {
+    <div class="loading-indicator">Loading events...</div>
+  }
+
+  <!-- Slot tree -->
+  @if (selectedEvent && !loading) {
+    <div class="slot-tree">
+      <div class="event-info">
+        <span class="event-gametype">{{ selectedEvent.gametype || 'EVENT' }}</span>
+        <span class="event-title">{{ selectedEvent.title }}</span>
+        <span class="event-date">{{ selectedEvent.dateTime | date:'fullDate' }}</span>
+      </div>
+
+      @for (side of selectedEvent.sides; track side.id) {
+        <div class="side-block" [style.border-left-color]="side.color || '#555'">
+          <div class="side-header" [style.color]="side.color || '#ccc'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L3 7v4c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
+            </svg>
+            {{ side.name }}
+          </div>
+
+          @for (group of side.groups; track group.id) {
+            <div class="group-block">
+              <div class="group-header">
+                {{ group.name }}
+                @if (group.communityRestriction) {
+                  <span class="community-badge">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 1L21 5V11C21 16.55 17.16 21.74 12 23C6.84 21.74 3 16.55 3 11V5L12 1Z"/>
+                    </svg>
+                    {{ communityMap[group.communityRestriction] || 'Community #' + group.communityRestriction }}
+                  </span>
+                }
+              </div>
+              <table class="roles-table">
+                <thead>
+                  <tr>
+                    <th>Role</th>
+                    <th>Assigned</th>
+                    <th class="actions-col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (role of group.roles; track role.id) {
+                    <tr [class.is-slotted]="!!role.slottedUser">
+                      <td class="role-name">{{ role.name }}</td>
+                      <td class="slot-status">
+                        @if (role.slottedUser) {
+                          <span class="slotted-badge">{{ role.slottedUser }}</span>
+                        } @else {
+                          <span class="open-badge">OPEN</span>
+                        }
+                      </td>
+                      <td class="role-actions">
+                        <button
+                          class="btn-slot"
+                          [disabled]="submitting"
+                          (click)="openSlotPanel(role, side.id, group.id)">
+                          {{ role.slottedUser ? 'Change' : 'Slot' }}
+                        </button>
+                        @if (role.slottedUser) {
+                          <button
+                            class="btn-kick"
+                            [disabled]="submitting"
+                            (click)="kickFromRole(role, side.id, group.id)">
+                            Kick
+                          </button>
+                        }
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Slot user panel overlay -->
+  @if (slottingContext) {
+    <div class="slot-overlay" (click)="closeSlotPanel()">
+      <div class="slot-panel" (click)="$event.stopPropagation()">
+        <div class="panel-header">
+          <h3>Slot user into: <em>{{ slottingContext.role.name }}</em></h3>
+          <button class="btn-close" (click)="closeSlotPanel()">&#x2715;</button>
+        </div>
+
+        <div class="panel-body">
+          <input
+            class="user-search-input"
+            type="text"
+            [(ngModel)]="userSearchFilter"
+            placeholder="Search by name or callsign..."
+            autofocus />
+
+          <div class="user-list">
+            @for (user of filteredUsers; track user.discordid) {
+              <div
+                class="user-item"
+                [class.selected]="selectedTargetUserId === user.discordid"
+                [class.no-guid]="!user.armaguid"
+                (click)="selectedTargetUserId = user.discordid">
+                <span class="user-name">{{ user.username }}</span>
+                @if (user.callsign) {
+                  <span class="user-callsign">[{{ user.callsign }}]</span>
+                }
+                @if (!user.armaguid) {
+                  <span class="warn-badge" title="No ARMA GUID set">&#9888;</span>
+                }
+              </div>
+            } @empty {
+              <div class="no-users">No users match your search.</div>
+            }
+          </div>
+        </div>
+
+        <div class="panel-footer">
+          <button
+            class="btn-confirm"
+            [disabled]="!selectedTargetUserId || submitting"
+            (click)="submitSlot()">
+            {{ submitting ? 'Slotting...' : 'Confirm Slot' }}
+          </button>
+          <button class="btn-cancel" (click)="closeSlotPanel()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
